@@ -4,6 +4,7 @@
 
 Client::Client() : c("localhost", PORT)
 {
+	std::cout << "Connected to port: " << PORT << std::endl;
 }
 
 void Client::initGl()
@@ -16,7 +17,6 @@ void Client::initGl()
 	controllerScene = std::shared_ptr<ControllerSphereModule>(new ControllerSphereModule());
 	srand(time(NULL));
 
-	std::cout << "Connected" << std::endl;
 	exampleState.hp = 100;
 }
 
