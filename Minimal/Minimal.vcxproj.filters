@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Modules">
+      <UniqueIdentifier>{85f5cd69-04d8-420b-953f-b229708b974c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Modules">
+      <UniqueIdentifier>{13a4286d-edbf-4aff-814d-91432cf719d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Util">
+      <UniqueIdentifier>{3e778d3c-35b5-4e4b-a698-ee853367ee73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Util">
+      <UniqueIdentifier>{1ddc9c42-ce2b-4a07-afaf-c15942c17a1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Past Projects">
+      <UniqueIdentifier>{76fbd724-e147-4a5f-b82f-eaa577552cfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Past Projects\Example App">
+      <UniqueIdentifier>{470119eb-d925-4734-bd7a-0e2fbdca5d81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Past Projects\Proj1">
+      <UniqueIdentifier>{2604898f-14ee-4e76-b621-6544a0ec1990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Past Projects\Proj2">
+      <UniqueIdentifier>{454e5762-6590-4367-852c-80c99bc656e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Past Projects\Proj3">
+      <UniqueIdentifier>{d02c8ad8-af9f-427f-848f-e279c1f82985}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Past Projects">
+      <UniqueIdentifier>{6d1d6331-4927-4f56-b710-10b4bc0bf811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Past Projects\Example App">
+      <UniqueIdentifier>{804df939-91ba-42ea-8e1a-e190510cb17f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Past Projects\Proj1">
+      <UniqueIdentifier>{6b7a5d89-3d3d-484e-88cd-bce56f9fae25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Past Projects\Proj2">
+      <UniqueIdentifier>{eda4c763-701e-4ecd-a8c0-f7dae4873293}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Past Projects\Proj3">
+      <UniqueIdentifier>{1ad7b475-b5a8-4222-aeea-fa8217174c49}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Proj1.cpp">
+      <Filter>Source Files\Past Projects\Proj1</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorCubeScene.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="OVRInputWrapper.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="SpheresScene.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="GlfwApp.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="RiftApp.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_image.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="RiftManagerApp.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturedCube.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerSphereModule.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExampleApp.cpp">
+      <Filter>Source Files\Past Projects\Example App</Filter>
+    </ClCompile>
+    <ClCompile Include="Proj2.cpp">
+      <Filter>Source Files\Past Projects\Proj2</Filter>
+    </ClCompile>
+    <ClCompile Include="Proj3.cpp">
+      <Filter>Source Files\Past Projects\Proj3</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorCubeScene2.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderable.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="CaveComponent.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Shaders\shader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\shader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\skybox.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\skybox.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\cave.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\cave.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\line.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\line.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Proj1.h">
+      <Filter>Header Files\Past Projects\Proj1</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorCubeScene.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="SpheresScene.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="OVRInputWrapper.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="GlfwApp.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="RiftApp.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="RiftManagerApp.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturedCube.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerSphereModule.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Proj2.h">
+      <Filter>Header Files\Past Projects\Proj2</Filter>
+    </ClInclude>
+    <ClInclude Include="ExampleApp.h">
+      <Filter>Header Files\Past Projects\Example App</Filter>
+    </ClInclude>
+    <ClInclude Include="Proj3.h">
+      <Filter>Header Files\Past Projects\Proj3</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorCubeScene2.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="CaveComponent.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
