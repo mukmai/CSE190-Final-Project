@@ -1,8 +1,8 @@
 #pragma once
+#include "rpc/client.h"
 #include "RiftApp.h"
 #include "SpheresScene.h"
 #include "ControllerSphereModule.h"
-#include "rpc/client.h"
 
 #include "BaseState.h"
 #include "Common.h"

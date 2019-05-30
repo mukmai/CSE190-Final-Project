@@ -17,6 +17,7 @@ limitations under the License.
 
 ************************************************************************************/
 
+#include "rpc/client.h"
 #include <iostream>
 #include <Windows.h>
 #include <OVR_CAPI.h>

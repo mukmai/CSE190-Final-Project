@@ -18,6 +18,7 @@ void Client::initGl()
 	srand(time(NULL));
 
 	exampleState.hp = 100;
+	exampleState.pos = glm::vec3(1.0f, 2.5f, -0.3f);
 }
 
 void Client::shutdownGl()
@@ -46,5 +47,14 @@ void Client::update()
 		auto newState = c.call("takeDamage", exampleState).as<BaseState>();
 		exampleState = newState;
 		std::cout << "Player Health: " << exampleState.hp << std::endl;
+	}
+
+	if (OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Left))
+	{
+		/* Call echo rpc function that is defined on the server */
+		/* Need to cast back the respond message to the type you want */
+		auto newState = c.call("movePos", exampleState).as<BaseState>();
+		exampleState = newState;
+		std::cout << "Player Health: " << exampleState.pos.x << " " << exampleState.pos.y << " " << exampleState.pos.z << " " << std::endl;
 	}
 }
