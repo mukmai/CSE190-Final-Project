@@ -95,7 +95,8 @@ private:
     static std::false_type check(...);
 public:
     using type = decltype(check<T>(MSGPACK_NULLPTR));
-    static constexpr bool value = type::value;
+    //static constexpr bool value = type::value;
+	static constexpr bool value = has_as<T>::type::value;
 };
 
 #endif // !defined(MSGPACK_USE_CPP03)
