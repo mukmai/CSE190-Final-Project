@@ -22,9 +22,9 @@ SpheresScene::SpheresScene()
 	instanceCount = instance_positions.size();
 
 	// Shader Program 
-	shader = std::make_unique<Shader>("./Shaders/shader.vert", "./Shaders/shader.frag");
+	shader = std::make_unique<Shader>("./Resources/Shaders/shader.vert", "./Resources/Shaders/shader.frag");
 
-	sphere = std::make_unique<Model>("./Models/sphere.obj", false);
+	sphere = std::make_unique<Model>("./Resources/Models/sphere.obj", false);
 
 }
 

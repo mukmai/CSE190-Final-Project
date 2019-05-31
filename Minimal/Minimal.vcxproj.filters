@@ -55,6 +55,12 @@
     <Filter Include="Header Files\Past Projects\Proj3">
       <UniqueIdentifier>{1ad7b475-b5a8-4222-aeea-fa8217174c49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\CEntities">
+      <UniqueIdentifier>{d28399ef-55fa-4b1e-b15a-7cb7293d377d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CEntities">
+      <UniqueIdentifier>{a2711c4e-a23d-4c9c-81cc-f33dbfff99ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -125,6 +131,9 @@
     </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Source Files\CEntities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +229,12 @@
     </ClInclude>
     <ClInclude Include="Client.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CBaseEntity.hpp">
+      <Filter>Header Files\CEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Header Files\CEntities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

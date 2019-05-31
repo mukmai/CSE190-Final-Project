@@ -2,8 +2,8 @@
 
 ControllerSphereModule::ControllerSphereModule()
 {
-	shader = std::make_unique<Shader>("./Shaders/shader.vert", "./Shaders/shader.frag");
-	sphere = std::make_unique<Model>("./Models/sphere.obj", false);
+	shader = std::make_unique<Shader>("./Resources/Shaders/shader.vert", "./Resources/Shaders/shader.frag");
+	sphere = std::make_unique<Model>("./Resources/Models/sphere.obj", false);
 	sphereScaleM = glm::scale(glm::mat4(1.0f), glm::vec3(scale));
 	smoothN = 1;
 	totalPos[0] = glm::vec3(0);

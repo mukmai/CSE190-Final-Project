@@ -15,6 +15,7 @@ class Client : public RiftApp {
 	double newTime = 0;
 	BaseState exampleState;
 	rpc::client c;
+	int playerID;
 
 public:
 	Client();
