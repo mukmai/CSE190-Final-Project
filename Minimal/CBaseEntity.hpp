@@ -39,17 +39,17 @@ public:
 	}
 
 	// Every child must override this if they carry additional state
-	virtual void updateState(std::shared_ptr<BaseState> state) {
-		_state->id = state->id;
+	virtual void updateState(BaseState const & state) {
+		_state->id = state.id;
 
 		// Translation
-		_state->pos = state->pos;
+		_state->pos = state.pos;
 
 		// Orientation
-		_state->rotation = state->rotation;
+		_state->rotation = state.rotation;
 
 		// Scale
-		_state->scale = state->scale;
+		_state->scale = state.scale;
 	}
 
 	int getID() {

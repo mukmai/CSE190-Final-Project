@@ -1,6 +1,7 @@
 #include "Client.h"
 #include <ctime>
 #include "OVRInputWrapper.h"
+#include "EntityManager.h"
 
 Client::Client() : c("localhost", PORT)
 {
@@ -31,6 +32,7 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 {
 	controllerScene->render(projection, glm::inverse(headPose));
 	sphereScene->render(projection, glm::inverse(headPose));
+	EntityManager::getInstance().render(projection, headPose);
 }
 
 void Client::update()
@@ -41,6 +43,13 @@ void Client::update()
 	newTime = ovr_GetTimeInSeconds();
 
 	// send pos of all things and update all states
+	vector<BaseState> newStates = c.call(serverFunction[UPDATE], playerID).as<vector<BaseState>>();
+	std::cout << "Updating: ";
+	for (int i = 0; i < newStates.size(); i++) {
+		EntityManager::getInstance().update(newStates[i]);
+		std::cout << newStates[i].id << " ";
+	}
+	std::cout << std::endl;
 
 	if (OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Left))
 	{

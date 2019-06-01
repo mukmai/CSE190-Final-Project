@@ -17,10 +17,10 @@ public:
 	std::shared_ptr<CBaseEntity> getEntity(int id);
 
 	// Get an existing entity using BaseState, create one if not exist
-	std::shared_ptr<CBaseEntity> getEntity(std::shared_ptr<BaseState> const& state);
+	std::shared_ptr<CBaseEntity> getEntity(BaseState const& state);
 
 	// Dispatch new state to the entity to update entity
-	void update(std::shared_ptr<BaseState> const& state);
+	void update(BaseState const& state);
 
 	// Render all entities in the game world
 	void render(const glm::mat4& projection, const glm::mat4& view);

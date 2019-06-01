@@ -26,10 +26,10 @@ std::shared_ptr<CBaseEntity> EntityManager::getEntity(int id)
 	return nullptr;
 }
 
-std::shared_ptr<CBaseEntity> EntityManager::getEntity(std::shared_ptr<BaseState> const & state)
+std::shared_ptr<CBaseEntity> EntityManager::getEntity(BaseState const & state)
 {
 	// Check if the Entity is already created
-	int id = state->id;
+	int id = state.id;
 	auto result = _entityMap.find(id);
 
 	// Return if found
@@ -40,7 +40,7 @@ std::shared_ptr<CBaseEntity> EntityManager::getEntity(std::shared_ptr<BaseState>
 
 	// Otherwise create the Entity based on its type
 	std::shared_ptr<CBaseEntity> entity = nullptr;
-	EntityType type = state->type;
+	EntityType type = state.type;
 
 	switch (type)
 	{
@@ -58,7 +58,7 @@ std::shared_ptr<CBaseEntity> EntityManager::getEntity(std::shared_ptr<BaseState>
 	return entity;
 }
 
-void EntityManager::update(std::shared_ptr<BaseState> const & state)
+void EntityManager::update(BaseState const & state)
 {
 	auto entity = getEntity(state);
 

@@ -7,14 +7,16 @@
 enum FUNCTION {
 	MOVE,
 	HIT,
-	PLAYER_JOIN
+	PLAYER_JOIN,
+	UPDATE
 };
 
 // map from FUNCTION enum to string (just to make it easier to find the location
 static std::map<FUNCTION, std::string> serverFunction {
 { MOVE , "move"},
 { HIT , "hit"},
-{ PLAYER_JOIN , "player_join"}
+{ PLAYER_JOIN , "player_join"},
+{ UPDATE , "update"}
 };
 
 enum EntityType
