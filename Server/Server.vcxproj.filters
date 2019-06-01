@@ -19,33 +19,48 @@
     <Filter Include="Source Files\SEntities">
       <UniqueIdentifier>{092ffe96-a4e2-455e-a4c3-41be5dc84ea0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{b526c1b7-aec6-4437-bb83-a19b39b45861}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{80cf6f27-1c67-430b-a85a-9075c4dd367c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SBaseEntity.hpp">
       <Filter>Header Files\SEntities</Filter>
     </ClInclude>
+    <ClInclude Include="SHandEntity.hpp">
+      <Filter>Header Files\SEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="SEntityManager.h">
+      <Filter>Header Files\SEntities</Filter>
+    </ClInclude>
     <ClInclude Include="IDGenerator.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SBaseEntity.cpp">
       <Filter>Source Files\SEntities</Filter>
     </ClCompile>
+    <ClCompile Include="SEntityManager.cpp">
+      <Filter>Source Files\SEntities</Filter>
+    </ClCompile>
     <ClCompile Include="IDGenerator.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

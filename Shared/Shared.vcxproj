@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="BaseState.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="HandState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common.cpp" />

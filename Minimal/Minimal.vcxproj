@@ -184,6 +184,7 @@
   <ItemGroup>
     <ClInclude Include="CaveComponent.h" />
     <ClInclude Include="CBaseEntity.hpp" />
+    <ClInclude Include="CHandEntity.hpp" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ColorCubeScene.h" />
     <ClInclude Include="ColorCubeScene2.h" />

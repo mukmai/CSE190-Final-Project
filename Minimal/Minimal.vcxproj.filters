@@ -236,5 +236,8 @@
     <ClInclude Include="EntityManager.h">
       <Filter>Header Files\CEntities</Filter>
     </ClInclude>
+    <ClInclude Include="CHandEntity.hpp">
+      <Filter>Header Files\CEntities</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

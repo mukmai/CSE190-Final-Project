@@ -40,6 +40,8 @@ void Client::update()
 	oldTime = newTime;
 	newTime = ovr_GetTimeInSeconds();
 
+	// send pos of all things and update all states
+
 	if (OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Left))
 	{
 		/* Call echo rpc function that is defined on the server */

@@ -12,4 +12,11 @@ std::shared_ptr<BaseState> SBaseEntity::getState()
 
 void SBaseEntity::initState(bool generateId)
 {
+	if (generateId) {
+		_state->id = IDGenerator::getInstance()->getNextId();
+	}
+
+	_state->pos = glm::vec3(0);
+	_state->rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+	_state->scale = glm::vec3(1);
 }

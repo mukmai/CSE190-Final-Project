@@ -1,6 +1,7 @@
 #include "EntityManager.h"
 #include <algorithm>
 #include <iostream>
+#include "CHandEntity.hpp"
 
 
 EntityManager::EntityManager()
@@ -44,6 +45,7 @@ std::shared_ptr<CBaseEntity> EntityManager::getEntity(std::shared_ptr<BaseState>
 	switch (type)
 	{
 	case ENTITY_HAND:
+		entity = std::make_shared<CHandEntity>();
 		break;
 	}
 
@@ -85,11 +87,13 @@ void EntityManager::update(std::shared_ptr<BaseState> const & state)
 
 void EntityManager::render(const glm::mat4 & projection, const glm::mat4 & view)
 {
+	std::cout << "Entities ID: ";
 	for (int i = 0; i < _entityList.size(); i++) {
 		if (_entityList[i]) {
 			//_entityList[i]->render(projection, view);
 			auto state = _entityList[i]->getState();
-			std::cout << "Player Position: " << state->id << std::endl;
+			std::cout << state->id << " ";
 		}
 	}
+	std::cout << std::endl;
 }
