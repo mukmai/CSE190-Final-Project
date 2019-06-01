@@ -12,6 +12,7 @@ struct BaseState
 	glm::vec3 scale;
 	int id;
 	EntityType type;
+	std::vector<int> extraData; // any special type of information will store in this vector
 
 	// rpc Macro to generate serialize code for the struct
 	MSGPACK_DEFINE_ARRAY(
@@ -19,5 +20,6 @@ struct BaseState
 		rotation.x, rotation.y, rotation.z, rotation.w,
 		scale.x, scale.y, scale.z,
 		id,
-		type);
+		type,
+		extraData);
 };

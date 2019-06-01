@@ -23,6 +23,6 @@ public:
 	void update(BaseState const& state);
 
 	// Render all entities in the game world
-	void render(const glm::mat4& projection, const glm::mat4& view);
+	void render(const glm::mat4& projection, const glm::mat4& view, glm::vec3 eyePos);
 };
 

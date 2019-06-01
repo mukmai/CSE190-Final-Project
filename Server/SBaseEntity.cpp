@@ -20,3 +20,8 @@ void SBaseEntity::initState(bool generateId)
 	_state->rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 	_state->scale = glm::vec3(1);
 }
+
+std::vector<std::shared_ptr<SBaseEntity>> SBaseEntity::getChildren()
+{
+	return std::vector<std::shared_ptr<SBaseEntity>>();
+}

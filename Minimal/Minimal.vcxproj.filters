@@ -138,28 +138,28 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Shaders\shader.frag">
+    <None Include="Resources\Shaders\cave.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Shaders\shader.vert">
+    <None Include="Resources\Shaders\cave.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Shaders\skybox.frag">
+    <None Include="Resources\Shaders\line.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Shaders\skybox.vert">
+    <None Include="Resources\Shaders\line.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Shaders\cave.frag">
+    <None Include="Resources\Shaders\shader.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Shaders\cave.vert">
+    <None Include="Resources\Shaders\shader.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Shaders\line.frag">
+    <None Include="Resources\Shaders\skybox.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Shaders\line.vert">
+    <None Include="Resources\Shaders\skybox.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -237,6 +237,9 @@
       <Filter>Header Files\CEntities</Filter>
     </ClInclude>
     <ClInclude Include="CHandEntity.hpp">
+      <Filter>Header Files\CEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerEntity.hpp">
       <Filter>Header Files\CEntities</Filter>
     </ClInclude>
   </ItemGroup>

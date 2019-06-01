@@ -172,14 +172,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Shaders\cave.frag" />
-    <None Include="Shaders\cave.vert" />
-    <None Include="Shaders\line.frag" />
-    <None Include="Shaders\line.vert" />
-    <None Include="Shaders\shader.frag" />
-    <None Include="Shaders\shader.vert" />
-    <None Include="Shaders\skybox.frag" />
-    <None Include="Shaders\skybox.vert" />
+    <None Include="Resources\Shaders\cave.frag" />
+    <None Include="Resources\Shaders\cave.vert" />
+    <None Include="Resources\Shaders\line.frag" />
+    <None Include="Resources\Shaders\line.vert" />
+    <None Include="Resources\Shaders\shader.frag" />
+    <None Include="Resources\Shaders\shader.vert" />
+    <None Include="Resources\Shaders\skybox.frag" />
+    <None Include="Resources\Shaders\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CaveComponent.h" />
@@ -189,6 +189,7 @@
     <ClInclude Include="ColorCubeScene.h" />
     <ClInclude Include="ColorCubeScene2.h" />
     <ClInclude Include="ControllerSphereModule.h" />
+    <ClInclude Include="CPlayerEntity.hpp" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="ExampleApp.h" />

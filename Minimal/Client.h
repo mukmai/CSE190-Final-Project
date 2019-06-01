@@ -6,16 +6,15 @@
 
 #include "BaseState.h"
 #include "Common.h"
+#include "PlayerController.h"
 
 // An example application that renders a simple cube
 class Client : public RiftApp {
-	std::shared_ptr<SpheresScene> sphereScene;
-	std::shared_ptr<ControllerSphereModule> controllerScene;
 	double oldTime = 0;
 	double newTime = 0;
-	BaseState exampleState;
 	rpc::client c;
-	int playerID;
+	std::shared_ptr<SpheresScene> sphereScene;
+	PlayerController playerController;
 
 public:
 	Client();

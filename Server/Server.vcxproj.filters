@@ -45,6 +45,9 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="SPlayerEntity.hpp">
+      <Filter>Header Files\SEntities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">

@@ -172,6 +172,7 @@
     <ClInclude Include="SEntityManager.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="SHandEntity.hpp" />
+    <ClInclude Include="SPlayerEntity.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IDGenerator.cpp" />

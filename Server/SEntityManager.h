@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include "SBaseEntity.hpp"
+#include "PlayerController.h"
 #include <vector>
 
 class SEntityManager
@@ -12,6 +13,8 @@ public:
 
 	std::vector<BaseState> getUpdateList(int playerID);
 
-	void addPlayerEntity(int playerID);
+	int addPlayerEntity();
+
+	void updatePlayer(PlayerController playerController);
 };
 
