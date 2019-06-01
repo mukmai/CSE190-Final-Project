@@ -45,7 +45,7 @@ std::shared_ptr<CBaseEntity> EntityManager::getEntity(BaseState const & state)
 	switch (type)
 	{
 	case ENTITY_HAND:
-		entity = std::make_shared<CHandEntity>(state.extraData[0]);
+		entity = std::make_shared<CHandEntity>(state.extraData[HAND_INDEX]);
 		break;
 	case ENTITY_PLAYER:
 		entity = std::make_shared<CPlayerEntity>();

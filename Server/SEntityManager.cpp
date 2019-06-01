@@ -29,6 +29,12 @@ int SEntityManager::addPlayerEntity()
 	{
 		entityMap.insert({ child->getState()->id, child });
 	}
+	playerList.push_back(playerEntity->getState()->id);
+
+	// TODO: this is just a temporary offset changing for player 1 and 2
+	if (playerList.size() == 2) {
+		playerEntity->getState()->pos = glm::vec3(0, 0, 2.0f);
+	}
 	return playerEntity->getState()->id;
 }
 
@@ -48,4 +54,17 @@ void SEntityManager::updatePlayer(PlayerController playerController)
 	rightHand->getState()->pos = playerController.rightHandPos;
 	rightHand->getState()->rotation = playerController.rightHandRotation;
 	rightHand->updatedPlayerList.clear();
+
+	// update head position
+	//playerEntity->getState()->pos = playerController.headPos;
+	//playerEntity->getState()->rotation = playerController.headRotation;
+}
+
+void SEntityManager::movePlayer(int playerID, float direction)
+{
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	playerEntity->getState()->pos.z += direction * 0.01f;
+	playerEntity->updatedPlayerList.clear();
 }

@@ -28,7 +28,11 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 {
 	//sphereScene->render(projection, glm::inverse(headPose));
 	auto eyePos = ovr::toGlm(eyePoses[renderingEye].Position);
-	EntityManager::getInstance().render(projection, glm::inverse(headPose), eyePos);
+	auto playerState = EntityManager::getInstance().getEntity(playerController.playerID)->getState();
+	auto globalPlayerTranslation = glm::translate(glm::mat4(1), playerState->pos);
+	auto globalPlayerRotation = glm::mat4_cast(playerState->rotation);
+	auto globalHeadPose = globalPlayerTranslation * globalPlayerRotation * headPose;
+	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), eyePos);
 }
 
 void Client::update()
@@ -41,10 +45,22 @@ void Client::update()
 	// send player head, controllers position and rotation to server
 	playerController.leftHandPos = controllerPosition[0];
 	playerController.leftHandRotation = controllerRotation[0];
+
 	playerController.rightHandPos = controllerPosition[1];
 	playerController.rightHandRotation = controllerRotation[1];
-	// TODO: head position
+
+	glm::quat headRotation = ovr::toGlm(eyePoses[0].Orientation);
+	glm::vec3 headPos = (ovr::toGlm(eyePoses[0].Position) + ovr::toGlm(eyePoses[1].Position)) / 2.0f;
+	headPos += headRotation * glm::vec3(0, 0, 1.0f) * 0.065f;
+	playerController.headPos = headPos;
+	playerController.headRotation = headRotation;
+
 	c.call(serverFunction[PLAYER_INPUT], playerController);
+
+	float leftThumbStickVertical = OVRInputWrapper::getInstance().thumbStickVertical(ovrHand_Left);
+	if (leftThumbStickVertical != 0) {
+		c.call(serverFunction[PLAYER_MOVE], playerController.playerID, leftThumbStickVertical);
+	}
 
 	// send pos of all things and update all states
 	vector<BaseState> newStates = c.call(serverFunction[GET_UPDATE], playerController.playerID).as<vector<BaseState>>();

@@ -9,6 +9,8 @@ class SEntityManager
 public:
 	std::unordered_map<int, std::shared_ptr<SBaseEntity>> entityMap;
 
+	std::vector<int> playerList;
+
 	SEntityManager();
 
 	std::vector<BaseState> getUpdateList(int playerID);
@@ -16,5 +18,7 @@ public:
 	int addPlayerEntity();
 
 	void updatePlayer(PlayerController playerController);
+
+	void movePlayer(int playerID, float direction);
 };
 

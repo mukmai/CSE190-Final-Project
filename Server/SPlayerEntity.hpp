@@ -17,9 +17,9 @@ public:
 		SBaseEntity::initState();
 		_state->type = ENTITY_PLAYER;
 
-		leftHand = std::make_shared<SHandEntity>(0);
+		leftHand = std::make_shared<SHandEntity>(0, _state->id);
 		_children.push_back(leftHand);
-		rightHand = std::make_shared<SHandEntity>(1);
+		rightHand = std::make_shared<SHandEntity>(1, _state->id);
 		_children.push_back(rightHand);
 	};
 

@@ -59,6 +59,9 @@ public:
 
 		// Scale
 		_state->scale = state.scale;
+
+		// extraData
+		_state->extraData = state.extraData;
 	}
 
 	int getID() {
