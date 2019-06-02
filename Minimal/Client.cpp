@@ -62,6 +62,12 @@ void Client::update()
 		c.call(serverFunction[PLAYER_MOVE], playerController.playerID, leftThumbStickVertical);
 	}
 
+	bool bSpawnProjectileRight = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Right);
+	if (bSpawnProjectileRight) {
+		// TODO: Create a new Projectile Entity at the right hand
+	}
+
+
 	// send pos of all things and update all states
 	vector<BaseState> newStates = c.call(serverFunction[GET_UPDATE], playerController.playerID).as<vector<BaseState>>();
 	//std::cout << "Updating: ";

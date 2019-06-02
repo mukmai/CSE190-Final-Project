@@ -3,6 +3,7 @@
 #include <iostream>
 #include "CHandEntity.hpp"
 #include "CPlayerEntity.hpp"
+#include "CProjectileEntity.hpp"
 
 EntityManager::EntityManager()
 {
