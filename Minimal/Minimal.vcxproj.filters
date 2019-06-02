@@ -135,6 +135,9 @@
     <ClCompile Include="EntityManager.cpp">
       <Filter>Source Files\CEntities</Filter>
     </ClCompile>
+    <ClCompile Include="ASound.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -241,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="CPlayerEntity.hpp">
       <Filter>Header Files\CEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="ASound.h">
+      <Filter>Header Files\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

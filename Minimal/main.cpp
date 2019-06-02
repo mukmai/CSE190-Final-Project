@@ -29,6 +29,8 @@ limitations under the License.
 #include "GlfwApp.h"
 #include "Client.h"
 
+#include "fmod/fmod.hpp"
+
 #define __STDC_FORMAT_MACROS 1
 
 #define FAIL(X) throw std::runtime_error(X)
@@ -121,6 +123,7 @@ void glDebugCallbackHandler(GLenum source, GLenum type, GLuint id, GLenum severi
   std::cout << "debug call: " << msg << std::endl;
 }
 
+#include "ASound.h"
 
 int main(int argc, char** argv) {
   int result = -1;
@@ -128,6 +131,10 @@ int main(int argc, char** argv) {
   if (!OVR_SUCCESS(ovr_Initialize(nullptr))) {
     FAIL("Failed to initialize the Oculus SDK");
   }
+
+  //ASound * soundObj = new ASound("Resources/Audio/Jack-a-Dandy.wav");
+  //soundObj->playSound();
+
   result = Client().run();
 
   ovr_Shutdown();
