@@ -169,10 +169,13 @@
     <ClInclude Include="IDGenerator.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SBaseEntity.hpp" />
+    <ClInclude Include="SBodyEntity.hpp" />
     <ClInclude Include="SEntityManager.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="SHandEntity.hpp" />
+    <ClInclude Include="SHeadEntity.hpp" />
     <ClInclude Include="SPlayerEntity.hpp" />
+    <ClInclude Include="SSphereEntity.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IDGenerator.cpp" />

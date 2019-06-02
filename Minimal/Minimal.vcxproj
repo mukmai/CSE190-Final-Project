@@ -184,12 +184,15 @@
   <ItemGroup>
     <ClInclude Include="CaveComponent.h" />
     <ClInclude Include="CBaseEntity.hpp" />
+    <ClInclude Include="CBodyEntity.hpp" />
     <ClInclude Include="CHandEntity.hpp" />
+    <ClInclude Include="CHeadEntity.hpp" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ColorCubeScene.h" />
     <ClInclude Include="ColorCubeScene2.h" />
     <ClInclude Include="ControllerSphereModule.h" />
     <ClInclude Include="CPlayerEntity.hpp" />
+    <ClInclude Include="CSphereEntity.hpp" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="ExampleApp.h" />

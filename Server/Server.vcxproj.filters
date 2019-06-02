@@ -48,6 +48,15 @@
     <ClInclude Include="SPlayerEntity.hpp">
       <Filter>Header Files\SEntities</Filter>
     </ClInclude>
+    <ClInclude Include="SHeadEntity.hpp">
+      <Filter>Header Files\SEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="SBodyEntity.hpp">
+      <Filter>Header Files\SEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="SSphereEntity.hpp">
+      <Filter>Header Files\SEntities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">

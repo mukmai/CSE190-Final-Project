@@ -242,5 +242,14 @@
     <ClInclude Include="CPlayerEntity.hpp">
       <Filter>Header Files\CEntities</Filter>
     </ClInclude>
+    <ClInclude Include="CHeadEntity.hpp">
+      <Filter>Header Files\CEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="CBodyEntity.hpp">
+      <Filter>Header Files\CEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="CSphereEntity.hpp">
+      <Filter>Header Files\CEntities</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

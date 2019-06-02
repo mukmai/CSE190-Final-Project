@@ -19,6 +19,8 @@ public:
 
 	void updatePlayer(PlayerController playerController);
 
-	void movePlayer(int playerID, float direction);
+	void movePlayerZ(int playerID, float rate);
+
+	void movePlayerX(int playerID, float rate);
 };
 

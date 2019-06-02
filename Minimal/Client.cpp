@@ -7,6 +7,7 @@ Client::Client() : c("localhost", PORT)
 {
 	std::cout << "Connected to port: " << PORT << std::endl;
 	playerController.playerID = c.call(serverFunction[PLAYER_JOIN]).as<int>();
+	EntityManager::getInstance().setPlayerID(playerController.playerID);
 }
 
 void Client::initGl()
@@ -59,15 +60,17 @@ void Client::update()
 
 	float leftThumbStickVertical = OVRInputWrapper::getInstance().thumbStickVertical(ovrHand_Left);
 	if (leftThumbStickVertical != 0) {
-		c.call(serverFunction[PLAYER_MOVE], playerController.playerID, leftThumbStickVertical);
+		c.call(serverFunction[PLAYER_MOVE_Z], playerController.playerID, leftThumbStickVertical);
+	}
+
+	float leftThumbStickHorizontal = OVRInputWrapper::getInstance().thumbStickHorizontal(ovrHand_Left);
+	if (leftThumbStickHorizontal != 0) {
+		c.call(serverFunction[PLAYER_MOVE_X], playerController.playerID, leftThumbStickHorizontal);
 	}
 
 	// send pos of all things and update all states
 	vector<BaseState> newStates = c.call(serverFunction[GET_UPDATE], playerController.playerID).as<vector<BaseState>>();
-	//std::cout << "Updating: ";
 	for (int i = 0; i < newStates.size(); i++) {
 		EntityManager::getInstance().update(newStates[i]);
-		//std::cout << newStates[i].id << " ";
 	}
-	//std::cout << std::endl;
 }

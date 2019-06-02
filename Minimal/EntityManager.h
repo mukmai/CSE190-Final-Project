@@ -9,6 +9,8 @@ private:
 
 	std::unordered_map<int, int> _entityMap;
 	std::vector<std::shared_ptr<CBaseEntity>> _entityList;
+	int playerID;
+
 public:
 	// The singleton getter of EntityManager (create one if not exist)
 	static EntityManager& getInstance();
@@ -24,5 +26,9 @@ public:
 
 	// Render all entities in the game world
 	void render(const glm::mat4& projection, const glm::mat4& view, glm::vec3 eyePos);
+
+	void setPlayerID(int playerID);
+
+	int getPlayerID();
 };
 
