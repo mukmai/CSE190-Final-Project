@@ -132,15 +132,6 @@ int main(int argc, char** argv) {
     FAIL("Failed to initialize the Oculus SDK");
   }
 
-  ASound * soundObj = new ASound("Resources/Audio/BGM/bgm4.mp3");
-
-  glm::mat4 testMat = glm::rotate(glm::mat4(1.0f), 50.0f, glm::vec3(1.0f, 1.0f, 0.0f));
-  testMat = glm::translate(testMat, glm::vec3(0.0f, 1000.0f, -1000.f));
-
-  soundObj->updateListener(testMat);
-  soundObj->playSound();
-  std::cout << "Sound should be playing..." << std::endl;
-
   result = Client().run();
 
   ovr_Shutdown();

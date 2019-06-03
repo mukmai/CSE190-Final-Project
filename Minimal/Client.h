@@ -8,6 +8,8 @@
 #include "Common.h"
 #include "PlayerController.h"
 
+#include "ASound.h"
+
 // An example application that renders a simple cube
 class Client : public RiftApp {
 	double oldTime = 0;
@@ -16,11 +18,16 @@ class Client : public RiftApp {
 	std::shared_ptr<SpheresScene> sphereScene;
 	PlayerController playerController;
 
+	ASound * soundBGM = new ASound("Resources/Audio/BGM/bgm2.mp3");
+	ASound * soundFire = new ASound("Resources/Audio/SoundEffects/fire1.wav");
+
 public:
 	Client();
 
 protected:
 	void initGl() override;
+
+	void initAudio();
 
 	void shutdownGl() override;
 

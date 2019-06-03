@@ -248,8 +248,5 @@
     <ClInclude Include="ASound.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="CProjectileEntity.hpp">
-      <Filter>Header Files\CEntities</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

@@ -16,6 +16,11 @@ ASound::ASound(const char * filepath){
 	// (+z goes into the screen) but OpenGL is in right-handed coordinates
 	// (+z goes out of the screen).
 	fmod_result = system->init(512, FMOD_INIT_3D_RIGHTHANDED, 0);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+		exit(-1);
+	}
 
     loadSound(filepath);
 }
@@ -54,29 +59,61 @@ void ASound::updateListener(glm::mat4 listenerMat) {
 void ASound::loadSound(const char * filepath){
 	// Just create the sound using the filepath. 
     fmod_result = system->createSound(filepath, FMOD_3D, NULL, &sound);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+		exit(-1);
+	}
+
 }
 
 void ASound::playSound(){
 	// Just play the stored sound
     fmod_result = system->playSound(sound, NULL, false, NULL);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+		exit(-1);
+	}
 }
 
 void ASound::playSound3D(glm::vec3 position){
 	// Play the stored sound
-	fmod_result = system->playSound(sound, NULL, false, &channel);
+	fmod_result = system->playSound(sound, NULL, false, &channel);	
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+		exit(-1);
+	}
 
 	// Modify channel information using the given position
 	FMOD_VECTOR fPos = glmToFMOD(position);
 	FMOD_VECTOR fVel = glmToFMOD(glm::vec3(100.0f, 100.0f, 100.0f));
-	channel->set3DAttributes(&fPos, NULL);
+
+	fmod_result = channel->set3DAttributes(&fPos, NULL);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+		exit(-1);
+	}
 }
 
 void ASound::pauseSound() {
 	channel->setPaused(true);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+		exit(-1);
+	}
 }
 
 void ASound::stopSound() {
 	channel->stop();
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+		exit(-1);
+	}
 }
 
 FMOD_VECTOR ASound::glmToFMOD(glm::vec3 gvec){

@@ -199,7 +199,6 @@
     <ClInclude Include="ColorCubeScene2.h" />
     <ClInclude Include="ControllerSphereModule.h" />
     <ClInclude Include="CPlayerEntity.hpp" />
-    <ClInclude Include="CProjectileEntity.hpp" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="ExampleApp.h" />

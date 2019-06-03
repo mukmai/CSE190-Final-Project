@@ -7,6 +7,7 @@ Client::Client() : c("localhost", PORT)
 {
 	std::cout << "Connected to port: " << PORT << std::endl;
 	playerController.playerID = c.call(serverFunction[PLAYER_JOIN]).as<int>();
+
 }
 
 void Client::initGl()
@@ -17,7 +18,11 @@ void Client::initGl()
 	ovr_RecenterTrackingOrigin(_session);
 	srand((unsigned int)time(NULL));
 	sphereScene = std::shared_ptr<SpheresScene>(new SpheresScene());
+}
 
+void Client::initAudio() {
+	soundBGM->playSound();
+	std::cout << "BGM should be playing..." << std::endl;
 }
 
 void Client::shutdownGl()
@@ -64,7 +69,17 @@ void Client::update()
 
 	bool bSpawnProjectileRight = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Right);
 	if (bSpawnProjectileRight) {
-		// TODO: Create a new Projectile Entity at the right hand
+		std::cout << "Right trigger pressed!" << std::endl;
+
+		// GOAL: Create a new Projectile Entity at the right hand
+		soundFire->playSound();
+	}
+
+	bool bPlayBGM = OVRInputWrapper::getInstance().buttonPressed(ovrButton_A);
+	if (bPlayBGM) {
+		std::cout << "A button pressed!" << std::endl;
+
+		soundBGM->playSound();
 	}
 
 
