@@ -20,5 +20,7 @@ public:
 	void updatePlayer(PlayerController playerController);
 
 	void movePlayer(int playerID, float direction);
+
+	void moveProjectile(int projID, float direction);
 };
 

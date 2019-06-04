@@ -8,6 +8,7 @@ Client::Client() : c("localhost", PORT)
 	std::cout << "Connected to port: " << PORT << std::endl;
 	playerController.playerID = c.call(serverFunction[PLAYER_JOIN]).as<int>();
 
+	initAudio();
 }
 
 void Client::initGl()
@@ -21,6 +22,8 @@ void Client::initGl()
 }
 
 void Client::initAudio() {
+	// NOTE: All audio is set up in the ASound constructor.
+	//       This function is really just to autoplay the BGM.
 	soundBGM->playSound();
 	std::cout << "BGM should be playing..." << std::endl;
 }
@@ -71,15 +74,29 @@ void Client::update()
 	if (bSpawnProjectileRight) {
 		std::cout << "Right trigger pressed!" << std::endl;
 
-		// GOAL: Create a new Projectile Entity at the right hand
+		// STEP: Play fire sound
 		soundFire->playSound();
+
+		// GOAL: Create a new Projectile Entity at the right hand
+		BaseState proj;
+
+		proj.pos = playerController.rightHandPos;
+		proj.rotation = playerController.rightHandRotation;
+		proj.scale = glm::vec3(1.0f);
+
+		proj.type = ENTITY_PROJECTILE;
+
+		proj.id = 10;
+
+		// STEP: Add this entity to the entity manager's list of entities
+		EntityManager::getInstance().getEntity(proj);
+
+		c.call(serverFunction[PROJECTILE_MOVE], proj.id, 0.1f);
 	}
 
 	bool bPlayBGM = OVRInputWrapper::getInstance().buttonPressed(ovrButton_A);
 	if (bPlayBGM) {
 		std::cout << "A button pressed!" << std::endl;
-
-		soundBGM->playSound();
 	}
 
 

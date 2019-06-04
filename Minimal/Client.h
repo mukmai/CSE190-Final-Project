@@ -18,7 +18,7 @@ class Client : public RiftApp {
 	std::shared_ptr<SpheresScene> sphereScene;
 	PlayerController playerController;
 
-	ASound * soundBGM = new ASound("Resources/Audio/BGM/bgm2.mp3");
+	ASound * soundBGM = new ASound("Resources/Audio/BGM/bgm5.wav");
 	ASound * soundFire = new ASound("Resources/Audio/SoundEffects/fire1.wav");
 
 public:

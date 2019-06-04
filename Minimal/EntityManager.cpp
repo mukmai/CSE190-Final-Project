@@ -3,6 +3,7 @@
 #include <iostream>
 #include "CHandEntity.hpp"
 #include "CPlayerEntity.hpp"
+#include "CProjectileEntity.hpp"
 
 EntityManager::EntityManager()
 {
@@ -50,6 +51,8 @@ std::shared_ptr<CBaseEntity> EntityManager::getEntity(BaseState const & state)
 	case ENTITY_PLAYER:
 		entity = std::make_shared<CPlayerEntity>();
 		break;
+	case ENTITY_PROJECTILE:
+		entity = std::make_shared<CProjectileEntity>(glm::vec3(0.0f, 0.0f, -0.01f));
 	}
 
 	if (entity)

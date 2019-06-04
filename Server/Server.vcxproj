@@ -173,6 +173,7 @@
     <ClInclude Include="Server.h" />
     <ClInclude Include="SHandEntity.hpp" />
     <ClInclude Include="SPlayerEntity.hpp" />
+    <ClInclude Include="SProjectileEntity.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IDGenerator.cpp" />

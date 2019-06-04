@@ -1,5 +1,6 @@
 #include "SEntityManager.h"
 #include "SPlayerEntity.hpp"
+#include "SProjectileEntity.hpp"
 
 SEntityManager::SEntityManager()
 {
@@ -67,4 +68,12 @@ void SEntityManager::movePlayer(int playerID, float direction)
 
 	playerEntity->getState()->pos.z += direction * 0.01f;
 	playerEntity->updatedPlayerList.clear();
+}
+
+void SEntityManager::moveProjectile(int projID, float direction)
+{
+	auto tempEntity = entityMap.find(projID)->second;
+	auto projEntity = std::static_pointer_cast<SProjectileEntity>(tempEntity);
+
+	projEntity->getState()->pos.z += direction * 0.01f;
 }
