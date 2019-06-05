@@ -7,6 +7,11 @@ ASound::ASound(){
 	// (+z goes into the screen) but OpenGL is in right-handed coordinates
 	// (+z goes out of the screen).
     fmod_result = system->init(512, FMOD_INIT_3D_RIGHTHANDED, 0);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+		exit(-1);
+	}
 }
 
 ASound::ASound(const char * filepath){

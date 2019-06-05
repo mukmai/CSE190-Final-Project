@@ -4,6 +4,8 @@
 #include "SpheresScene.h"
 #include "ControllerSphereModule.h"
 
+//#include <vector>
+
 #include "BaseState.h"
 #include "Common.h"
 #include "PlayerController.h"
@@ -18,7 +20,10 @@ class Client : public RiftApp {
 	std::shared_ptr<SpheresScene> sphereScene;
 	PlayerController playerController;
 
-	ASound * soundBGM = new ASound("Resources/Audio/BGM/bgm5.wav");
+	std::vector<ASound *> bgmList;
+	ASound * soundBGM;
+	//ASound * soundBGM = new ASound("Resources/Audio/BGM/bgm1.mp3");
+
 	ASound * soundFire = new ASound("Resources/Audio/SoundEffects/fire1.wav");
 
 public:

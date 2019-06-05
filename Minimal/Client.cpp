@@ -24,7 +24,20 @@ void Client::initGl()
 void Client::initAudio() {
 	// NOTE: All audio is set up in the ASound constructor.
 	//       This function is really just to autoplay the BGM.
+	soundBGM = new ASound("Resources/Audio/BGM/bgm1.mp3");
+	bgmList.push_back(soundBGM);
+	soundBGM = new ASound("Resources/Audio/BGM/bgm2.mp3");
+	bgmList.push_back(soundBGM);
+	soundBGM = new ASound("Resources/Audio/BGM/bgm3.wav");
+	bgmList.push_back(soundBGM);
+	soundBGM = new ASound("Resources/Audio/BGM/bgm4.mp3");
+	bgmList.push_back(soundBGM);
+	soundBGM = new ASound("Resources/Audio/BGM/bgm5.wav");
+	bgmList.push_back(soundBGM);
+
+	soundBGM = bgmList[0];
 	soundBGM->playSound();
+
 	std::cout << "BGM should be playing..." << std::endl;
 }
 
