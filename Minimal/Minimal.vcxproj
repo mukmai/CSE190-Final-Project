@@ -153,6 +153,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AParticleSystem.cpp" />
     <ClCompile Include="CaveComponent.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ColorCubeScene.cpp" />
@@ -191,6 +192,7 @@
     <None Include="Resources\Shaders\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AParticleSystem.h" />
     <ClInclude Include="CaveComponent.h" />
     <ClInclude Include="CBaseEntity.hpp" />
     <ClInclude Include="CHandEntity.hpp" />

@@ -8,7 +8,11 @@ Client::Client() : c("localhost", PORT)
 	std::cout << "Connected to port: " << PORT << std::endl;
 	playerController.playerID = c.call(serverFunction[PLAYER_JOIN]).as<int>();
 
+	leftPS->init();
+	rightPS->init();
+
 	initAudio();
+
 }
 
 void Client::initGl()
@@ -54,6 +58,17 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	auto globalPlayerRotation = glm::mat4_cast(playerState->rotation);
 	auto globalHeadPose = globalPlayerTranslation * globalPlayerRotation * headPose;
 	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), eyePos);
+
+	// XXX: QUICK HACK FOR PARTICLE SYSTEMS
+	playerController.leftHandPos = controllerPosition[0];
+	playerController.rightHandPos = controllerPosition[1];
+
+	// Particle Systems
+	leftPS->update(playerController.leftHandPos, eyePos);
+	rightPS->update(playerController.rightHandPos, eyePos);
+
+	leftPS->render(projection, headPose);
+	rightPS->render(projection, headPose);
 }
 
 void Client::update()

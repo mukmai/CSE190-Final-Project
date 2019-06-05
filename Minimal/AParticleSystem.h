@@ -1,4 +1,6 @@
-#include "common.h"
+#include "RiftApp.h"
+
+#include "shader.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
@@ -9,8 +11,10 @@
 
 #include <random>
 
+
+
 struct Particle{
-    glm::vec4 pos;
+    glm::vec3 pos;
     glm::vec3 vel;
 
     glm::vec4 color;
@@ -34,8 +38,7 @@ const glm::vec3 vertices[] = {
 };
 
 
-const int MAX_PARTICLES = 1000;
-Particle container[MAX_PARTICLES];
+const unsigned int MAX_PARTICLES = 1000;
 
 
 class AParticleSystem{
@@ -47,7 +50,7 @@ class AParticleSystem{
 
     void init();
 
-    void update(glm::vec3 origin);
+    void update(glm::vec3 origin, glm::vec3 eyePos);
 
     void render(glm::mat4 projMat, glm::mat4 camMat);
 
@@ -61,6 +64,12 @@ class AParticleSystem{
     GLuint verticesBO;
     GLuint positionBO;
     GLuint colorBO;
+
+	
+	
+	Particle container[MAX_PARTICLES];
+	glm::vec3 positions[MAX_PARTICLES];
+	glm::vec4 colors[MAX_PARTICLES];
 
     void initGL();
 

@@ -11,6 +11,7 @@
 #include "PlayerController.h"
 
 #include "ASound.h"
+#include "AParticleSystem.h"
 
 // An example application that renders a simple cube
 class Client : public RiftApp {
@@ -25,6 +26,9 @@ class Client : public RiftApp {
 	//ASound * soundBGM = new ASound("Resources/Audio/BGM/bgm1.mp3");
 
 	ASound * soundFire = new ASound("Resources/Audio/SoundEffects/fire1.wav");
+
+	AParticleSystem * leftPS = new AParticleSystem();
+	AParticleSystem * rightPS = new AParticleSystem();
 
 public:
 	Client();
