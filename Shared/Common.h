@@ -2,7 +2,7 @@
 #include <map>
 #include <rpc/client.h>
 
-#define PORT 8080
+#define PORT 8008
 
 enum FUNCTION {
 	MOVE,
