@@ -14,9 +14,14 @@ void main()
     // The vector "vert" contains the vertex data of the particle, but
 	// it has to be offset by the vector "pos" to get the individual
 	// particle's world position
-    vec3 position = (pos.w * vert) + vec3(pos.x, pos.y, pos.z);
-	//vec3 position = pos.w (vert + vec3(pos.x, pos.y, pos.z));
-    gl_Position = projMat * camMat * vec4(position, 1.0);
+    vec3 position = vec3(pos.x, pos.y, pos.z);
+
+	vec3 camRight = vec3(camMat[0][0], camMat[1][0], camMat[2][0]);
+	vec3 camUp    = vec3(camMat[0][1], camMat[1][1], camMat[2][1]);
+
+	vec3 finalPosition = position + (camRight * vert.x * pos.w) + (camUp * vert.y * pos.w);
+
+    gl_Position = projMat * camMat * vec4(finalPosition, 1.0);
 	
 	fragColor = color;
 }

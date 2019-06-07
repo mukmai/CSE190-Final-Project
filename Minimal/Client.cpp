@@ -70,8 +70,8 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 
 	// Particle Systems
 	//std::cout << "**** Attempting to update particle systems" << std::endl;
-	leftPS->update(playerController.leftHandPos, eyePos);
-	rightPS->update(playerController.rightHandPos, eyePos);
+	leftPS->update(playerController.leftHandPos, glm::toMat4(playerController.leftHandRotation), eyePos);
+	rightPS->update(playerController.rightHandPos, glm::toMat4(playerController.leftHandRotation), eyePos);
 
 	//std::cout << "**** Attempting to render particle systems" << std::endl;
 	leftPS->render(projection, glm::inverse(globalHeadPose));

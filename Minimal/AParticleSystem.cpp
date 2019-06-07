@@ -55,25 +55,26 @@ void AParticleSystem::initGL(){
 	glBindVertexArray(0);
 }
 
-void AParticleSystem::update(glm::vec3 origin, glm::vec3 eyePos){
+void AParticleSystem::update(glm::vec3 origin_pos, glm::mat4 origin_rot, glm::vec3 eyePos){
     // STEP: Update timers
 	lastTime = newTime;
     newTime  = std::chrono::system_clock::now();
     unsigned int deltaTimeMS = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - lastTime).count();
 	double deltaTime = (double)deltaTimeMS / 1000.0;
 	
-	std::cout << "***PARTICLE SHADER: delta time in frame: " << deltaTime << std::endl;
-	std::cout << "***PARTICLE SHADER: Origin of particle system: " << glm::to_string(origin) << std::endl;
+	//std::cout << "***PARTICLE SHADER: delta time in frame: " << deltaTime << std::endl;
+	//std::cout << "***PARTICLE SHADER: Origin of particle system: " << glm::to_string(origin) << std::endl;
 
     // STEP: Calculate the number of particles to update
     //        - Refresh expired particles
-    unsigned int newParticles = (unsigned int)(deltaTime * 1000.0 * 20.0);
-    if(newParticles > (unsigned int)(0.0111 * 1000.0)){
-		std::cout << "***PARTICLE_SHADER: Limiting number of particles generated this frame." << std::endl;
-        newParticles = (unsigned int)(0.0111 * 1000.0);
+    unsigned int newParticles = (unsigned int)(deltaTime * 1000.0);
+    //if(newParticles > (unsigned int)(0.0111 * 1000.0)){
+	if (newParticles > (unsigned int)(10)) {
+		//std::cout << "***PARTICLE_SHADER: Limiting number of particles generated this frame." << std::endl;
+        newParticles = (unsigned int)(10);
     }
 
-	std::cout << "***PARTICLE_SHADER: Generating " << newParticles << " particles." << std::endl;
+	//std::cout << "***PARTICLE_SHADER: Generating " << newParticles << " particles." << std::endl;
 
     // STEP: Create "newParticles" amount of particles
     for(unsigned int u = 0; u < newParticles; u++){
@@ -81,20 +82,25 @@ void AParticleSystem::update(glm::vec3 origin, glm::vec3 eyePos){
 
         // Basic components of the particle
         container[idx].life = MAX_LIFESPAN;
-        container[idx].pos  = origin;
-		container[idx].size = 0.5f * randomFloat(0.001f, 0.005f);
+        container[idx].pos  = origin_pos;
+		container[idx].size = randomFloat(0.01f, 0.05f);
 		//container[idx].color = glm::vec4(randomVec3(0.0f, 1.0f), 0.45f);
-		glm::vec3 randColor = glm::vec3(
+		/*glm::vec3 randColor = glm::vec3(
 			randomFloat(0.4f, 0.6f),
 			randomFloat(0.6f, 0.8f),
 			randomFloat(0.8f, 1.0f)
+		);*/
+		glm::vec3 randColor = glm::vec3(
+			randomFloat(0.0f, 1.0f),
+			randomFloat(0.0f, 1.0f),
+			randomFloat(0.0f, 1.0f)
 		);
 		container[idx].color = glm::vec4(randColor, 0.5f);
 
         // Figure out velocity vectors any specific particle
-        float spread = 5.0f;
-        glm::vec3 baseDir = glm::vec3(0.0f, 0.0f, -1.0f);
-        glm::vec3 randDir = randomSphereVec3(1.0f);
+        float spread = 0.3f;
+        glm::vec3 baseDir = origin_rot * glm::vec4(glm::vec3(0.0f, 0.0f, -0.2f), 1.0f);
+        glm::vec3 randDir = origin_rot * glm::vec4(randomBoxVec3(origin_pos, OFFSET_VEC), 1.0f);
         container[idx].vel = baseDir + glm::vec3(randDir*spread);
     }
 
@@ -107,7 +113,7 @@ void AParticleSystem::update(glm::vec3 origin, glm::vec3 eyePos){
 			p.life -= deltaTime;
 
 			if (p.life > 0.0f) {
-				p.vel += glm::vec3(0.0f, -9.81f, 0.0f) * (float)deltaTime * 0.5f;
+				p.vel += glm::vec3(0.0f, -9.81f, 0.0f) * (float)deltaTime * 0.05f;
 				p.pos += p.vel * (float)deltaTime;
 				p.size = p.life / MAX_LIFESPAN;
 				p.camDist = glm::length(p.pos - eyePos);
@@ -195,6 +201,19 @@ glm::vec3 AParticleSystem::randomSphereVec3(float radius){
     retvec.z = r * cos(theta);
 
     return retvec;
+}
+
+glm::vec3 AParticleSystem::randomBoxVec3(glm::vec3 ctr, glm::vec3 ofs) {
+	glm::vec3 ret_vec = glm::vec3(
+		randomFloat(ctr.x - ofs.x, ctr.x + ofs.x),
+		randomFloat(ctr.y - ofs.y, ctr.y + ofs.y),
+		randomFloat(ctr.z - ofs.z, ctr.z + ofs.z)
+		//randomFloat(0, ctr.x + ofs.x),
+		//randomFloat(0, ctr.y + ofs.y),
+		//randomFloat(0, ctr.z + ofs.z)
+		);
+
+	return ret_vec;
 }
 
 unsigned int AParticleSystem::findUnusedParticle(){

@@ -32,15 +32,15 @@ struct Particle{
 
 
 const glm::vec3 vertices[] = {
-	glm::vec3(-0.05, -00.5f, 0.0f),
-	glm::vec3(00.5, -00.5f, 0.0f),
-	glm::vec3(-00.5, 00.5f, 0.0f),
-	glm::vec3(00.5, 00.5f, 0.0f),
+	glm::vec3(-0.05f, -0.05f, 0.0f),
+	glm::vec3(0.05f, -0.05f, 0.0f),
+	glm::vec3(-0.05f, 0.05f, 0.0f),
+	glm::vec3(0.05f, 0.05f, 0.0f),
 };
 
 
-const unsigned int MAX_PARTICLES = 1000;
-const float MAX_LIFESPAN = 10.0f;
+const unsigned int MAX_PARTICLES = 100;
+const float MAX_LIFESPAN = 5.0f;
 
 
 class AParticleSystem{
@@ -52,7 +52,7 @@ class AParticleSystem{
 
     void init();
 
-    void update(glm::vec3 origin, glm::vec3 eyePos);
+    void update(glm::vec3 origin_pos, glm::mat4 origin_rot, glm::vec3 eyePos);
 
     void render(glm::mat4 projMat, glm::mat4 camMat);
 
@@ -74,12 +74,15 @@ class AParticleSystem{
 	glm::vec3 positions[MAX_PARTICLES];
 	glm::vec4 colors[MAX_PARTICLES];
 
+	glm::vec3 OFFSET_VEC = 0.3f * glm::vec3(1.0f, 1.0f, 1.0f);
+
     void initGL();
 
     float randomFloat(float lb, float ub);
 
-	glm::vec3 AParticleSystem::randomVec3(float lb, float ub);
+	glm::vec3 randomVec3(float lb, float ub);
     glm::vec3 randomSphereVec3(float radius);
+	glm::vec3 randomBoxVec3(glm::vec3 ctr, glm::vec3 ofs);
 
     unsigned int findUnusedParticle();
 

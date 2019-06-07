@@ -35,17 +35,8 @@ public:
 		_objectShader->setMat4("model", model);
 	}
   
-  void updateState(BaseState const & state) {
-    lastTime = currTime;
-    currTime = ovr_GetTimeInSeconds();
-    double dTime = currTime - lastTime;
-    
+	void updateState(BaseState const & state) override {
 		_state->id = state.id;
-
-		// Translation
-		//glm::mat4 rotmat = glm::toMat4(state.rotation);
-		//glm::vec4 tmpvec = glm::vec4(velocity, 0.0f);
-		//_state->pos = state.pos + glm::vec3(dTime) * glm::vec3(rotmat*tmpvec);
 
 		_state->pos = state.pos;
 
