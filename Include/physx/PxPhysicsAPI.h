@@ -162,6 +162,15 @@ Alternatively, one can instead directly #include a subset of the below files.
 #include "characterkinematic/PxControllerObstacles.h"
 #include "characterkinematic/PxExtended.h"
 
+//Cloth Simulation
+#if PX_USE_CLOTH_API
+#include "cloth/PxCloth.h"
+#include "cloth/PxClothCollisionData.h"
+#include "cloth/PxClothFabric.h"
+#include "cloth/PxClothParticleData.h"
+#include "cloth/PxClothTypes.h"
+#endif
+
 //Cooking (data preprocessing)
 #include "cooking/Pxc.h"
 #include "cooking/PxConvexMeshDesc.h"
@@ -178,6 +187,7 @@ Alternatively, one can instead directly #include a subset of the below files.
 #include "extensions/PxFixedJoint.h"
 #include "extensions/PxJoint.h"
 #include "extensions/PxJointLimit.h"
+//#include "extensions/PxParticleExt.h"
 #include "extensions/PxPrismaticJoint.h"
 #include "extensions/PxRevoluteJoint.h"
 #include "extensions/PxRigidBodyExt.h"
@@ -193,6 +203,18 @@ Alternatively, one can instead directly #include a subset of the below files.
 #include "extensions/PxSerialization.h"
 #include "extensions/PxBinaryConverter.h"
 #include "extensions/PxRepXSerializer.h"
+
+//Particle Simulation
+#if PX_USE_PARTICLE_SYSTEM_API
+#include "particles/PxParticleBase.h"
+#include "particles/PxParticleBaseFlag.h"
+#include "particles/PxParticleCreationData.h"
+#include "particles/PxParticleFlag.h"
+#include "particles/PxParticleFluid.h"
+#include "particles/PxParticleFluidReadData.h"
+#include "particles/PxParticleReadData.h"
+#include "particles/PxParticleSystem.h"
+#endif
 
 //Vehicle Simulation
 #include "vehicle/PxVehicleComponents.h"
