@@ -8,8 +8,8 @@ Client::Client() : c("localhost", PORT)
 	std::cout << "Connected to port: " << PORT << std::endl;
 	playerController.playerID = c.call(serverFunction[PLAYER_JOIN]).as<int>();
 
-	leftPS->init();
-	rightPS->init();
+	//leftPS->init();
+	//rightPS->init();
 
 	initAudio();
 
@@ -23,6 +23,11 @@ void Client::initGl()
 	ovr_RecenterTrackingOrigin(_session);
 	srand((unsigned int)time(NULL));
 	sphereScene = std::shared_ptr<SpheresScene>(new SpheresScene());
+
+	std::cout << "***** Initializing particle systems" << std::endl;
+	leftPS = new AParticleSystem();
+	rightPS = new AParticleSystem();
+	std::cout << "***** Finished initializing particle systems" << std::endl;
 }
 
 void Client::initAudio() {
@@ -64,11 +69,13 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	playerController.rightHandPos = controllerPosition[1];
 
 	// Particle Systems
+	//std::cout << "**** Attempting to update particle systems" << std::endl;
 	leftPS->update(playerController.leftHandPos, eyePos);
 	rightPS->update(playerController.rightHandPos, eyePos);
 
-	leftPS->render(projection, headPose);
-	rightPS->render(projection, headPose);
+	//std::cout << "**** Attempting to render particle systems" << std::endl;
+	leftPS->render(projection, glm::inverse(globalHeadPose));
+	rightPS->render(projection, glm::inverse(globalHeadPose));
 }
 
 void Client::update()
@@ -105,21 +112,21 @@ void Client::update()
 		// STEP: Play fire sound
 		soundFire->playSound();
 
-		// GOAL: Create a new Projectile Entity at the right hand
-		BaseState proj;
+		//// GOAL: Create a new Projectile Entity at the right hand
+		//BaseState proj;
 
-		proj.pos = playerController.rightHandPos;
-		proj.rotation = playerController.rightHandRotation;
-		proj.scale = glm::vec3(1.0f);
+		//proj.pos = playerController.rightHandPos;
+		//proj.rotation = playerController.rightHandRotation;
+		//proj.scale = glm::vec3(1.0f);
 
-		proj.type = ENTITY_PROJECTILE;
+		//proj.type = ENTITY_PROJECTILE;
 
-		proj.id = 10;
+		//proj.id = 10;
 
-		// STEP: Add this entity to the entity manager's list of entities
-		EntityManager::getInstance().getEntity(proj);
+		//// STEP: Add this entity to the entity manager's list of entities
+		//EntityManager::getInstance().getEntity(proj);
 
-		c.call(serverFunction[PROJECTILE_MOVE], proj.id, 0.1f);
+		//c.call(serverFunction[PROJECTILE_MOVE], proj.id, 0.1f);
 	}
 
 	bool bPlayBGM = OVRInputWrapper::getInstance().buttonPressed(ovrButton_A);

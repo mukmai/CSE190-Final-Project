@@ -13,6 +13,8 @@
 #include "ASound.h"
 #include "AParticleSystem.h"
 
+#include <iostream>
+
 // An example application that renders a simple cube
 class Client : public RiftApp {
 	double oldTime = 0;
@@ -27,8 +29,8 @@ class Client : public RiftApp {
 
 	ASound * soundFire = new ASound("Resources/Audio/SoundEffects/fire1.wav");
 
-	AParticleSystem * leftPS = new AParticleSystem();
-	AParticleSystem * rightPS = new AParticleSystem();
+	AParticleSystem * leftPS;
+	AParticleSystem * rightPS;
 
 public:
 	Client();
