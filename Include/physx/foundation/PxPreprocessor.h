@@ -1,27 +1,27 @@
-// This code contains NVIDIA Confidential Information and is disclosed to you
-// under a form of NVIDIA software license agreement provided separately to you.
 //
-// Notice
-// NVIDIA Corporation and its licensors retain all intellectual property and
-// proprietary rights in and to this software and related documentation and
-// any modifications thereto. Any use, reproduction, disclosure, or
-// distribution of this software and related documentation without an express
-// license agreement from NVIDIA Corporation is strictly prohibited.
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+//  * Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+//  * Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+//  * Neither the name of NVIDIA CORPORATION nor the names of its
+//    contributors may be used to endorse or promote products derived
+//    from this software without specific prior written permission.
 //
-// ALL NVIDIA DESIGN SPECIFICATIONS, CODE ARE PROVIDED "AS IS.". NVIDIA MAKES
-// NO WARRANTIES, EXPRESSED, IMPLIED, STATUTORY, OR OTHERWISE WITH RESPECT TO
-// THE MATERIALS, AND EXPRESSLY DISCLAIMS ALL IMPLIED WARRANTIES OF NONINFRINGEMENT,
-// MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE.
-//
-// Information and code furnished is believed to be accurate and reliable.
-// However, NVIDIA Corporation assumes no responsibility for the consequences of use of such
-// information or for any infringement of patents or other rights of third parties that may
-// result from its use. No license is granted by implication or otherwise under any patent
-// or patent rights of NVIDIA Corporation. Details are subject to change without notice.
-// This code supersedes and replaces all information previously supplied.
-// NVIDIA Corporation products are not authorized for use as critical
-// components in life support devices or systems without express written approval of
-// NVIDIA Corporation.
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+// OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // Copyright (c) 2008-2018 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
@@ -81,6 +81,8 @@ Operating system defines, see http://sourceforge.net/p/predef/wiki/OperatingSyst
 */
 #if defined(_XBOX_ONE)
 #define PX_XBOXONE 1
+#elif defined(WINAPI_FAMILY) && WINAPI_FAMILY == WINAPI_FAMILY_APP
+#define PX_UWP 1
 #elif defined(_WIN64) // note: _XBOX_ONE implies _WIN64
 #define PX_WIN64 1
 #elif defined(_WIN32) // note: _M_PPC implies _WIN32
@@ -172,6 +174,9 @@ define anything not defined on this platform to 0
 #ifndef PX_SWITCH
 #define PX_SWITCH 0
 #endif
+#ifndef PX_UWP
+#define PX_UWP 0
+#endif
 #ifndef PX_X64
 #define PX_X64 0
 #endif
@@ -209,6 +214,9 @@ define anything not defined through the command line to 0
 #ifndef PX_PROFILE
 #define PX_PROFILE 0
 #endif
+#ifndef PX_DEBUG_CRT
+#define PX_DEBUG_CRT 0
+#endif
 #ifndef PX_NVTX
 #define PX_NVTX 0
 #endif
@@ -222,7 +230,7 @@ family shortcuts
 // compiler
 #define PX_GCC_FAMILY (PX_CLANG || PX_GCC)
 // os
-#define PX_WINDOWS_FAMILY (PX_WIN32 || PX_WIN64)
+#define PX_WINDOWS_FAMILY (PX_WIN32 || PX_WIN64 || PX_UWP)
 #define PX_MICROSOFT_FAMILY (PX_XBOXONE || PX_WINDOWS_FAMILY)
 #define PX_LINUX_FAMILY (PX_LINUX || PX_ANDROID)
 #define PX_APPLE_FAMILY (PX_IOS || PX_OSX)                  // equivalent to #if __APPLE__
@@ -240,7 +248,7 @@ family shortcuts
 /**
 C++ standard library defines
 */
-#if defined(_LIBCPP_VERSION) || PX_WIN64 || PX_WIN32 || PX_PS4 || PX_XBOXONE || PX_EMSCRIPTEN
+#if defined(_LIBCPP_VERSION) || PX_WIN64 || PX_WIN32 || PX_PS4 || PX_XBOXONE || PX_UWP || PX_EMSCRIPTEN
 #define PX_LIBCPP 1
 #else
 #define PX_LIBCPP 0
@@ -433,7 +441,7 @@ General defines
 */
 
 // static assert
-#if (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7))) || (PX_PS4) || (PX_APPLE_FAMILY) || (PX_SWITCH) || (PX_CLANG && PX_ARM)
+#if(defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7))) || (PX_PS4) || (PX_APPLE_FAMILY) || (PX_SWITCH) || (PX_CLANG && PX_ARM)
 #define PX_COMPILE_TIME_ASSERT(exp) typedef char PX_CONCAT(PxCompileTimeAssert_Dummy, __COUNTER__)[(exp) ? 1 : -1] __attribute__((unused))
 #else
 #define PX_COMPILE_TIME_ASSERT(exp) typedef char PxCompileTimeAssert_Dummy[(exp) ? 1 : -1]
@@ -451,7 +459,7 @@ General defines
 
 // check that exactly one of NDEBUG and _DEBUG is defined
 #if !defined(NDEBUG) ^ defined(_DEBUG)
-//#error Exactly one of NDEBUG and _DEBUG needs to be defined!
+#error Exactly one of NDEBUG and _DEBUG needs to be defined!
 #endif
 
 // make sure PX_CHECKED is defined in all _DEBUG configurations as well

@@ -1,27 +1,27 @@
-// This code contains NVIDIA Confidential Information and is disclosed to you
-// under a form of NVIDIA software license agreement provided separately to you.
 //
-// Notice
-// NVIDIA Corporation and its licensors retain all intellectual property and
-// proprietary rights in and to this software and related documentation and
-// any modifications thereto. Any use, reproduction, disclosure, or
-// distribution of this software and related documentation without an express
-// license agreement from NVIDIA Corporation is strictly prohibited.
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+//  * Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+//  * Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+//  * Neither the name of NVIDIA CORPORATION nor the names of its
+//    contributors may be used to endorse or promote products derived
+//    from this software without specific prior written permission.
 //
-// ALL NVIDIA DESIGN SPECIFICATIONS, CODE ARE PROVIDED "AS IS.". NVIDIA MAKES
-// NO WARRANTIES, EXPRESSED, IMPLIED, STATUTORY, OR OTHERWISE WITH RESPECT TO
-// THE MATERIALS, AND EXPRESSLY DISCLAIMS ALL IMPLIED WARRANTIES OF NONINFRINGEMENT,
-// MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE.
-//
-// Information and code furnished is believed to be accurate and reliable.
-// However, NVIDIA Corporation assumes no responsibility for the consequences of use of such
-// information or for any infringement of patents or other rights of third parties that may
-// result from its use. No license is granted by implication or otherwise under any patent
-// or patent rights of NVIDIA Corporation. Details are subject to change without notice.
-// This code supersedes and replaces all information previously supplied.
-// NVIDIA Corporation products are not authorized for use as critical
-// components in life support devices or systems without express written approval of
-// NVIDIA Corporation.
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+// OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // Copyright (c) 2008-2018 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
@@ -36,7 +36,7 @@
 #include "foundation/PxMat33.h"
 #include "foundation/PxTransform.h"
 #include "PxConstraintDesc.h"
-#include "GeomUtils/GuContactPoint.h"
+#include "geomutils/GuContactPoint.h"
 
 #if PX_VC
 #pragma warning(push)
@@ -50,7 +50,8 @@ namespace physx
 
 namespace Dy
 {
-	struct FsData;
+	//struct FsData;
+	class ArticulationV;
 }
 
 namespace Sc
@@ -60,7 +61,7 @@ namespace Sc
 
 struct PxSolverBody
 {
-	PxVec3				linearVelocity;					//!< Delta linear velocity computed by the solver
+	PX_ALIGN(16, PxVec3) linearVelocity;					//!< Delta linear velocity computed by the solver
 	PxU16				maxSolverNormalProgress;		//!< Progress counter used by constraint batching and parallel island solver. 
 	PxU16				maxSolverFrictionProgress;		//!< Progress counter used by constraint batching and parallel island solver.
 
@@ -86,7 +87,8 @@ struct PxSolverBodyData
 	PxU32			nodeIndex;				//!< 76 the node idx of this solverBodyData. Used by solver to reference between solver bodies and island bodies. Not required by immediate mode
 	PxReal			maxContactImpulse;		//!< 80 the max contact impulse
 	PxTransform		body2World;				//!< 108 the body's transform
-	PxU32			lockFlags;				//!< 112 lock flags
+	PxU16			lockFlags;				//!< 110 lock flags
+	PxU16			pad;					//!< 112 pad
 
 	PX_FORCE_INLINE PxReal projectVelocity(const PxVec3& lin, const PxVec3& ang)	const
 	{
@@ -118,14 +120,14 @@ struct PxSolverConstraintDesc
 
 	union
 	{
-		PxSolverBody*		bodyA;			//!< bodyA pointer
-		Dy::FsData*			articulationA;	//!< Articulation pointer for body A
+		PxSolverBody*				bodyA;			//!< bodyA pointer
+		Dy::ArticulationV*			articulationA;	//!< Articulation pointer for body A
 	};
 
 	union
 	{
-		PxSolverBody*		bodyB;			//!< BodyB pointer
-		Dy::FsData*			articulationB;	//!< Articulation pointer for body B
+		PxSolverBody*				bodyB;			//!< BodyB pointer
+		Dy::ArticulationV*			articulationB;	//!< Articulation pointer for body B
 	};
 	PxU16				linkIndexA;			//!< Link index defining which link in Articulation A this constraint affects. If not an articulation, must be NO_LINK
 	PxU16				linkIndexB;			//!< Link index defining which link in Articulation B this constraint affects. If not an articulation, must be NO_LINK.
@@ -187,6 +189,7 @@ struct PxSolverConstraintPrepDesc : public PxSolverConstraintPrepDescBase
 	bool disablePreprocessing;					//!< Disable joint pre-processing. Pre-processing can improve stability but under certain circumstances, e.g. when some invInertia rows are zero/almost zero, can cause instabilities.	
 	bool improvedSlerp;							//!< Use improved slerp model
 	bool driveLimitsAreForces;					//!< Indicates whether drive limits are forces
+	bool extendedLimits;						//!< Indicates whether we want to use extended limits
 
 	PxVec3 body0WorldOffset;					//!< Body0 world offset
 };

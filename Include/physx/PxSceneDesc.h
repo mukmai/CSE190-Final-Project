@@ -1,27 +1,27 @@
-// This code contains NVIDIA Confidential Information and is disclosed to you
-// under a form of NVIDIA software license agreement provided separately to you.
 //
-// Notice
-// NVIDIA Corporation and its licensors retain all intellectual property and
-// proprietary rights in and to this software and related documentation and
-// any modifications thereto. Any use, reproduction, disclosure, or
-// distribution of this software and related documentation without an express
-// license agreement from NVIDIA Corporation is strictly prohibited.
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+//  * Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+//  * Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+//  * Neither the name of NVIDIA CORPORATION nor the names of its
+//    contributors may be used to endorse or promote products derived
+//    from this software without specific prior written permission.
 //
-// ALL NVIDIA DESIGN SPECIFICATIONS, CODE ARE PROVIDED "AS IS.". NVIDIA MAKES
-// NO WARRANTIES, EXPRESSED, IMPLIED, STATUTORY, OR OTHERWISE WITH RESPECT TO
-// THE MATERIALS, AND EXPRESSLY DISCLAIMS ALL IMPLIED WARRANTIES OF NONINFRINGEMENT,
-// MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE.
-//
-// Information and code furnished is believed to be accurate and reliable.
-// However, NVIDIA Corporation assumes no responsibility for the consequences of use of such
-// information or for any infringement of patents or other rights of third parties that may
-// result from its use. No license is granted by implication or otherwise under any patent
-// or patent rights of NVIDIA Corporation. Details are subject to change without notice.
-// This code supersedes and replaces all information previously supplied.
-// NVIDIA Corporation products are not authorized for use as critical
-// components in life support devices or systems without express written approval of
-// NVIDIA Corporation.
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+// OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // Copyright (c) 2008-2018 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
@@ -63,6 +63,7 @@ dynamic AABB tree, without the per-frame overhead. This can be a good choice for
 objects, if no static objects are added, moved or removed after the scene has been
 created. If there is no such guarantee (e.g. when streaming parts of the world in and out),
 then the dynamic version is a better choice even for static objects.
+
 */
 struct PxPruningStructureType
 {
@@ -121,16 +122,34 @@ than patch friction for scenarios with many contact points.
 
 #PxFrictionType::eFRICTION_COUNT is the total numer of friction models supported by the SDK.
 */
-	struct PxFrictionType
+struct PxFrictionType
+{
+	enum Enum
 	{
-		enum Enum
-		{
-			ePATCH,				//!< Select default patch-friction model.
-			eONE_DIRECTIONAL,	//!< Select one directional per-contact friction model.
-			eTWO_DIRECTIONAL,	//!< Select two directional per-contact friction model.
-			eFRICTION_COUNT		//!< The total number of friction models supported by the SDK.
-		};
+		ePATCH,				//!< Select default patch-friction model.
+		eONE_DIRECTIONAL,	//!< Select one directional per-contact friction model.
+		eTWO_DIRECTIONAL,	//!< Select two directional per-contact friction model.
+		eFRICTION_COUNT		//!< The total number of friction models supported by the SDK.
 	};
+};
+
+
+/**
+\brief Enum for selecting the type of solver used for the simulation.
+
+#PxSolverType::ePGS selects the default iterative sequential impulse solver. This is the same kind of solver used in PhysX 3.4 and earlier releases.
+
+#PxSolverType::eTGS selects a non linear iterative solver. This kind of solver can lead to improved convergence and handle large mass ratios, long chains and jointed systems better. It is slightly more expensive than the default solver and can introduce more energy to correct joint and contact errors.
+*/
+struct PxSolverType
+{
+	enum Enum
+	{
+		ePGS,			//!< Default Projected Gauss-Seidel iterative solver
+		eTGS			//!< Temporal Gauss-Seidel solver
+	};
+};
+
 
 /**
 \brief flags for configuring properties of the scene
@@ -157,20 +176,6 @@ struct PxSceneFlag
 		eENABLE_ACTIVE_ACTORS	= (1<<0),
 
 		/**
-		\brief Enable Active Transform Notification.
-
-		This flag enables the Active Transform Notification feature for a scene.  This
-		feature defaults to disabled.  When disabled, the function
-		PxScene::getActiveTransforms() will always return a NULL list.
-
-		\note There may be a performance penalty for enabling the Active Transform Notification, hence this flag should
-		only be enabled if the application intends to use the feature.
-
-		<b>Default:</b> False
-		*/
-		eENABLE_ACTIVETRANSFORMS	PX_DEPRECATED = (1<<1),
-
-		/**
 		\brief Enables a second broad phase check after integration that makes it possible to prevent objects from tunneling through eachother.
 
 		PxPairFlag::eDETECT_CCD_CONTACT requires this flag to be specified.
@@ -182,7 +187,7 @@ struct PxSceneFlag
 
 		@see PxRigidBodyFlag::eENABLE_CCD, PxPairFlag::eDETECT_CCD_CONTACT, eDISABLE_CCD_RESWEEP
 		*/
-		eENABLE_CCD	= (1<<2),
+		eENABLE_CCD	= (1<<1),
 
 		/**
 		\brief Enables a simplified swept integration strategy, which sacrifices some accuracy for improved performance.
@@ -203,7 +208,7 @@ struct PxSceneFlag
 
 		@see PxRigidBodyFlag::eENABLE_CCD, PxPairFlag::eDETECT_CCD_CONTACT, eENABLE_CCD
 		*/
-		eDISABLE_CCD_RESWEEP	= (1<<3),
+		eDISABLE_CCD_RESWEEP	= (1<<2),
 
 		/**
 		\brief Enable adaptive forces to accelerate convergence of the solver. 
@@ -212,7 +217,7 @@ struct PxSceneFlag
 
 		<b>Default:</b> false
 		*/
-		eADAPTIVE_FORCE				= (1<<4),
+		eADAPTIVE_FORCE			= (1<<3),
 
 		/**
 		\brief Enable contact pair filtering between kinematic and static rigid bodies.
@@ -224,7 +229,7 @@ struct PxSceneFlag
 
 		<b>Default:</b> false
 		*/
-		eENABLE_KINEMATIC_STATIC_PAIRS	PX_DEPRECATED	= (1<<5),
+		eENABLE_KINEMATIC_STATIC_PAIRS	PX_DEPRECATED = (1<<4),
 
 		/**
 		\brief Enable contact pair filtering between kinematic rigid bodies.
@@ -236,7 +241,7 @@ struct PxSceneFlag
 
 		<b>Default:</b> false
 		*/
-		eENABLE_KINEMATIC_PAIRS	PX_DEPRECATED	= (1<<6),
+		eENABLE_KINEMATIC_PAIRS	PX_DEPRECATED = (1<<5),
 
 		/**
 		\brief Enable GJK-based distance collision detection system.
@@ -245,7 +250,7 @@ struct PxSceneFlag
 
 		<b>Default:</b> true
 		*/
-		eENABLE_PCM	= (1 << 9),
+		eENABLE_PCM	= (1 << 6),
 
 		/**
 		\brief Disable contact report buffer resize. Once the contact buffer is full, the rest of the contact reports will 
@@ -255,7 +260,7 @@ struct PxSceneFlag
 		
 		<b>Default:</b> false
 		*/
-		eDISABLE_CONTACT_REPORT_BUFFER_RESIZE	= (1 << 10),
+		eDISABLE_CONTACT_REPORT_BUFFER_RESIZE	= (1 << 7),
 
 		/**
 		\brief Disable contact cache.
@@ -267,7 +272,7 @@ struct PxSceneFlag
 
 		<b>Default:</b> false
 		*/
-		eDISABLE_CONTACT_CACHE	= (1 << 11),
+		eDISABLE_CONTACT_CACHE	= (1 << 8),
 
 		/**
 		\brief Require scene-level locking
@@ -284,7 +289,7 @@ struct PxSceneFlag
 		
 		<b>Default:</b> false
 		*/
-		eREQUIRE_RW_LOCK = (1 << 12),
+		eREQUIRE_RW_LOCK = (1 << 9),
 
 		/**
 		\brief Enables additional stabilization pass in solver
@@ -293,7 +298,7 @@ struct PxSceneFlag
 
 		Note that this flag is not mutable and must be set in PxSceneDesc at scene creation. Also, this is an experimental feature which does result in some loss of momentum.
 		*/
-		eENABLE_STABILIZATION = (1 << 14),
+		eENABLE_STABILIZATION = (1 << 10),
 
 		/**
 		\brief Enables average points in contact manifolds
@@ -303,53 +308,21 @@ struct PxSceneFlag
 
 		Note that this flag is not mutable and must be set in PxSceneDesc at scene creation.
 		*/
-		eENABLE_AVERAGE_POINT = (1 << 15),
+		eENABLE_AVERAGE_POINT = (1 << 11),
 
 		/**
-		\brief Enable legacy behavior to get trigger reports for interactions between two trigger shapes
-
-		By default PhysX does not report trigger interactions between two trigger shapes any longer. Raise this flag to still get the corresponding reports.
-
-		Note that this flag is not mutable and must be set in PxSceneDesc at scene creation.
-
-		\deprecated This flag is deprecated and will be removed in PhysX 3.5.
-
-		@see PxSimulationEventCallback::onTrigger()
-
-		<b>Default:</b> false
-		*/
-		eDEPRECATED_TRIGGER_TRIGGER_REPORTS = (1 << 16),
-
-		/**
-		\brief Do not report kinematics in list of active actors/transforms.
+		\brief Do not report kinematics in list of active actors.
 
 		Since the target pose for kinematics is set by the user, an application can track the activity state directly and use
-		this flag to avoid that kinematics get added to the list of active actors/transforms.
+		this flag to avoid that kinematics get added to the list of active actors.
 
-		\note This flag has only an effect in combination with eENABLE_ACTIVE_ACTORS or eENABLE_ACTIVETRANSFORMS.
+		\note This flag has only an effect in combination with eENABLE_ACTIVE_ACTORS.
 
-		@see eENABLE_ACTIVE_ACTORS eENABLE_ACTIVETRANSFORMS
-
-		<b>Default:</b> false
-		*/
-		eEXCLUDE_KINEMATICS_FROM_ACTIVE_ACTORS = (1 << 17),
-
-		/**
-		\brief Lazily refit the dynamic scene query tree, instead of eagerly refitting in fetchResults
-
-		By default PhysX refits the dynamic scene query tree during fetchResults. Setting this flag during scene
-		creation suppresses this behavior. Refit will then occur during the first scene query following fetchResults,
-		or may be forced by the method PxScene::flushSceneQueryUpdates()
-
-		\note Deprecated, will be replaced with an enum in next releases.
-		\note This flag will be ignored if PxSceneDesc::sceneQueryUpdateMode is set.
-		\note This flag is not used anymore, please use PxSceneQueryUpdateMode::Enum instead
-
-		@see PxScene::flushSceneQueryUpdates()
+		@see eENABLE_ACTIVE_ACTORS
 
 		<b>Default:</b> false
 		*/
-		eSUPPRESS_EAGER_SCENE_QUERY_REFIT PX_DEPRECATED = (1 << 18),
+		eEXCLUDE_KINEMATICS_FROM_ACTIVE_ACTORS = (1 << 12),
 
 		/*\brief Enables the GPU dynamics pipeline
 
@@ -357,7 +330,7 @@ struct PxSceneFlag
 
 		Note that this flag is not mutable and must be set in PxSceneDesc at scene creation.
 		*/
-		eENABLE_GPU_DYNAMICS = (1 << 19),
+		eENABLE_GPU_DYNAMICS = (1 << 13),
 
 		/**
 		\brief Provides improved determinism at the expense of performance. 
@@ -380,9 +353,25 @@ struct PxSceneFlag
 
 		<b>Default</b> false
 		*/
-		eENABLE_ENHANCED_DETERMINISM = (1<<20),
+		eENABLE_ENHANCED_DETERMINISM = (1<<14),
 
-		eMUTABLE_FLAGS = eENABLE_ACTIVE_ACTORS|eENABLE_ACTIVETRANSFORMS|eEXCLUDE_KINEMATICS_FROM_ACTIVE_ACTORS
+		/**
+		\brief Controls processing friction in all solver iterations
+
+		By default, PhysX processes friction only in the final 3 position iterations, and all velocity
+		iterations. This flag enables friction processing in all position and velocity iterations.
+
+		The default behaviour provides a good trade-off between performance and stability and is aimed
+		primarily at game development.
+
+		When simulating more complex frictional behaviour, such as grasping of complex geometries with
+		a robotic manipulator, better results can be achieved by enabling friction in all solver iterations.
+
+		\note This flag only has effect with the default solver. The TGS solver always performs friction per-iteration.
+		*/
+		eENABLE_FRICTION_EVERY_ITERATION = (1 << 15),
+
+		eMUTABLE_FLAGS = eENABLE_ACTIVE_ACTORS|eEXCLUDE_KINEMATICS_FROM_ACTIVE_ACTORS
 	};
 };
 
@@ -420,7 +409,6 @@ public:
 	PxU32		maxNbConstraints;			//!< Expected maximum number of constraint shaders
 	PxU32		maxNbRegions;				//!< Expected maximum number of broad-phase regions
 	PxU32		maxNbBroadPhaseOverlaps;	//!< Expected maximum number of broad-phase overlaps
-	PX_DEPRECATED	PxU32		maxNbObjectsPerRegion;		//!< \deprecated This is deprecated. Expected maximum number of objects in one broad-phase region
 
 	/**
 	\brief constructor sets to default 
@@ -447,8 +435,7 @@ PX_INLINE PxSceneLimits::PxSceneLimits() :	//constructor sets to default
 	maxNbAggregates			(0),
 	maxNbConstraints		(0),
 	maxNbRegions			(0),
-	maxNbBroadPhaseOverlaps	(0),
-	maxNbObjectsPerRegion	(0)
+	maxNbBroadPhaseOverlaps	(0)
 {
 }
 
@@ -521,9 +508,6 @@ public:
 
 	/**
 	\brief Possible notification callback.
-
-	This callback will be associated with the client PX_DEFAULT_CLIENT.
-	Please use PxScene::setSimulationEventCallback() to register callbacks for other clients.
 
 	<b>Default:</b> NULL
 
@@ -611,7 +595,7 @@ public:
 	/**
 	\brief Selects the broad-phase algorithm to use.
 
-	<b>Default:</b> PxBroadPhaseType::eSAP
+	<b>Default:</b> PxBroadPhaseType::eABP
 
 	@see PxBroadPhaseType
 	*/
@@ -619,9 +603,6 @@ public:
 
 	/**
 	\brief Broad-phase callback
-
-	This callback will be associated with the client PX_DEFAULT_CLIENT.
-	Please use PxScene::setBroadPhaseCallback() to register callbacks for other clients.
 
 	<b>Default:</b> NULL
 
@@ -647,6 +628,15 @@ public:
 	@see PxScene::setFrictionType, PxScene::getFrictionType
 	*/
 	PxFrictionType::Enum frictionType;
+
+	/**
+	\brief Selects the solver algorithm to use.
+
+	<b>Default:</b> PxSolverType::eDEFAULT
+
+	@see PxSolverType
+	*/
+	PxSolverType::Enum 			solverType;
 
 	/**
 	\brief A contact with a relative velocity below this will not bounce. A typical value for simulation.
@@ -751,9 +741,6 @@ public:
 
 	/**
 	\brief Defines the scene query update mode.
-
-	\note Setting a value other than the default will result in ignoring the deprecated PxSceneFlag::eSUPPRESS_EAGER_SCENE_QUERY_REFIT
-
 	<b>Default:</b> PxSceneQueryUpdateMode::eBUILD_ENABLED_COMMIT_ENABLED
 	*/
 	PxSceneQueryUpdateMode::Enum sceneQueryUpdateMode;
@@ -869,7 +856,7 @@ public:
 	<b>Range:</b> (0, PX_MAX_F32)<br>
 	<b>Default:</b> 0.4 (which corresponds to 20 frames for a time step of 0.02)
 
-	@see PxRigidDynamic::wakeUp() PxArticulation::wakeUp() PxCloth::wakeUp()
+	@see PxRigidDynamic::wakeUp() PxArticulationBase::wakeUp()
 	*/
 	PxReal					wakeCounterResetValue;
 
@@ -964,10 +951,11 @@ PX_INLINE PxSceneDesc::PxSceneDesc(const PxTolerancesScale& scale):
 	kineKineFilteringMode				(PxPairFilteringMode::eDEFAULT),
 	staticKineFilteringMode				(PxPairFilteringMode::eDEFAULT),
 
-	broadPhaseType						(PxBroadPhaseType::eSAP),
+	broadPhaseType						(PxBroadPhaseType::eABP),
 	broadPhaseCallback					(NULL),
 
 	frictionType						(PxFrictionType::ePATCH),
+	solverType							(PxSolverType::ePGS),
 	bounceThresholdVelocity				(0.2f * scale.speed),
 	frictionOffsetThreshold				(0.04f * scale.length),
 	ccdMaxSeparation					(0.04f * scale.length),
@@ -994,10 +982,8 @@ PX_INLINE PxSceneDesc::PxSceneDesc(const PxTolerancesScale& scale):
 	ccdMaxPasses						(1),
 	wakeCounterResetValue				(20.0f*0.02f),
 	sanityBounds						(PxBounds3(PxVec3(-PX_MAX_BOUNDS_EXTENTS), PxVec3(PX_MAX_BOUNDS_EXTENTS))),
-
 	gpuMaxNumPartitions					(8),
 	gpuComputeVersion					(0),
-
 	tolerancesScale						(scale)
 {
 }
@@ -1031,6 +1017,8 @@ PX_INLINE bool PxSceneDesc::isValid() const
 		return false;
 	if(ccdMaxSeparation < 0.0f)
 		return false;
+	if (solverOffsetSlop < 0.f)
+		return false;
 
 	if(!cpuDispatcher)
 		return false;
@@ -1051,11 +1039,13 @@ PX_INLINE bool PxSceneDesc::isValid() const
 	if(!sanityBounds.isValid())
 		return false;
 
+#if PX_SUPPORT_GPU_PHYSX
 	//gpuMaxNumPartitions must be power of 2
 	if((gpuMaxNumPartitions&(gpuMaxNumPartitions - 1)) != 0)
 		return false;
 	if (gpuMaxNumPartitions > 32)
 		return false;
+#endif
 
 	return true;
 }
