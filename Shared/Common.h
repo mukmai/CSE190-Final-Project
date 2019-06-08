@@ -3,6 +3,7 @@
 #include <rpc/client.h>
 
 #define PORT 8008
+#define TICK_PER_SECOND 30
 
 enum FUNCTION {
 	MOVE,
