@@ -12,6 +12,10 @@
 // Attachable Sound Object
 class ASound{
     public:
+      // Ptrs to different components of FMOD sound API
+	  FMOD::System  * system  = NULL;
+	  FMOD::Sound   * sound   = NULL;
+	  FMOD::Channel * channel = NULL;
 
       // Constructors
       ASound();
@@ -27,24 +31,23 @@ class ASound{
       void loadSound(const char * filepath);
       
 	  // General function to simply play the loaded sound
-      void playSound();
+      void playSound(float volume);
 
 	  // TODO: Set up the sound for proper spatialization
       void playSound3D(glm::vec3 position);
 
 	  void pauseSound();
 
+	  void unpauseSound();
+
 	  void stopSound();
+
+	  void setVolume(float volume);
     
     protected:
     
 	  // Used to store the results (Success/Failure) of FMOD functions
       FMOD_RESULT fmod_result;
-
-	  // Ptrs to different components of FMOD sound API
-      FMOD::System  * system  = NULL;
-      FMOD::Sound   * sound   = NULL;
-	  FMOD::Channel * channel = NULL;
       
 	  // Simple function to create FMOD vectors from GLM vectors
       FMOD_VECTOR glmToFMOD(glm::vec3 gvec);

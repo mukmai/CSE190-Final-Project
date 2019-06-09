@@ -3,13 +3,17 @@
 #include "OVRInputWrapper.h"
 #include "EntityManager.h"
 
+#include <chrono>
+
 Client::Client() : c("localhost", PORT)
 {
+	//srand((unsigned int)(ovr_GetTimeInSeconds));
+	std::chrono::time_point<std::chrono::system_clock> now =
+		std::chrono::system_clock::now();
+	srand(std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count());
+
 	std::cout << "Connected to port: " << PORT << std::endl;
 	playerController.playerID = c.call(serverFunction[PLAYER_JOIN]).as<int>();
-
-	//leftPS->init();
-	//rightPS->init();
 
 	initAudio();
 
@@ -23,29 +27,49 @@ void Client::initGl()
 	ovr_RecenterTrackingOrigin(_session);
 	srand((unsigned int)time(NULL));
 	sphereScene = std::shared_ptr<SpheresScene>(new SpheresScene());
-
+	
 	std::cout << "***** Initializing particle systems" << std::endl;
+
+	initPS(); // For some reason, this initialization has to occur here or else the 
+	          // program crashes on startup
+	          // Probably because you need to have the RiftApp initialize the Oculus'
+	          // environment in OpenGL beforehand.
+}
+
+void Client::initPS() {
+	std::cout << "***** Initializing particle systems" << std::endl;
+
 	leftPS = new AParticleSystem();
 	rightPS = new AParticleSystem();
+
+	std::cout << "***** Initializing direction vectors for particle systems" << std::endl;
+
+	leftPS->vecSpawnDir = glm::vec3(5.0f, 0.0f, 0.0f);
+	rightPS->vecSpawnDir = glm::vec3(-5.0f, 0.0f, 0.0f);
+
+	std::cout << "***** Initializing sound objects for particle systems " << std::endl;
+
+	leftPS->setSound("Resources/Audio/SoundEffects/Thruster1.wav");
+	rightPS->setSound("Resources/Audio/SoundEffects/Thruster1.wav");
+
 	std::cout << "***** Finished initializing particle systems" << std::endl;
 }
 
 void Client::initAudio() {
 	// NOTE: All audio is set up in the ASound constructor.
 	//       This function is really just to autoplay the BGM.
-	soundBGM = new ASound("Resources/Audio/BGM/bgm1.mp3");
+	soundBGM = new ASound("Resources/Audio/BGM/Moment of Impact V2.wav");
 	bgmList.push_back(soundBGM);
-	soundBGM = new ASound("Resources/Audio/BGM/bgm2.mp3");
+	soundBGM = new ASound("Resources/Audio/BGM/Conciliation.wav");
 	bgmList.push_back(soundBGM);
-	soundBGM = new ASound("Resources/Audio/BGM/bgm3.wav");
+	soundBGM = new ASound("Resources/Audio/BGM/Riverside.wav");
 	bgmList.push_back(soundBGM);
-	soundBGM = new ASound("Resources/Audio/BGM/bgm4.mp3");
+	soundBGM = new ASound("Resources/Audio/BGM/Fireworks Over Barcelona.wav");
 	bgmList.push_back(soundBGM);
-	soundBGM = new ASound("Resources/Audio/BGM/bgm5.wav");
+	soundBGM = new ASound("Resources/Audio/BGM/Wayang Kulit.wav");
 	bgmList.push_back(soundBGM);
 
-	soundBGM = bgmList[0];
-	soundBGM->playSound();
+	checkBGM();
 
 	std::cout << "BGM should be playing..." << std::endl;
 }
@@ -64,15 +88,11 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	auto globalHeadPose = globalPlayerTranslation * globalPlayerRotation * headPose;
 	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), eyePos);
 
-	// Update particle system for both hands
-	leftPS->matModel = glm::translate(glm::mat4(1.0f), controllerPosition[0]) * glm::toMat4(controllerRotation[0]);
-	rightPS->matModel = glm::translate(glm::mat4(1.0f), controllerPosition[1]) * glm::toMat4(controllerRotation[1]);
-
 	leftPS->update(eyePos);
-	rightPS->update(eyePos);
-
 	leftPS->render(projection, glm::inverse(globalHeadPose));
+	rightPS->update(eyePos);
 	rightPS->render(projection, glm::inverse(globalHeadPose));
+
 }
 
 void Client::update()
@@ -102,19 +122,35 @@ void Client::update()
 		c.call(serverFunction[PLAYER_MOVE], playerController.playerID, leftThumbStickVertical);
 	}
 
-	bool bSpawnProjectileRight = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Right);
-	if (bSpawnProjectileRight) {
+	bool bRightTriggerPressed = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Right);
+	if (bRightTriggerPressed) {
 		std::cout << "Right trigger pressed!" << std::endl;
 
 		// STEP: Play fire sound
-		soundFire->playSound();
+		soundFire->playSound(1.0f);
 	}
 
-	bool bPlayBGM = OVRInputWrapper::getInstance().buttonPressed(ovrButton_A);
-	if (bPlayBGM) {
-		std::cout << "A button pressed!" << std::endl;
+	bool bLeftTriggerPressed = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Left);
+	if (bLeftTriggerPressed) {
+		std::cout << "Left trigger pressed!" << std::endl;
+
+		// STEP: Play fire sound
+		soundFire->playSound(1.0f);
 	}
 
+	if (OVRInputWrapper::getInstance().gripTriggerHeld(ovrHand_Left)) {
+		leftPS->playPS();
+	}
+	else {
+		leftPS->stopPS();
+	}
+
+	if (OVRInputWrapper::getInstance().gripTriggerHeld(ovrHand_Right)) {
+		rightPS->playPS();
+	}
+	else {
+		rightPS->stopPS();
+	}
 
 	// send pos of all things and update all states
 	vector<BaseState> newStates = c.call(serverFunction[GET_UPDATE], playerController.playerID).as<vector<BaseState>>();
@@ -124,4 +160,44 @@ void Client::update()
 		//std::cout << newStates[i].id << " ";
 	}
 	//std::cout << std::endl;
+
+	// STEP: Check that the BGM is playing properly
+	checkBGM();
+
+	// STEP: Update particle system for both hands
+	leftPS->matModel = glm::translate(glm::mat4(1.0f), controllerPosition[0]) * glm::toMat4(controllerRotation[0]);
+	//leftPS->matModel[3][3] = 0.0f;
+	rightPS->matModel = glm::translate(glm::mat4(1.0f), controllerPosition[1]) * glm::toMat4(controllerRotation[1]);
+	//rightPS->matModel[3][3] = 0.0f;
+}
+
+void Client::checkBGM() {
+	// Check if the BGM has stopped playing.
+	// If it has, play a random song from the BGM list.
+
+	// Check that the soundBGM ptr is NOT NULL
+	if (soundBGM != NULL) {
+		// If the ptr is not NULL, check that its audio channel is playing
+		bool bTempPlaying;
+		soundBGM->channel->isPlaying(&bTempPlaying);
+		if (!bTempPlaying) {
+			// Just in case, manually stop the channel
+			soundBGM->stopSound();
+
+			// Pick a random index for the BGM list
+			unsigned int idx = rand() % (bgmList.size());
+
+			// Reassign soundBGM to a randomly selected BGM
+			soundBGM = bgmList[idx];
+			soundBGM->playSound(BGM_VOLUME);
+		}
+	}
+	else {
+		// Pick a random index for the BGM list
+		unsigned int idx = rand() % (bgmList.size());
+
+		// Reassign soundBGM to a randomly selected BGM
+		soundBGM = bgmList[idx];
+		soundBGM->playSound(BGM_VOLUME);
+	}
 }

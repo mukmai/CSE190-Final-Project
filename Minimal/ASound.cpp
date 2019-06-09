@@ -2,6 +2,11 @@
 
 ASound::ASound(){
 	fmod_result = FMOD::System_Create(&system);     
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: ASound()");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
 
 	// FMOD's normal initialization is done in left-hand coordinates 
 	// (+z goes into the screen) but OpenGL is in right-handed coordinates
@@ -9,13 +14,18 @@ ASound::ASound(){
     fmod_result = system->init(512, FMOD_INIT_3D_RIGHTHANDED, 0);
 	if (fmod_result != FMOD_OK)
 	{
+		printf("FUNCTION: ASound()");
 		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
-		exit(-1);
 	}
 }
 
 ASound::ASound(const char * filepath){
 	fmod_result = FMOD::System_Create(&system);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: ASound(const char * filepath)");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
 
 	// FMOD's normal initialization is done in left-hand coordinates 
 	// (+z goes into the screen) but OpenGL is in right-handed coordinates
@@ -23,8 +33,8 @@ ASound::ASound(const char * filepath){
 	fmod_result = system->init(512, FMOD_INIT_3D_RIGHTHANDED, 0);
 	if (fmod_result != FMOD_OK)
 	{
+		printf("FUNCTION: ASound(const char * filepath)");
 		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
-		exit(-1);
 	}
 
     loadSound(filepath);
@@ -32,6 +42,11 @@ ASound::ASound(const char * filepath){
 
 void ASound::update() {
 	system->update();
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: update()");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
 }
 
 void ASound::updateListener(glm::mat4 listenerMat) {
@@ -59,6 +74,11 @@ void ASound::updateListener(glm::mat4 listenerMat) {
 
 	// Set 3D attributes for the player listener
 	fmod_result = system->set3DListenerAttributes(0, &fPos, &fVel, &fForward, &fUp);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: updateListener()");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
 }
 
 void ASound::loadSound(const char * filepath){
@@ -66,29 +86,61 @@ void ASound::loadSound(const char * filepath){
     fmod_result = system->createSound(filepath, FMOD_3D, NULL, &sound);
 	if (fmod_result != FMOD_OK)
 	{
+		printf("FUNCTION: loadSound()");
 		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
-		exit(-1);
 	}
 
 }
 
-void ASound::playSound(){
-	// Just play the stored sound
-    fmod_result = system->playSound(sound, NULL, false, NULL);
+void ASound::playSound(float volume){
+	bool bPlaying;
+	fmod_result = channel->isPlaying(&bPlaying);
 	if (fmod_result != FMOD_OK)
 	{
+		printf("FUNCTION: playSound()");
 		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
-		exit(-1);
+	}
+
+	if (bPlaying) {
+		return;
+	}
+
+	// Just play the stored sound
+    fmod_result = system->playSound(sound, NULL, false, &channel);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: stopSound()");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
+
+	// Set the volume of the sound
+	fmod_result = channel->setVolume(volume);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: stopSound()");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
 	}
 }
 
 void ASound::playSound3D(glm::vec3 position){
+	bool bPlaying;
+	fmod_result = channel->isPlaying(&bPlaying);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: playSound3D()");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
+
+	if (bPlaying) {
+		return;
+	}
+
 	// Play the stored sound
 	fmod_result = system->playSound(sound, NULL, false, &channel);	
 	if (fmod_result != FMOD_OK)
 	{
+		printf("FUNCTION: playSound3D()");
 		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
-		exit(-1);
 	}
 
 	// Modify channel information using the given position
@@ -98,26 +150,64 @@ void ASound::playSound3D(glm::vec3 position){
 	fmod_result = channel->set3DAttributes(&fPos, NULL);
 	if (fmod_result != FMOD_OK)
 	{
+		printf("FUNCTION: playSound3D()");
 		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
-		exit(-1);
 	}
 }
 
 void ASound::pauseSound() {
-	channel->setPaused(true);
+	fmod_result = channel->setPaused(true);
 	if (fmod_result != FMOD_OK)
 	{
+		printf("FUNCTION: pauseSound()");
 		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
-		exit(-1);
+	}
+}
+
+void ASound::unpauseSound() {
+	fmod_result = channel->setPaused(true);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: unpauseSound()");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
 	}
 }
 
 void ASound::stopSound() {
-	channel->stop();
+	bool bPlaying;
+
+	fmod_result = channel->isPlaying(&bPlaying);
 	if (fmod_result != FMOD_OK)
 	{
+		printf("FUNCTION: stopSound()");
 		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
-		exit(-1);
+	}
+
+	if (bPlaying) {
+		fmod_result = channel->stop();
+		if (fmod_result != FMOD_OK)
+		{
+			printf("FUNCTION: stopSound()");
+			printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+		}
+
+		//FMOD::Channel* pChannel = nullptr;
+		//fmod_result = system->getChannel(0, &pChannel);
+
+		//if (fmod_result == FMOD_OK && pChannel)
+		//{
+		//	pChannel->stop();
+		//	if (fmod_result != FMOD_OK)
+		//	{
+		//		printf("FUNCTION: stopSound()");
+		//		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+		//	}
+		//}
+		//else if(fmod_result != FMOD_OK)
+		//{
+		//	printf("FUNCTION: stopSound()");
+		//	printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+		//}
 	}
 }
 
@@ -128,4 +218,25 @@ FMOD_VECTOR ASound::glmToFMOD(glm::vec3 gvec){
     fvec.y = gvec.y;
     fvec.z = gvec.z;
     return fvec;
+}
+
+void ASound::setVolume(float volume) {
+	pauseSound();
+
+	fmod_result = system->getChannel(0, &channel);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: setVolume()");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
+
+	// Set the volume of the sound
+	fmod_result = channel->setVolume(volume);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: setVolume()");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
+
+	unpauseSound();
 }

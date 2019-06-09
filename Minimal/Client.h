@@ -14,6 +14,7 @@
 #include "AParticleSystem.h"
 
 #include <iostream>
+#include <random>
 
 // An example application that renders a simple cube
 class Client : public RiftApp {
@@ -25,7 +26,7 @@ class Client : public RiftApp {
 
 	std::vector<ASound *> bgmList;
 	ASound * soundBGM;
-	//ASound * soundBGM = new ASound("Resources/Audio/BGM/bgm1.mp3");
+	float BGM_VOLUME = 0.6f;
 
 	ASound * soundFire = new ASound("Resources/Audio/SoundEffects/fire1.wav");
 
@@ -39,10 +40,14 @@ protected:
 	void initGl() override;
 
 	void initAudio();
+	
+	void initPS();
 
 	void shutdownGl() override;
 
 	void renderScene(const glm::mat4& projection, const glm::mat4& headPose) override;
 
 	void update() override;
+
+	void checkBGM();
 };

@@ -10,6 +10,8 @@ AParticleSystem::AParticleSystem(){
 	shader = new Shader("./Resources/Shaders/particle_shader.vert", "./Resources/Shaders/particle_shader.frag");
 	shader->use();
 
+	sound = new ASound();
+
     init();
 
 	newTime = std::chrono::system_clock::now();
@@ -74,6 +76,10 @@ void AParticleSystem::update(glm::vec3 eyePos){
         newParticles = (unsigned int)(40);
     }
 
+	if (!bSpawnParticles) {
+		newParticles = 0;
+	}
+
 	//std::cout << "***PARTICLE_SHADER: Generating " << newParticles << " particles." << std::endl;
 
     // STEP: Create "newParticles" amount of particles
@@ -100,7 +106,8 @@ void AParticleSystem::update(glm::vec3 eyePos){
 
         // Figure out velocity vectors for any specific particle
         float spread = 0.55f;
-        glm::vec3 baseDir = rotMat * glm::vec4(glm::vec3(0.0f, 0.0f, -6.0f), 0.0f);
+        glm::vec3 baseDir = rotMat * glm::vec4(vecSpawnDir, 1.0f);
+		//glm::vec3 baseDir = rotMat * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 		glm::vec3 randDir = glm::vec3(
 			randomFloat(-4.0f, 4.0f),
 			randomFloat(-4.0f, 4.0f),
@@ -248,3 +255,18 @@ void AParticleSystem::sortParticles(){
   std::sort(&container[0], &container[MAX_PARTICLES]);
 }
 
+void AParticleSystem::setSound(const char * filepath) {
+	sound->loadSound(filepath);
+}
+
+
+void AParticleSystem::playPS() {
+	bSpawnParticles = true;
+	sound->playSound(1.0f);
+}
+
+
+void AParticleSystem::stopPS() {
+	bSpawnParticles = false;
+	sound->stopSound();
+}
