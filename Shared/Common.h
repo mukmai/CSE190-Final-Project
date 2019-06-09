@@ -3,7 +3,7 @@
 #include <rpc/client.h>
 
 #define PORT 8008
-#define TICK_PER_SECOND 30
+#define TICK_PER_SECOND 60
 
 enum FUNCTION {
 	MOVE,
@@ -13,7 +13,8 @@ enum FUNCTION {
 	TEST,
 	PLAYER_INPUT,
 	PLAYER_MOVE_Z,
-	PLAYER_MOVE_X
+	PLAYER_MOVE_X,
+	PLAYER_BUTTON_A
 };
 
 // map from FUNCTION enum to string (just to make it easier to find the location
@@ -25,7 +26,8 @@ static std::map<FUNCTION, std::string> serverFunction {
 { TEST , "test"},
 { PLAYER_INPUT , "player_input"},
 { PLAYER_MOVE_Z , "player_move_z"},
-{ PLAYER_MOVE_X , "player_move_x"}
+{ PLAYER_MOVE_X , "player_move_x"},
+{ PLAYER_BUTTON_A , "player_button_a"}
 };
 
 enum EntityType

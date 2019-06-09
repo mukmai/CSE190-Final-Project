@@ -68,6 +68,10 @@ void Client::update()
 		c.call(serverFunction[PLAYER_MOVE_X], playerController.playerID, leftThumbStickHorizontal);
 	}
 
+	if (OVRInputWrapper::getInstance().buttonPressed(ovrButton_A)) {
+		c.call(serverFunction[PLAYER_BUTTON_A], playerController.playerID);
+	}
+
 	// send pos of all things and update all states
 	vector<BaseState> newStates = c.call(serverFunction[GET_UPDATE], playerController.playerID).as<vector<BaseState>>();
 	for (int i = 0; i < newStates.size(); i++) {

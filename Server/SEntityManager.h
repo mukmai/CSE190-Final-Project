@@ -22,5 +22,7 @@ public:
 	void movePlayerZ(int playerID, float rate);
 
 	void movePlayerX(int playerID, float rate);
+
+	void createSphere(int playerID);
 };
 

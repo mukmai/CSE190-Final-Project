@@ -25,3 +25,9 @@ std::vector<std::shared_ptr<SBaseEntity>> SBaseEntity::getChildren()
 {
 	return std::vector<std::shared_ptr<SBaseEntity>>();
 }
+
+btRigidBody * SBaseEntity::createRigidBody()
+{
+	rigidBody = nullptr;
+	return nullptr;
+}

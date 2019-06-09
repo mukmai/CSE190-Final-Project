@@ -12,7 +12,9 @@ public:
 
 	void stepSimulation(float timeStep);
 
-	void updatePosition();
+	void updateBody();
+
+	void updateEntity(btRigidBody* body);
 
 	~PhysicsEngine();
 
@@ -37,8 +39,8 @@ private:
 
 	std::map<const btCollisionObject*, std::vector<btManifoldPoint*>> objectsCollisions;
 
-	std::map<btRigidBody*, int> entityIdMap;
-	std::map<int, btRigidBody*> idEntityMap;
+	std::map<btRigidBody*, int> bodyIdMap;
+	std::map<int, btRigidBody*> idBodyMap;
 
 	SEntityManager * entityManager;
 };

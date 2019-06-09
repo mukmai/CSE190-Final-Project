@@ -1,5 +1,6 @@
 #include "SEntityManager.h"
 #include "SPlayerEntity.hpp"
+#include "SSphereEntity.hpp"
 #include <glm/gtx/quaternion.hpp>
 
 SEntityManager::SEntityManager()
@@ -96,4 +97,16 @@ void SEntityManager::movePlayerX(int playerID, float rate)
 	auto moveOffset = right * rate * 0.01f;
 	playerEntity->getState()->pos += moveOffset;
 	playerEntity->updatedPlayerList.clear();
+}
+
+void SEntityManager::createSphere(int playerID)
+{
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	auto moveOffset = playerEntity->getForward() * 1.0f;
+	auto sphere = std::make_shared<SSphereEntity>(
+		glm::vec3(0.2f),
+		playerEntity->getState()->pos + moveOffset);
+	entityMap.insert({ sphere->getState()->id, sphere });
 }
