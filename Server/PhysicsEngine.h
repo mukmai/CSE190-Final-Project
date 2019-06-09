@@ -4,6 +4,9 @@
 #include <map>
 #include <vector>
 #include "SEntityManager.h"
+#include <glm/gtx/quaternion.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 class PhysicsEngine
 {
@@ -15,6 +18,8 @@ public:
 	void updateBody();
 
 	void updateEntity(btRigidBody* body);
+
+	void generateEnvironment();
 
 	~PhysicsEngine();
 
