@@ -1,6 +1,7 @@
 #include "AParticleSystem.h"
 
 #include <glm/gtx/string_cast.hpp> 
+#include <glm/gtx/norm.hpp>
 
 AParticleSystem::AParticleSystem(){
     // Seed the random number generator
@@ -55,7 +56,7 @@ void AParticleSystem::initGL(){
 	glBindVertexArray(0);
 }
 
-void AParticleSystem::update(glm::vec3 origin_pos, glm::mat4 origin_rot, glm::vec3 eyePos){
+void AParticleSystem::update(glm::vec3 eyePos){
     // STEP: Update timers
 	lastTime = newTime;
     newTime  = std::chrono::system_clock::now();
@@ -69,38 +70,43 @@ void AParticleSystem::update(glm::vec3 origin_pos, glm::mat4 origin_rot, glm::ve
     //        - Refresh expired particles
     unsigned int newParticles = (unsigned int)(deltaTime * 1000.0);
     //if(newParticles > (unsigned int)(0.0111 * 1000.0)){
-	if (newParticles > (unsigned int)(10)) {
+	if (newParticles > (unsigned int)(40)) {
 		//std::cout << "***PARTICLE_SHADER: Limiting number of particles generated this frame." << std::endl;
-        newParticles = (unsigned int)(10);
+        newParticles = (unsigned int)(40);
     }
 
 	//std::cout << "***PARTICLE_SHADER: Generating " << newParticles << " particles." << std::endl;
 
     // STEP: Create "newParticles" amount of particles
+	glm::mat4 rotMat = matModel;
+	rotMat[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
     for(unsigned int u = 0; u < newParticles; u++){
         unsigned int idx = findUnusedParticle();
 
         // Basic components of the particle
         container[idx].life = MAX_LIFESPAN;
-        container[idx].pos  = origin_pos;
-		container[idx].size = randomFloat(0.01f, 0.05f);
-		//container[idx].color = glm::vec4(randomVec3(0.0f, 1.0f), 0.45f);
+        container[idx].pos  = matModel[3];
+		container[idx].initSize = randomFloat(0.1f, 0.35f);
 		/*glm::vec3 randColor = glm::vec3(
 			randomFloat(0.4f, 0.6f),
 			randomFloat(0.6f, 0.8f),
 			randomFloat(0.8f, 1.0f)
 		);*/
 		glm::vec3 randColor = glm::vec3(
-			randomFloat(0.0f, 1.0f),
-			randomFloat(0.0f, 1.0f),
-			randomFloat(0.0f, 1.0f)
+			randomFloat(0.4f, 1.0f),
+			randomFloat(0.4f, 1.0f),
+			randomFloat(0.4f, 1.0f)
 		);
-		container[idx].color = glm::vec4(randColor, 0.5f);
+		container[idx].color = glm::vec4(randColor, 1.0f);
 
-        // Figure out velocity vectors any specific particle
-        float spread = 0.3f;
-        glm::vec3 baseDir = origin_rot * glm::vec4(glm::vec3(0.0f, 0.0f, -0.2f), 1.0f);
-        glm::vec3 randDir = origin_rot * glm::vec4(randomBoxVec3(origin_pos, OFFSET_VEC), 1.0f);
+        // Figure out velocity vectors for any specific particle
+        float spread = 0.55f;
+        glm::vec3 baseDir = rotMat * glm::vec4(glm::vec3(0.0f, 0.0f, -5.0f), 0.0f);
+		glm::vec3 randDir = glm::vec3(
+			randomFloat(-4.0f, 4.0f),
+			randomFloat(-4.0f, 4.0f),
+			randomFloat(-1.0f, 1.0f)
+		);
         container[idx].vel = baseDir + glm::vec3(randDir*spread);
     }
 
@@ -113,14 +119,17 @@ void AParticleSystem::update(glm::vec3 origin_pos, glm::mat4 origin_rot, glm::ve
 			p.life -= deltaTime;
 
 			if (p.life > 0.0f) {
-				p.vel += glm::vec3(0.0f, -9.81f, 0.0f) * (float)deltaTime * 0.05f;
-				p.pos += p.vel * (float)deltaTime;
-				p.size = p.life / MAX_LIFESPAN;
-				p.camDist = glm::length(p.pos - eyePos);
+				p.vel  = p.vel + (glm::vec3(0.0f, -9.81f, 0.0f) * ((float)deltaTime * 0.4f));
+				p.pos  = p.pos + p.vel * (float)deltaTime;
+				p.size    = p.initSize * (p.life / MAX_LIFESPAN);  // Shrink the particle as time goes on
+				p.color.w = 0.8f * (p.life / MAX_LIFESPAN);        // Increase the transparency of the particle as time goes on
+				p.camDist = glm::length2(p.pos - eyePos);
 
 				// Update GPU buffers
 				positions[particleCount] = glm::vec4(p.pos, p.size);
-				colors[particleCount] = p.color;
+				colors[particleCount]    = p.color;
+
+				
 			}
 			else {
 				p.camDist = -1.0f;
@@ -173,8 +182,13 @@ void AParticleSystem::render(glm::mat4 projMat, glm::mat4 camMat){
 }
 
 float AParticleSystem::randomFloat(float lb, float ub){
-    float retval = lb + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX/(ub-lb)));
-    return retval;
+	if ((ub - lb) == 0.0f) {
+		return 0.0f;
+	}
+	else {
+		float retval = lb + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (ub - lb)));
+		return retval;
+	}
 }
 
 glm::vec3 AParticleSystem::randomVec3(float lb, float ub) {
@@ -208,9 +222,6 @@ glm::vec3 AParticleSystem::randomBoxVec3(glm::vec3 ctr, glm::vec3 ofs) {
 		randomFloat(ctr.x - ofs.x, ctr.x + ofs.x),
 		randomFloat(ctr.y - ofs.y, ctr.y + ofs.y),
 		randomFloat(ctr.z - ofs.z, ctr.z + ofs.z)
-		//randomFloat(0, ctr.x + ofs.x),
-		//randomFloat(0, ctr.y + ofs.y),
-		//randomFloat(0, ctr.z + ofs.z)
 		);
 
 	return ret_vec;

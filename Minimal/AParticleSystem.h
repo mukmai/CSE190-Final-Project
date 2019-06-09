@@ -21,6 +21,7 @@ struct Particle{
     glm::vec4 color;
 
     float size, angle, weight;
+	float initSize;
     float life;
 
     float camDist;
@@ -39,12 +40,14 @@ const glm::vec3 vertices[] = {
 };
 
 
-const unsigned int MAX_PARTICLES = 100;
+const unsigned int MAX_PARTICLES = 300;
 const float MAX_LIFESPAN = 5.0f;
 
 
 class AParticleSystem{
   public:
+	glm::mat4 matModel = glm::mat4(1.0f);
+
     AParticleSystem();
 
     ~AParticleSystem();
@@ -52,7 +55,7 @@ class AParticleSystem{
 
     void init();
 
-    void update(glm::vec3 origin_pos, glm::mat4 origin_rot, glm::vec3 eyePos);
+    void update(glm::vec3 eyePos);
 
     void render(glm::mat4 projMat, glm::mat4 camMat);
 
@@ -71,10 +74,9 @@ class AParticleSystem{
 	Shader * shader;
 	
 	Particle container[MAX_PARTICLES];
-	glm::vec3 positions[MAX_PARTICLES];
+	glm::vec4 positions[MAX_PARTICLES];
 	glm::vec4 colors[MAX_PARTICLES];
 
-	glm::vec3 OFFSET_VEC = 0.3f * glm::vec3(1.0f, 1.0f, 1.0f);
 
     void initGL();
 

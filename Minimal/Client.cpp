@@ -64,16 +64,13 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	auto globalHeadPose = globalPlayerTranslation * globalPlayerRotation * headPose;
 	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), eyePos);
 
-	// XXX: QUICK HACK FOR PARTICLE SYSTEMS
-	playerController.leftHandPos = controllerPosition[0];
-	playerController.rightHandPos = controllerPosition[1];
+	// Update particle system for both hands
+	leftPS->matModel = glm::translate(glm::mat4(1.0f), playerController.leftHandPos) * glm::toMat4(playerController.leftHandRotation);
+	rightPS->matModel = glm::translate(glm::mat4(1.0f), playerController.rightHandPos) * glm::toMat4(playerController.rightHandRotation);
 
-	// Particle Systems
-	//std::cout << "**** Attempting to update particle systems" << std::endl;
-	leftPS->update(playerController.leftHandPos, glm::toMat4(playerController.leftHandRotation), eyePos);
-	rightPS->update(playerController.rightHandPos, glm::toMat4(playerController.leftHandRotation), eyePos);
+	leftPS->update(eyePos);
+	rightPS->update(eyePos);
 
-	//std::cout << "**** Attempting to render particle systems" << std::endl;
 	leftPS->render(projection, glm::inverse(globalHeadPose));
 	rightPS->render(projection, glm::inverse(globalHeadPose));
 }
@@ -111,22 +108,6 @@ void Client::update()
 
 		// STEP: Play fire sound
 		soundFire->playSound();
-
-		//// GOAL: Create a new Projectile Entity at the right hand
-		//BaseState proj;
-
-		//proj.pos = playerController.rightHandPos;
-		//proj.rotation = playerController.rightHandRotation;
-		//proj.scale = glm::vec3(1.0f);
-
-		//proj.type = ENTITY_PROJECTILE;
-
-		//proj.id = 10;
-
-		//// STEP: Add this entity to the entity manager's list of entities
-		//EntityManager::getInstance().getEntity(proj);
-
-		//c.call(serverFunction[PROJECTILE_MOVE], proj.id, 0.1f);
 	}
 
 	bool bPlayBGM = OVRInputWrapper::getInstance().buttonPressed(ovrButton_A);
