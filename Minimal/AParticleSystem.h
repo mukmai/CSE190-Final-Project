@@ -40,8 +40,8 @@ const glm::vec3 vertices[] = {
 };
 
 
-const unsigned int MAX_PARTICLES = 300;
-const float MAX_LIFESPAN = 5.0f;
+const unsigned int MAX_PARTICLES = 400;
+const float MAX_LIFESPAN = 6.0f;
 
 
 class AParticleSystem{

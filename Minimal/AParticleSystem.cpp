@@ -69,7 +69,6 @@ void AParticleSystem::update(glm::vec3 eyePos){
     // STEP: Calculate the number of particles to update
     //        - Refresh expired particles
     unsigned int newParticles = (unsigned int)(deltaTime * 1000.0);
-    //if(newParticles > (unsigned int)(0.0111 * 1000.0)){
 	if (newParticles > (unsigned int)(40)) {
 		//std::cout << "***PARTICLE_SHADER: Limiting number of particles generated this frame." << std::endl;
         newParticles = (unsigned int)(40);
@@ -79,7 +78,7 @@ void AParticleSystem::update(glm::vec3 eyePos){
 
     // STEP: Create "newParticles" amount of particles
 	glm::mat4 rotMat = matModel;
-	rotMat[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	rotMat[3] = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
     for(unsigned int u = 0; u < newParticles; u++){
         unsigned int idx = findUnusedParticle();
 
@@ -101,7 +100,7 @@ void AParticleSystem::update(glm::vec3 eyePos){
 
         // Figure out velocity vectors for any specific particle
         float spread = 0.55f;
-        glm::vec3 baseDir = rotMat * glm::vec4(glm::vec3(0.0f, 0.0f, -5.0f), 0.0f);
+        glm::vec3 baseDir = rotMat * glm::vec4(glm::vec3(0.0f, 0.0f, -6.0f), 0.0f);
 		glm::vec3 randDir = glm::vec3(
 			randomFloat(-4.0f, 4.0f),
 			randomFloat(-4.0f, 4.0f),
@@ -122,7 +121,7 @@ void AParticleSystem::update(glm::vec3 eyePos){
 				p.vel  = p.vel + (glm::vec3(0.0f, -9.81f, 0.0f) * ((float)deltaTime * 0.4f));
 				p.pos  = p.pos + p.vel * (float)deltaTime;
 				p.size    = p.initSize * (p.life / MAX_LIFESPAN);  // Shrink the particle as time goes on
-				p.color.w = 0.8f * (p.life / MAX_LIFESPAN);        // Increase the transparency of the particle as time goes on
+				p.color.w = (p.life / MAX_LIFESPAN);               // Increase the transparency of the particle as time goes on
 				p.camDist = glm::length2(p.pos - eyePos);
 
 				// Update GPU buffers

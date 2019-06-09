@@ -65,8 +65,8 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), eyePos);
 
 	// Update particle system for both hands
-	leftPS->matModel = glm::translate(glm::mat4(1.0f), playerController.leftHandPos) * glm::toMat4(playerController.leftHandRotation);
-	rightPS->matModel = glm::translate(glm::mat4(1.0f), playerController.rightHandPos) * glm::toMat4(playerController.rightHandRotation);
+	leftPS->matModel = glm::translate(glm::mat4(1.0f), controllerPosition[0]) * glm::toMat4(controllerRotation[0]);
+	rightPS->matModel = glm::translate(glm::mat4(1.0f), controllerPosition[1]) * glm::toMat4(controllerRotation[1]);
 
 	leftPS->update(eyePos);
 	rightPS->update(eyePos);
