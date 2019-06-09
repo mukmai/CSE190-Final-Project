@@ -1,14 +1,18 @@
 #pragma once
 #include "bullet/btBulletDynamicsCommon.h"
 #include "bullet/btBulletCollisionCommon.h"
-
+#include <map>
+#include <vector>
+#include "SEntityManager.h"
 
 class PhysicsEngine
 {
 public:
-	PhysicsEngine();
+	PhysicsEngine(SEntityManager * entityManager);
 
 	void stepSimulation(float timeStep);
+
+	void updatePosition();
 
 	~PhysicsEngine();
 
@@ -30,5 +34,12 @@ private:
 	//keep track of the shapes, we release memory at exit.
 	//make sure to re-use collision shapes among rigid bodies whenever possible!
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
+
+	std::map<const btCollisionObject*, std::vector<btManifoldPoint*>> objectsCollisions;
+
+	std::map<btRigidBody*, int> entityIdMap;
+	std::map<int, btRigidBody*> idEntityMap;
+
+	SEntityManager * entityManager;
 };
 

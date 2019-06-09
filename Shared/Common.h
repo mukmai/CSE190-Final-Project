@@ -39,6 +39,14 @@ enum EntityType
 
 MSGPACK_ADD_ENUM(EntityType);
 
+enum ColliderType
+{
+	COLLIDER_SPHERE,
+	COLLIDER_BOX
+};
+
+MSGPACK_ADD_ENUM(ColliderType);
+
 enum HandExtraData
 {
 	PLAYER_ID,

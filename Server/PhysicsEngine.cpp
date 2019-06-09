@@ -1,9 +1,9 @@
 #include "PhysicsEngine.h"
 
-
-
-PhysicsEngine::PhysicsEngine()
+PhysicsEngine::PhysicsEngine(SEntityManager * entityManager)
 {
+	this->entityManager = entityManager;
+
 	///collision configuration contains default setup for memory, collision setup. Advanced users can create their own configuration.
 	collisionConfiguration = new btDefaultCollisionConfiguration();
 
@@ -81,6 +81,13 @@ PhysicsEngine::PhysicsEngine()
 		btRigidBody* body = new btRigidBody(rbInfo);
 
 		dynamicsWorld->addRigidBody(body);
+	}
+}
+
+void PhysicsEngine::updatePosition() {
+	auto updatedList = entityManager->getUpdateList(0);
+	for (int i = 0; i < updatedList.size(); i++) {
+
 	}
 }
 
