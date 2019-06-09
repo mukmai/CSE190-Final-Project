@@ -49,6 +49,7 @@ class AParticleSystem{
   public:
 	glm::mat4 matModel    = glm::mat4(1.0f);
 	glm::vec3 vecSpawnDir = glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 lastPos     = glm::vec3(0.0f);
 
 	bool bSpawnParticles = false;
 
@@ -60,6 +61,7 @@ class AParticleSystem{
     void init();
 
     void update(glm::vec3 eyePos);
+	void update3DAudio(glm::mat4 listMat);
 
     void render(glm::mat4 projMat, glm::mat4 camMat);
 

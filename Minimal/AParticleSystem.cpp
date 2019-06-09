@@ -164,6 +164,16 @@ void AParticleSystem::update(glm::vec3 eyePos){
 	numParticles = particleCount;
 }
 
+void AParticleSystem::update3DAudio(glm::mat4 listMat) {
+	// Update the listener attributes of the sound (ie. What the sound knows about the lister/player)
+	sound->update3DListener(listMat);
+
+	// Update the 3D attributes of the audio channel of the sound itself
+	glm::vec3 currPos = matModel[3];
+	sound->update3DChannel(currPos);
+	lastPos = currPos;
+}
+
 void AParticleSystem::render(glm::mat4 projMat, glm::mat4 camMat){
 	
 	shader->use();
@@ -262,7 +272,7 @@ void AParticleSystem::setSound(const char * filepath) {
 
 void AParticleSystem::playPS() {
 	bSpawnParticles = true;
-	sound->playSound(1.0f);
+	sound->playSound3D(1.0f);
 }
 
 

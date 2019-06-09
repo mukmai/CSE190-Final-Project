@@ -17,6 +17,11 @@ class ASound{
 	  FMOD::Sound   * sound   = NULL;
 	  FMOD::Channel * channel = NULL;
 
+	  glm::vec3 sound_pos = glm::vec3(0.0f);
+	  glm::vec3 sound_vel = glm::vec3(0.0f);
+
+	  glm::mat4 storedListMat = glm::mat4(1.0f);
+
       // Constructors
       ASound();
       ASound(const char * filepath);
@@ -24,8 +29,11 @@ class ASound{
 	  // General update function to use per-frame
 	  void update();
 
-	  // Specific update function to update the listener's position (ie. player position)
-	  void updateListener(glm::mat4 listenerMat);
+	  // Update function to update the listener's (ie. Player's) attributes (ex. player position)
+	  void update3DListener(glm::mat4 listMat);
+
+	  // Update function to update the sound's attributes (ex. The sound's location)
+	  void update3DChannel(glm::vec3 pos);
       
 	  // Load the soundfile using just the filepath to the file
       void loadSound(const char * filepath);
@@ -34,7 +42,7 @@ class ASound{
       void playSound(float volume);
 
 	  // TODO: Set up the sound for proper spatialization
-      void playSound3D(glm::vec3 position);
+      void playSound3D(float volume);
 
 	  void pauseSound();
 

@@ -88,10 +88,19 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	auto globalHeadPose = globalPlayerTranslation * globalPlayerRotation * headPose;
 	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), eyePos);
 
-	leftPS->update(eyePos);
+	if (renderingEye == ovrEye_Left) {
+		leftPS->update(eyePos);
+		leftPS->update3DAudio(globalHeadPose);
+
+		rightPS->update(eyePos);
+		rightPS->update3DAudio(globalHeadPose);
+		// Update the last eye pos
+		lastEyePos = eyePos;
+	}
+
 	leftPS->render(projection, glm::inverse(globalHeadPose));
-	rightPS->update(eyePos);
 	rightPS->render(projection, glm::inverse(globalHeadPose));
+
 
 }
 

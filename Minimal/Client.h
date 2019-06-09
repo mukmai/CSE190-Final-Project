@@ -28,6 +28,8 @@ class Client : public RiftApp {
 	ASound * soundBGM;
 	float BGM_VOLUME = 0.6f;
 
+	glm::vec3 lastEyePos = glm::vec3(0.0f);
+
 	ASound * soundFire = new ASound("Resources/Audio/SoundEffects/fire1.wav");
 
 	AParticleSystem * leftPS;

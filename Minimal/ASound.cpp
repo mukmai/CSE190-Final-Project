@@ -49,36 +49,57 @@ void ASound::update() {
 	}
 }
 
-void ASound::updateListener(glm::mat4 listenerMat) {
-	// Set listener position
-	const FMOD_VECTOR fPos = glmToFMOD(listenerMat[3]);
+void ASound::update3DListener(glm::mat4 listMat){
+	glm::vec3 list_pos         = listMat[3];
+	glm::vec3 list_vel         = list_pos - glm::vec3(storedListMat[3]);
+	glm::vec3 list_cam_forward = glm::normalize(listMat * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
+	glm::vec3 list_cam_up      = glm::normalize(listMat * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
 
-	// Set up listener orientation
-	glm::vec4 up = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
-	glm::vec4 forward = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
-
-	// Clear the last column of the listener matrix
-	glm::mat4 rotMat = listenerMat;
-	rotMat[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-
-	// Simply rotate the vectors by the above rotation matrix
-	up      = rotMat * up;
-	forward = rotMat * forward;
-
-	// Convert the vectors to FMOD vectors
-	const FMOD_VECTOR fUp      = glmToFMOD(up);
-	const FMOD_VECTOR fForward = glmToFMOD(forward);
-
-	// For now, assume velocity is 0 m/s
-	const FMOD_VECTOR fVel = glmToFMOD(glm::vec3(0.0f));
+	// Set listener attributes
+	const FMOD_VECTOR fPos     = glmToFMOD(list_pos);
+	const FMOD_VECTOR fVel     = glmToFMOD(list_vel);
+	const FMOD_VECTOR fForward = glmToFMOD(list_cam_forward);
+	const FMOD_VECTOR fUp      = glmToFMOD(list_cam_up);
 
 	// Set 3D attributes for the player listener
 	fmod_result = system->set3DListenerAttributes(0, &fPos, &fVel, &fForward, &fUp);
 	if (fmod_result != FMOD_OK)
 	{
-		printf("FUNCTION: updateListener()");
+		printf("FUNCTION: update3DListener()");
 		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
 	}
+
+	// Update the system
+	fmod_result = system->update();
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: update3DListener()");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
+
+	storedListMat = listMat;
+}
+
+void ASound::update3DChannel(glm::vec3 ch_pos) {
+	glm::vec3 ch_vel = ch_pos - sound_pos;
+	const FMOD_VECTOR fPos = glmToFMOD(ch_pos);
+	const FMOD_VECTOR fVel = glmToFMOD(ch_vel);
+
+	fmod_result = channel->set3DAttributes(&fPos, &fVel);
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: update3DChannel()");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
+
+	system->update();
+	if (fmod_result != FMOD_OK)
+	{
+		printf("FUNCTION: update3DChannel()");
+		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
+
+	sound_pos = ch_pos;
 }
 
 void ASound::loadSound(const char * filepath){
@@ -122,7 +143,7 @@ void ASound::playSound(float volume){
 	}
 }
 
-void ASound::playSound3D(glm::vec3 position){
+void ASound::playSound3D(float volume){
 	bool bPlaying;
 	fmod_result = channel->isPlaying(&bPlaying);
 	if (fmod_result != FMOD_OK)
@@ -143,14 +164,11 @@ void ASound::playSound3D(glm::vec3 position){
 		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
 	}
 
-	// Modify channel information using the given position
-	FMOD_VECTOR fPos = glmToFMOD(position);
-	FMOD_VECTOR fVel = glmToFMOD(glm::vec3(100.0f, 100.0f, 100.0f));
-
-	fmod_result = channel->set3DAttributes(&fPos, NULL);
+	// Set the volume of the sound
+	fmod_result = channel->setVolume(volume);
 	if (fmod_result != FMOD_OK)
 	{
-		printf("FUNCTION: playSound3D()");
+		printf("FUNCTION: stopSound()");
 		printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
 	}
 }
