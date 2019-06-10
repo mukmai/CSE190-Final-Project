@@ -31,3 +31,8 @@ btRigidBody * SBaseEntity::createRigidBody()
 	rigidBody = nullptr;
 	return nullptr;
 }
+
+btGhostObject * SBaseEntity::createGhostObject()
+{
+	return nullptr;
+}

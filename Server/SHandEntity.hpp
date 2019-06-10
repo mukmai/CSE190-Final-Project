@@ -13,6 +13,8 @@ public:
 		SBaseEntity::initState();
 		_state->type = ENTITY_HAND;
 
+		//_state->scale = glm::vec3(0.04f, 0.04f, 1.0f);
+
 		_state->extraData.push_back(playerID); // extraData[PLAYER_ID] = player ID
 		_state->extraData.push_back(handIndex); // extraData[HAND_INDEX] = hand index (0 = left, 1 = right)
 		_state->extraData.push_back(0); // extraData[HAND_STATE] = hand state (0 = release hand, 1 = hold hand)
@@ -20,7 +22,8 @@ public:
 
 	btRigidBody* createRigidBody() override {
 		//create a dynamic rigidbody
-		colShape = new btSphereShape(btScalar(0.08f));
+		colShape = new btSphereShape(btScalar(0.03f));
+		//colShape = new btBoxShape(btVector3(btScalar(0.02f), btScalar(0.02f), btScalar(0.5f)));
 
 		/// Create Dynamic Objects
 		btTransform startTransform;
@@ -44,9 +47,23 @@ public:
 
 		// kinematic static objects (hands)
 		rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+		//rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
 		rigidBody->setActivationState(DISABLE_DEACTIVATION);
 
 		return rigidBody;
+	}
+
+	btGhostObject* createGhostObject() override {
+		auto ghostObject = new btGhostObject();
+		ghostObject->setCollisionShape(new btSphereShape(btScalar(0.08f)));
+
+		btTransform startTransform;
+		startTransform.setIdentity();
+		startTransform.setOrigin(bullet::fromGlm(_state->pos));
+
+		ghostObject->setWorldTransform(startTransform);
+
+		return ghostObject;
 	}
 
 	~SHandEntity() {

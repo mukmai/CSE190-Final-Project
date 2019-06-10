@@ -1,6 +1,6 @@
 #pragma once
-#include "bullet/btBulletDynamicsCommon.h"
-#include "bullet/btBulletCollisionCommon.h"
+#include "btBulletDynamicsCommon.h"
+#include "btBulletCollisionCommon.h"
 #include <map>
 #include <vector>
 #include "SEntityManager.h"

@@ -14,7 +14,8 @@ enum FUNCTION {
 	PLAYER_INPUT,
 	PLAYER_MOVE_Z,
 	PLAYER_MOVE_X,
-	PLAYER_BUTTON_A
+	PLAYER_BUTTON_A,
+	PLAYER_BUTTON_X
 };
 
 // map from FUNCTION enum to string (just to make it easier to find the location
@@ -27,7 +28,8 @@ static std::map<FUNCTION, std::string> serverFunction {
 { PLAYER_INPUT , "player_input"},
 { PLAYER_MOVE_Z , "player_move_z"},
 { PLAYER_MOVE_X , "player_move_x"},
-{ PLAYER_BUTTON_A , "player_button_a"}
+{ PLAYER_BUTTON_A , "player_button_a"},
+{ PLAYER_BUTTON_X , "player_button_x"}
 };
 
 enum EntityType
@@ -36,7 +38,8 @@ enum EntityType
 	ENTITY_PLAYER,
 	ENTITY_HEAD,
 	ENTITY_BODY,
-	ENTITY_SPHERE
+	ENTITY_SPHERE,
+	ENTITY_BOX
 };
 
 MSGPACK_ADD_ENUM(EntityType);

@@ -5,8 +5,9 @@
 #include "BaseState.h"
 #include "IDGenerator.h"
 #include <set>
-#include "bullet/btBulletDynamicsCommon.h"
-#include "bullet/btBulletCollisionCommon.h"
+#include "btBulletDynamicsCommon.h"
+#include "btBulletCollisionCommon.h"
+#include "BulletCollision/CollisionDispatch/btGhostObject.h"
 
 class SBaseEntity
 {
@@ -26,6 +27,8 @@ public:
 	virtual	std::vector<std::shared_ptr<SBaseEntity>> getChildren();
 
 	virtual btRigidBody* createRigidBody();
+
+	virtual btGhostObject* createGhostObject();
 
 protected:
 	std::shared_ptr<BaseState> _state;
@@ -49,4 +52,16 @@ namespace bullet
 		return btVector3(v.x, v.y, v.z);
 	}
 
+	inline glm::quat toGlm(const btQuaternion& bt) {
+		glm::quat res;
+		res.x = (float)bt.getX();
+		res.y = (float)bt.getY();
+		res.z = (float)bt.getZ();
+		res.w = (float)bt.getW();
+		return res;
+	}
+
+	inline btQuaternion fromGlm(const glm::quat& v) {
+		return btQuaternion(v.x, v.y, v.z);
+	}
 }

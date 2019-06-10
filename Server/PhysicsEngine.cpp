@@ -51,11 +51,13 @@ void PhysicsEngine::updateBody() {
 
 		// if it is body part then need to get global position through body position
 		glm::vec3 globalPos;
+		glm::quat globalRot = updatedList[i].rotation;
 		if (updatedList[i].type == ENTITY_HAND) {
 			auto playerState = entityManager->entityMap[updatedList[i].extraData[PLAYER_ID]]->getState();
 			auto globalPlayerTranslation = glm::translate(glm::mat4(1), playerState->pos);
 			auto globalPlayerRotation = glm::mat4_cast(playerState->rotation);
 			globalPos = globalPlayerTranslation * globalPlayerRotation * glm::vec4(updatedList[i].pos, 1);
+			//globalRot = playerState->rotation * updatedList[i].rotation;
 		}
 		else {
 			globalPos = updatedList[i].pos;
@@ -63,7 +65,7 @@ void PhysicsEngine::updateBody() {
 		btTransform newTransform;
 		newTransform.setIdentity();
 		newTransform.setOrigin(bullet::fromGlm(globalPos));
-		//newTransform.setRotation();
+		newTransform.setRotation(bullet::fromGlm(globalRot));
 		body->setWorldTransform(newTransform);
 		body->getMotionState()->setWorldTransform(newTransform);
 		body->clearForces();
@@ -89,7 +91,6 @@ void PhysicsEngine::stepSimulation(float timeStep) {
 		{
 			trans = obj->getWorldTransform();
 		}
-		//printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
 	}
 }
 
@@ -105,7 +106,7 @@ void PhysicsEngine::updateEntity(btRigidBody* body) {
 	btTransform trans;
 	body->getMotionState()->getWorldTransform(trans);
 	entity->getState()->pos = bullet::toGlm(trans.getOrigin());
-	// TODO: update rotation
+	entity->getState()->rotation = bullet::toGlm(trans.getRotation());
 	entity->updatedPlayerList.clear();
 	entity->updatedPlayerList.insert(0);
 }
