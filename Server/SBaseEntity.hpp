@@ -30,6 +30,10 @@ public:
 
 	virtual btGhostObject* createGhostObject();
 
+	virtual btCollisionShape* getcollisionShape();
+
+	virtual btRigidBody* getRigidBody();
+
 protected:
 	std::shared_ptr<BaseState> _state;
 

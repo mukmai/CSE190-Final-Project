@@ -36,3 +36,13 @@ btGhostObject * SBaseEntity::createGhostObject()
 {
 	return nullptr;
 }
+
+btCollisionShape * SBaseEntity::getcollisionShape()
+{
+	return colShape;
+}
+
+btRigidBody * SBaseEntity::getRigidBody()
+{
+	return rigidBody;
+}

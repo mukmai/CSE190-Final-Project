@@ -34,6 +34,8 @@ int SEntityManager::addPlayerEntity()
 	}
 	playerList.push_back(playerEntity->getState()->id);
 
+	playerEntity->getState()->pos = glm::vec3(0, 3, 0);
+
 	// TODO: this is just a temporary offset changing for player 1 and 2
 	if (playerList.size() == 2) {
 		playerEntity->getState()->pos = glm::vec3(0, 0, 2.0f);
@@ -45,6 +47,8 @@ void SEntityManager::updatePlayer(PlayerController playerController)
 {
 	auto tempEntity = entityMap.find(playerController.playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+
 
 	// update left hand
 	auto leftHand = playerEntity->leftHand;
@@ -76,6 +80,8 @@ void SEntityManager::updatePlayer(PlayerController playerController)
 	auto bodyRotation = glm::angleAxis(angle, glm::vec3(0, -1.0f, 0));
 	body->getState()->rotation = bodyRotation;
 	body->updatedPlayerList.clear();
+
+	//playerEntity->updatedPlayerList.clear();
 }
 
 void SEntityManager::movePlayerZ(int playerID, float rate)
@@ -105,10 +111,12 @@ void SEntityManager::createSphere(int playerID)
 	auto tempEntity = entityMap.find(playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
-	auto moveOffset = playerEntity->getForward() * 1.0f;
+	auto rightHand = playerEntity->rightHand;
+
+	auto moveOffset = rightHand->getPalmForward() * 1.0f;
 	auto sphere = std::make_shared<SSphereEntity>(
 		glm::vec3(0.2f),
-		playerEntity->getState()->pos + moveOffset);
+		rightHand->getState()->pos + moveOffset);
 	entityMap.insert({ sphere->getState()->id, sphere });
 }
 
@@ -122,4 +130,53 @@ void SEntityManager::createBox(int playerID)
 		glm::vec3(0.2f),
 		playerEntity->getState()->pos + moveOffset);
 	entityMap.insert({ box->getState()->id, box });
+}
+
+void SEntityManager::increaseHandSize(int playerID)
+{
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	//auto leftHand = playerEntity->leftHand;
+	//float curScale = leftHand->getState()->scale.x;
+	//leftHand->getcollisionShape()->setLocalScaling(leftHand->getcollisionShape()->getLocalScaling() + bullet::fromGlm(glm::vec3(0.2f)));
+
+	//auto rightHand = playerEntity->rightHand;
+	//curScale = rightHand->getState()->scale.x;
+	//rightHand->getcollisionShape()->setLocalScaling(rightHand->getcollisionShape()->getLocalScaling() + bullet::fromGlm(glm::vec3(0.2f)));
+
+	//playerEntity->getcollisionShape()->setLocalScaling(playerEntity->getcollisionShape()->getLocalScaling() + bullet::fromGlm(glm::vec3(0.2f)));
+	
+	//playerEntity->getState()->pos += glm::vec3(0, 1, 0);
+	//playerEntity->updatedPlayerList.clear();
+}
+
+void SEntityManager::rightHandThruster(int playerID, float rate)
+{
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	auto rightHand = playerEntity->rightHand;
+
+	auto force = rightHand->getPalmForward() * THRUSTER_FORCE * rate;
+
+	// reduce side way speed
+	force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
+
+	playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
+}
+
+void SEntityManager::leftHandThruster(int playerID, float rate)
+{
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	auto leftHand = playerEntity->leftHand;
+
+	auto force = leftHand->getPalmForward() * THRUSTER_FORCE * rate;
+
+	// reduce side way speed
+	force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
+
+	playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
 }

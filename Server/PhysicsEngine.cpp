@@ -62,6 +62,9 @@ void PhysicsEngine::updateBody() {
 		else {
 			globalPos = updatedList[i].pos;
 		}
+		if (updatedList[i].type == ENTITY_PLAYER) {
+			//std::cout << updatedList[i].pos.x << " " << updatedList[i].pos.y << " " << updatedList[i].pos.z << std::endl;
+		}
 		btTransform newTransform;
 		newTransform.setIdentity();
 		newTransform.setOrigin(bullet::fromGlm(globalPos));
@@ -109,6 +112,8 @@ void PhysicsEngine::updateEntity(btRigidBody* body) {
 	entity->getState()->rotation = bullet::toGlm(trans.getRotation());
 	entity->updatedPlayerList.clear();
 	entity->updatedPlayerList.insert(0);
+	//if (entity->getState()->type == ENTITY_PLAYER)
+	//	std::cout << entity->getState()->pos.x << " " << entity->getState()->pos.y << " " << entity->getState()->pos.z << std::endl;
 }
 
 void PhysicsEngine::generateEnvironment() {

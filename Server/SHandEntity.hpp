@@ -47,7 +47,7 @@ public:
 
 		// kinematic static objects (hands)
 		rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-		//rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+		rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
 		rigidBody->setActivationState(DISABLE_DEACTIVATION);
 
 		return rigidBody;
@@ -64,6 +64,10 @@ public:
 		ghostObject->setWorldTransform(startTransform);
 
 		return ghostObject;
+	}
+
+	glm::vec3 getPalmForward() {
+		return _state->rotation * glm::vec3(-1 + _state->extraData[HAND_INDEX] * 2, 0, 0);
 	}
 
 	~SHandEntity() {
