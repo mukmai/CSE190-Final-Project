@@ -63,6 +63,9 @@
     <ClInclude Include="SBoxEntity.hpp">
       <Filter>Header Files\SEntities</Filter>
     </ClInclude>
+    <ClInclude Include="SProjectileEntity.hpp">
+      <Filter>Header Files\SEntities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">

@@ -201,20 +201,24 @@ void Client::update()
 		c.call(serverFunction[PLAYER_RIGHT_THRUSTER_OFF], playerController.playerID);
 	}
 
-	bool bRightTriggerPressed = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Right);
-	if (bRightTriggerPressed) {
-		std::cout << "Right trigger pressed!" << std::endl;
-
-		// STEP: Play fire sound
-		soundFire->playSound(1.0f);
-	}
-
 	bool bLeftTriggerPressed = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Left);
 	if (bLeftTriggerPressed) {
 		std::cout << "Left trigger pressed!" << std::endl;
 
 		// STEP: Play fire sound
-		soundFire->playSound(1.0f);
+		soundFire->playSound3DInstance(1.0f);
+
+		c.call(serverFunction[PLAYER_SHOOT], playerController.playerID, 0);
+	}
+
+	bool bRightTriggerPressed = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Right);
+	if (bRightTriggerPressed) {
+		std::cout << "Right trigger pressed!" << std::endl;
+
+		// STEP: Play fire sound
+		soundFire->playSound3DInstance(1.0f);
+
+		c.call(serverFunction[PLAYER_SHOOT], playerController.playerID, 1);
 	}
 
 	// send pos of all things and update all states

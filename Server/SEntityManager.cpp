@@ -2,6 +2,7 @@
 #include "SPlayerEntity.hpp"
 #include "SSphereEntity.hpp"
 #include "SBoxEntity.hpp"
+#include "SProjectileEntity.hpp"
 #include <glm/gtx/quaternion.hpp>
 
 SEntityManager::SEntityManager()
@@ -130,6 +131,41 @@ void SEntityManager::createBox(int playerID)
 		glm::vec3(0.2f),
 		playerEntity->getState()->pos + moveOffset);
 	entityMap.insert({ box->getState()->id, box });
+}
+
+void SEntityManager::createProjectile(int playerID, int handIdx) {
+	std::cout << "In function \'createProjectile\' of SEntityManager." << std::endl;
+	std::cout << "--- handIdx = " << handIdx << std::endl;
+
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	auto hand = playerEntity->leftHand;
+
+	if (handIdx == 0) {
+		hand = playerEntity->leftHand;
+	}
+	else {
+		hand = playerEntity->rightHand;
+	}
+
+	// Only spawn a projectile if the hand is in gun mode
+	if (hand->getState()->extraData.at(HAND_STATE) == 1) {
+		// STEP: Calculate and apply an initial velocity
+		glm::vec3 spawnPos = hand->getState()->pos + playerEntity->getState()->pos;
+		glm::mat4 spawnRot = glm::toMat4(hand->getState()->rotation);
+		glm::vec3 spawnOfs = spawnRot * glm::vec4(glm::vec3(0.0f, 0.0f, -0.3f), 0.0f);
+
+		// Spawn the projectile
+		auto projectile = std::make_shared<SProjectileEntity>(
+			glm::vec3(0.2f),
+			spawnPos + spawnOfs,
+			spawnRot,
+			playerID);
+
+		entityMap.insert({ projectile->getState()->id, projectile });
+	}
+
 }
 
 void SEntityManager::increaseHandSize(int playerID)

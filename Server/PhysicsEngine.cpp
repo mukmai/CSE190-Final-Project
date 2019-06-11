@@ -59,6 +59,23 @@ void PhysicsEngine::updateBody() {
 			globalPos = globalPlayerTranslation * globalPlayerRotation * glm::vec4(updatedList[i].pos, 1);
 			//globalRot = playerState->rotation * updatedList[i].rotation;
 		}
+		else if (updatedList[i].type == ENTITY_PROJECTILE) {
+			// STEP: Turn off gravity for this entity
+			body->setGravity(btVector3(0, 0, 0));
+
+			// Set the velocity of the projectile
+			auto init_state = entityManager->entityMap[entityID]->getState();
+			glm::vec3 initVel = glm::vec4(0.0f, 0.0f, -20.0f, 0.0f);
+			initVel = glm::toMat4(init_state->rotation) * glm::vec4(initVel, 0.0f);
+
+			// Calculate the initial velocity of the projectile
+			body->setLinearVelocity(bullet::fromGlm(initVel));
+
+			// XXX: Turn off collision
+			//body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+
+			globalPos = updatedList[i].pos;
+		}
 		else {
 			globalPos = updatedList[i].pos;
 		}

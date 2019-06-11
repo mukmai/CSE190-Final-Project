@@ -178,6 +178,7 @@
     <ClInclude Include="SHandEntity.hpp" />
     <ClInclude Include="SHeadEntity.hpp" />
     <ClInclude Include="SPlayerEntity.hpp" />
+    <ClInclude Include="SProjectileEntity.hpp" />
     <ClInclude Include="SSphereEntity.hpp" />
   </ItemGroup>
   <ItemGroup>

@@ -109,6 +109,13 @@ std::function<void(int)> playerRightHandSwitch = [&](int playerID) {
 	mtx.unlock();
 };
 
+std::function<void(int, int)> playerShoot = [&](int playerID, int handIdx) {
+	mtx.lock();
+	std::cout << "In function \'playerShoot\' of server." << std::endl;
+	entityManager->createProjectile(playerID, handIdx);
+	mtx.unlock();
+};
+
 void startServer() {
 	// Set up rpc server and listen to PORT
 	rpc::server srv(PORT);
@@ -154,6 +161,8 @@ void startServer() {
 	srv.bind(serverFunction[PLAYER_LEFT_SWITCH], playerLeftHandSwitch);
 
 	srv.bind(serverFunction[PLAYER_RIGHT_SWITCH], playerRightHandSwitch);
+
+	srv.bind(serverFunction[PLAYER_SHOOT], playerShoot);
 
 	// Blocking call to start the server: non-blocking call is srv.async_run(threadsCount);
 	constexpr size_t thread_count = 2;

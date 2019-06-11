@@ -27,6 +27,8 @@ public:
 
 	void createBox(int playerID);
 
+	void createProjectile(int playerID, int handIdx);
+
 	void increaseHandSize(int playerID);
 
 	void rightHandThruster(int playerID, float rate);
