@@ -49,7 +49,10 @@ btRigidBody * SBaseEntity::getRigidBody()
 
 void SBaseEntity::deleteBody()
 {
-	delete colShape;
-	delete rigidBody->getMotionState();
-	delete rigidBody;
+	if (!deleted) {
+		//delete colShape;
+		//delete rigidBody->getMotionState();
+		//delete rigidBody;
+		deleted = true;
+	}
 }

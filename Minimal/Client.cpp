@@ -28,7 +28,7 @@ Client::Client() : c("localhost", PORT)
 void Client::initGl()
 {
 	RiftApp::initGl();
-	glClearColor(0.7f, 0.7f, 0.7f, 0.0f); // background color
+	glClearColor(1.0f, 0.0f, 0.0f, 0.0f); // background color
 	glEnable(GL_DEPTH_TEST);
 	ovr_RecenterTrackingOrigin(_session);
 	//srand((unsigned int)time(NULL));
@@ -37,7 +37,7 @@ void Client::initGl()
 		std::chrono::milliseconds(1);
 	srand(milliseconds_since_epoch);
 	sphereScene = std::shared_ptr<SpheresScene>(new SpheresScene());
-	imageGUI = new ImageGUI(_mirrorSize.x, _mirrorSize.y);
+	healthHUD = new HealthHUD(_mirrorSize.x, _mirrorSize.y);
 	IOD = _viewScaleDesc.HmdToEyePose[ovrEye_Right].Position.x - _viewScaleDesc.HmdToEyePose[ovrEye_Left].Position.x;
 	std::cout << IOD << std::endl;
 }
@@ -77,7 +77,7 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), globalEyePose);
 	float offset = IOD / 2 * 5000;
 	if (renderingEye) offset = -offset;
-	imageGUI->render(offset);
+	healthHUD->render(offset);
 }
 
 void Client::update()
@@ -225,7 +225,10 @@ void Client::update()
 	for (int i = 0; i < newStates.size(); i++) {
 		EntityManager::getInstance().update(newStates[i]);
 	}
-	//std::cout << EntityManager::getInstance().getEntity(playerController.playerID)->getState()->extraData[PLAYER_HEALTH] << std::endl;
+	//std::cout << EntityManager::getInstance().getEntity(playerController.playerID)->getState()->extraData[PLAYER_HEALTH] / 5.0f << std::endl;
+
+	// update health bar
+	healthHUD->updateHealth(EntityManager::getInstance().getEntity(playerController.playerID)->getState()->extraData[PLAYER_HEALTH] / 5.0f);
 
 	lastLeftHand = tmpLeftMat;
 	lastRightHand = tmpRightMat;

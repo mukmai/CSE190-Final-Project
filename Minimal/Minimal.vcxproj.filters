@@ -290,5 +290,8 @@
     <ClInclude Include="ImageGUI.hpp">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="HealthHUD.hpp">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

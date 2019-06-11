@@ -46,6 +46,7 @@ protected:
 	btRigidBody* rigidBody;
 
 	btCollisionShape* colShape;
+	bool deleted = false;
 };
 
 namespace bullet

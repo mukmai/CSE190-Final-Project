@@ -19,11 +19,12 @@ protected:
 	std::unique_ptr<Shader> _quadShader;
 	unsigned int textureID;
 
-	glm::vec2 _quad_size;
 	glm::vec2 _win_size;
+	glm::vec2 _quad_size;
 	glm::vec2 _quad_pos;
 	float _quad_rotation;
 	GLuint VAO, VBO;
+	Model* model;
 
 public:
 
@@ -57,8 +58,8 @@ public:
 		glBindVertexArray(0);
 
 		//_quad_size = glm::vec2(100, 100);
-		Model* model = new Model("./Resources/Models/left_hand.obj", false);
-		textureID = model->TextureFromFile("health.png", "./Resources/Textures/", false);
+		model = new Model("./Resources/Models/sphere.obj", false);
+		//textureID = model->TextureFromFile("health.png", "./Resources/Textures/", false);
 	}
 
 	virtual void updateWindowSize(float width, float height) {
@@ -73,6 +74,7 @@ public:
 
 	virtual void render(float offset) {
 		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
 		_quadShader->use();
 
 		// Compute model matrix based on state: t * r * s
@@ -97,6 +99,7 @@ public:
 		glDrawArrays(GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
 		glBindVertexArray(0);
 		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_BLEND);
 	}
 };
 

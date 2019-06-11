@@ -17,7 +17,7 @@
 #include <random>
 
 #include <chrono>
-#include "ImageGUI.hpp"
+#include "HealthHUD.hpp"
 
 // An example application that renders a simple cube
 class Client : public RiftApp {
@@ -26,7 +26,7 @@ class Client : public RiftApp {
 	rpc::client c;
 	std::shared_ptr<SpheresScene> sphereScene;
 	PlayerController playerController;
-	ImageGUI * imageGUI;
+	HealthHUD * healthHUD;
 	float IOD;
 
 	std::vector<ASound *> bgmList;

@@ -26,11 +26,11 @@ void PhysicsEngine::updateBody() {
 	for (int i = deletedEntities.size() - 1; i >= 0; i--) {
 		int id = deletedEntities[i];
 		auto entity = entityManager->entityMap[id];
-		if (entity->updatedPlayerList.size() > entityManager->playerList.size()) {
-			entityManager->entityMap.erase(id);
-			completedDeletedList.push_back(i);
-		}
+		//if (entity->updatedPlayerList.size() > entityManager->playerList.size()) {
 
+		//	completedDeletedList.push_back(i);
+		//}
+		entityManager->entityMap.erase(id);
 		auto search = idBodyMap.find(id);
 		if (search == idBodyMap.end())
 			continue;
@@ -40,10 +40,12 @@ void PhysicsEngine::updateBody() {
 		dynamicsWorld->removeRigidBody(body);
 		entity->deleteBody();
 	}
+	deletedEntities.clear();
 
-	for (int i = 0; i < completedDeletedList.size(); i++) {
-		deletedEntities.erase(deletedEntities.begin() + completedDeletedList[i]);
-	}
+	//for (int i = 0; i < completedDeletedList.size(); i++) {
+	//	deletedEntities.erase(deletedEntities.begin() + completedDeletedList[i]);
+	//}
+	//completedDeletedList.clear();
 
 	auto updatedList = entityManager->getUpdateList(0);
 	for (int i = 0; i < updatedList.size(); i++) {
@@ -125,7 +127,7 @@ void PhysicsEngine::stepSimulation(float timeStep) {
 			}
 			float diff = glm::length(entityA->getState()->pos - entityB->getState()->pos);
 			float radius = entityA->getState()->scale.x + entityB->getState()->scale.x;
-			if (diff <= radius + 0.03f) {
+			if (diff <= radius + 0.05f) {
 				if (entityA->collisionGroup == COL_BULLET && entityB->collisionGroup == COL_BODY) {
 					if (entityA->getState()->extraData[PLAYER_ID] == entityB->getState()->extraData[PLAYER_ID])
 						continue;
