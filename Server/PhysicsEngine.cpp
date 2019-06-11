@@ -128,20 +128,21 @@ void PhysicsEngine::stepSimulation(float timeStep) {
 			float diff = glm::length(entityA->getState()->pos - entityB->getState()->pos);
 			float radius = entityA->getState()->scale.x + entityB->getState()->scale.x;
 			if (diff <= radius + 0.05f) {
-				if (entityA->collisionGroup == COL_BULLET && entityB->collisionGroup == COL_BODY) {
-					if (entityA->getState()->extraData[PLAYER_ID] == entityB->getState()->extraData[PLAYER_ID])
-						continue;
-					entityManager->hitPlayer(entityB->getState()->extraData[PLAYER_ID]);
-					entityA->getState()->isDeleted = true;
-					deletedEntities.push_back(entityA->getState()->id);
-				}
-				else if (entityA->collisionGroup == COL_BODY && entityB->collisionGroup == COL_BULLET) {
-					if (entityB->getState()->extraData[PLAYER_ID] == entityA->getState()->extraData[PLAYER_ID])
-						continue;
-					entityManager->hitPlayer(entityA->getState()->extraData[PLAYER_ID]);
-					entityB->getState()->isDeleted = true;
-					deletedEntities.push_back(entityB->getState()->id);
-				}
+
+			}
+			if (entityA->collisionGroup == COL_BULLET && entityB->collisionGroup == COL_BODY) {
+				if (entityA->getState()->extraData[PLAYER_ID] == entityB->getState()->extraData[PLAYER_ID])
+					continue;
+				entityManager->hitPlayer(entityB->getState()->extraData[PLAYER_ID]);
+				entityA->getState()->isDeleted = true;
+				deletedEntities.push_back(entityA->getState()->id);
+			}
+			else if (entityA->collisionGroup == COL_BODY && entityB->collisionGroup == COL_BULLET) {
+				if (entityB->getState()->extraData[PLAYER_ID] == entityA->getState()->extraData[PLAYER_ID])
+					continue;
+				entityManager->hitPlayer(entityA->getState()->extraData[PLAYER_ID]);
+				entityB->getState()->isDeleted = true;
+				deletedEntities.push_back(entityB->getState()->id);
 			}
 		}
 	}
