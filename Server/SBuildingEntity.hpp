@@ -44,9 +44,13 @@ public:
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 		rigidBody = new btRigidBody(rbInfo);
 
-		int collideWith = COL_HEIGHT | COL_BULLET | COL_WALL;
+		collideWith = COL_HEIGHT | COL_BULLET | COL_WALL;
 
-		dynamicsWorld->addRigidBody(rigidBody, COL_WALL, collideWith);
+		collisionGroup = COL_WALL;
+
+		dynamicsWorld->addRigidBody(rigidBody, collisionGroup, collideWith);
+
+		rigidBody->setUserPointer(this);
 
 		return rigidBody;
 	}

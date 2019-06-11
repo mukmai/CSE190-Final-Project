@@ -45,5 +45,6 @@ public:
 
 	void stabilizerSwitch(int playerID);
 
+	void hitPlayer(int playerID);
 };
 

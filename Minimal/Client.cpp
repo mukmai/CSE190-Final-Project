@@ -72,7 +72,6 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	auto globalHeadPose = globalPlayerTranslation * globalPlayerRotation * headPose;
 	auto globalEyePose = globalPlayerTranslation * globalPlayerRotation * glm::vec4(eyePos, 1);
 	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), globalEyePose);
-
 }
 
 void Client::update()
@@ -153,8 +152,6 @@ void Client::update()
 
 	//if (OVRInputWrapper::getInstance().buttonPressed(ovrButton_Y)) {
 	if(leftAngY > 0.4f && leftAngX > 0.4f && (std::chrono::duration_cast<std::chrono::milliseconds>(time_now - leftCooldown).count() > 500)){
-	//if(leftAng > 0.05f){
-		std::cout << "Switching left hand state!" << std::endl;
 		c.call(serverFunction[PLAYER_LEFT_SWITCH], playerController.playerID);
 		leftCooldown = std::chrono::system_clock::now();
 	}
@@ -181,7 +178,6 @@ void Client::update()
 
 	//if (OVRInputWrapper::getInstance().buttonPressed(ovrButton_B)) {
 	if (rightAngY > 0.4f && rightAngX > 0.4f && (std::chrono::duration_cast<std::chrono::milliseconds>(time_now - rightCooldown).count() > 500)) {
-		std::cout << "Switching right hand state!" << std::endl;
 		c.call(serverFunction[PLAYER_RIGHT_SWITCH], playerController.playerID);
 		rightCooldown = std::chrono::system_clock::now();
 	}
@@ -204,8 +200,6 @@ void Client::update()
 
 	bool bLeftTriggerPressed = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Left);
 	if (bLeftTriggerPressed) {
-		std::cout << "Left trigger pressed!" << std::endl;
-
 		// STEP: Play fire sound
 		soundFire->playSound3DInstance(1.0f);
 
@@ -214,8 +208,6 @@ void Client::update()
 
 	bool bRightTriggerPressed = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Right);
 	if (bRightTriggerPressed) {
-		std::cout << "Right trigger pressed!" << std::endl;
-
 		// STEP: Play fire sound
 		soundFire->playSound3DInstance(1.0f);
 

@@ -34,6 +34,7 @@ public:
 		_children.push_back(head);
 		body = std::make_shared<SBodyEntity>(_state->id);
 		_children.push_back(body);
+		_state->extraData.push_back(5);
 	};
 
 	~SPlayerEntity() {
@@ -81,9 +82,13 @@ public:
 		rigidBody->setActivationState(DISABLE_DEACTIVATION);
 		rigidBody->setAngularFactor(0);
 
-		int collideWith = COL_WALL;
+		collideWith = COL_WALL;
 
-		dynamicsWorld->addRigidBody(rigidBody, COL_HEIGHT, collideWith);
+		collisionGroup = COL_HEIGHT;
+
+		dynamicsWorld->addRigidBody(rigidBody, collisionGroup, collideWith);
+
+		rigidBody->setUserPointer(this);
 
 		return rigidBody;
 	}

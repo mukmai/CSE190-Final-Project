@@ -13,7 +13,11 @@ class SBaseEntity
 {
 public:
 	// stores playerID that has already updated this entity
-	std::set<int> updatedPlayerList; 
+	std::set<int> updatedPlayerList;
+
+	int collideWith;
+
+	int collisionGroup;
 
 	virtual ~SBaseEntity(); // Destroys local state and collider objects
 
@@ -33,6 +37,8 @@ public:
 	virtual btCollisionShape* getcollisionShape();
 
 	virtual btRigidBody* getRigidBody();
+
+	virtual void deleteBody();
 
 protected:
 	std::shared_ptr<BaseState> _state;

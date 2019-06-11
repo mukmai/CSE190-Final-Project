@@ -62,7 +62,8 @@ enum EntityType
 	ENTITY_SPHERE,
 	ENTITY_BOX,
 	ENTITY_BUILDING,
-	ENTITY_PROJECTILE
+	ENTITY_PROJECTILE,
+	ENTITY_WALL
 };
 
 MSGPACK_ADD_ENUM(EntityType);
@@ -84,4 +85,9 @@ enum HandExtraData
 	HAND_INDEX,
 	HAND_STATE,
 	THRUSTER_ON
+};
+
+enum PlayerExtraData
+{
+	PLAYER_HEALTH
 };

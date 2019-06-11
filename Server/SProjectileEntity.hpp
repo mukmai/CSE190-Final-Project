@@ -56,12 +56,16 @@ public:
 
 		rigidBody->setFriction(0);
 
-		int collideWith = COL_BULLET | COL_WALL | COL_BODY;
+		collideWith = COL_WALL | COL_BODY;
 
-		dynamicsWorld->addRigidBody(rigidBody, COL_BULLET, collideWith);
+		collisionGroup = COL_BULLET;
+
+		dynamicsWorld->addRigidBody(rigidBody, collisionGroup, collideWith);
 
 		// STEP: Turn off gravity for this entity
 		rigidBody->setGravity(btVector3(0, 0, 0));
+
+		rigidBody->setUserPointer(this);
 
 		return rigidBody;
 	}

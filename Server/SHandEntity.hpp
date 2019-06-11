@@ -24,7 +24,7 @@ public:
 
 	btRigidBody* createRigidBody(btDiscreteDynamicsWorld * dynamicsWorld) override {
 		//create a dynamic rigidbody
-		colShape = new btSphereShape(btScalar(0.03f));
+		colShape = new btSphereShape(btScalar(0.02f));
 		//colShape = new btBoxShape(btVector3(btScalar(0.02f), btScalar(0.02f), btScalar(0.5f)));
 
 		/// Create Dynamic Objects
@@ -52,9 +52,13 @@ public:
 		//rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
 		rigidBody->setActivationState(DISABLE_DEACTIVATION);
 
-		int collideWith = COL_BULLET | COL_WALL;
+		collideWith = COL_BULLET | COL_WALL;
 
-		dynamicsWorld->addRigidBody(rigidBody, COL_BODY, collideWith);
+		collisionGroup = COL_BODY;
+
+		dynamicsWorld->addRigidBody(rigidBody, collisionGroup, collideWith);
+
+		rigidBody->setUserPointer(this);
 
 		return rigidBody;
 	}

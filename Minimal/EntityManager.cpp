@@ -9,6 +9,7 @@
 #include "CBoxEntity.hpp"
 #include "CBuildingEntity.hpp"
 #include "CProjectileEntity.hpp"
+#include "CWallEntity.hpp"
 
 EntityManager::EntityManager()
 {
@@ -70,9 +71,12 @@ std::shared_ptr<CBaseEntity> EntityManager::getEntity(BaseState const & state)
 		break;
 	case ENTITY_BUILDING:
 		entity = std::make_shared<CBuildingEntity>();
-    break;
+		break;
 	case ENTITY_PROJECTILE:
 		entity = std::make_shared<CProjectileEntity>();
+		break;
+	case ENTITY_WALL:
+		entity = std::make_shared<CWallEntity>();
 		break;
 	}
 
@@ -87,29 +91,30 @@ std::shared_ptr<CBaseEntity> EntityManager::getEntity(BaseState const & state)
 
 void EntityManager::update(BaseState const & state)
 {
+	if (state.isDeleted && !getEntity(state.id)) {
+		return;
+	}
 	auto entity = getEntity(state);
 
 	if (entity)
 	{
 		entity->updateState(state);
+
+		// Destroy entity if necessary
+		if (state.isDeleted)
+		{
+			// Find in map and destroy if it exists
+			auto result = _entityMap.find(state.id);
+			if (result != _entityMap.end())
+			{
+				// Erase from map
+				_entityList[result->second] = nullptr;
+				_entityMap.erase(result);
+			}
+
+			return;
+		}
 	}
-
-	// Destroy entity if necessary
-	//if (state->isDestroyed)
-	//{
-	//	// Find in map and destroy if it exists
-	//	auto result = _entityMap.find(state->id);
-	//	if (result != _entityMap.end())
-	//	{
-	//		//_entityList.erase(_entityList.begin() + result->second);
-
-	//		// Erase from map
-	//		_entityList[result->second] = nullptr;
-	//		_entityMap.erase(result);
-	//	}
-
-	//	return;
-	//}
 }
 
 void EntityManager::render(const glm::mat4 & projection, const glm::mat4 & view, glm::vec3 eyePos)

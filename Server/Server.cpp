@@ -111,7 +111,6 @@ std::function<void(int)> playerRightHandSwitch = [&](int playerID) {
 
 std::function<void(int, int)> playerShoot = [&](int playerID, int handIdx) {
 	mtx.lock();
-	std::cout << "In function \'playerShoot\' of server." << std::endl;
 	entityManager->createProjectile(playerID, handIdx);
 	mtx.unlock();
 };
