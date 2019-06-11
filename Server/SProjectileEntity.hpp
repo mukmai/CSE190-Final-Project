@@ -24,7 +24,7 @@ public:
 		_state->extraData.push_back(playerID); // extraData[PLAYER_ID] = player ID
 	};
 
-	btRigidBody* createRigidBody() override {
+	btRigidBody* createRigidBody(btDiscreteDynamicsWorld * dynamicsWorld) override {
 		//create a dynamic rigidbody
 		colShape = new btSphereShape(btScalar(_state->scale.x / 2));
 
@@ -48,9 +48,6 @@ public:
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 		rigidBody = new btRigidBody(rbInfo);
 
-		// STEP: Turn off gravity for this entity
-		rigidBody->setGravity(btVector3(0, 0, 0));
-
 		glm::vec3 initVel = glm::vec4(0.0f, 0.0f, -20.0f, 0.0f);
 		initVel = glm::toMat4(_state->rotation) * glm::vec4(initVel, 0.0f);
 
@@ -58,6 +55,13 @@ public:
 		rigidBody->setLinearVelocity(bullet::fromGlm(initVel));
 
 		rigidBody->setFriction(0);
+
+		int collideWith = COL_BULLET | COL_WALL | COL_BODY;
+
+		dynamicsWorld->addRigidBody(rigidBody, COL_BULLET, collideWith);
+
+		// STEP: Turn off gravity for this entity
+		rigidBody->setGravity(btVector3(0, 0, 0));
 
 		return rigidBody;
 	}
