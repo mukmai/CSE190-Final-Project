@@ -133,15 +133,11 @@ void SEntityManager::createSphere(int playerID)
 	auto tempEntity = entityMap.find(playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
-
-
-	//auto rightHand = playerEntity->rightHand;
-
-	//auto moveOffset = rightHand->getPalmForward() * 1.0f;
-	//auto sphere = std::make_shared<SSphereEntity>(
-	//	glm::vec3(0.2f),
-	//	rightHand->getState()->pos + moveOffset);
-	//entityMap.insert({ sphere->getState()->id, sphere });
+	auto moveOffset = playerEntity->getForward() * 1.0f;
+	auto sphere = std::make_shared<SSphereEntity>(
+		glm::vec3(0.2f),
+		playerEntity->getState()->pos + moveOffset);
+	entityMap.insert({ sphere->getState()->id, sphere });
 }
 
 void SEntityManager::createBox(int playerID)
@@ -330,7 +326,13 @@ void SEntityManager::hitPlayer(int playerID)
 	auto tempEntity = entityMap.find(playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
-	if (playerEntity->getState()->extraData[PLAYER_HEALTH] > 0)
+	if (!gameEnd && playerEntity->getState()->extraData[PLAYER_HEALTH] > 0)
 		playerEntity->getState()->extraData[PLAYER_HEALTH] -= 1;
+	if (playerEntity->getState()->extraData[PLAYER_HEALTH] == 0)
+		gameEnd = true;
+}
 
+bool SEntityManager::getGameState()
+{
+	return gameEnd;
 }

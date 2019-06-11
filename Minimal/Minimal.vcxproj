@@ -217,6 +217,7 @@ xcopy /y /d  "$(ProjectDir)External\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="CWallEntity.hpp" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="ExampleApp.h" />
+    <ClInclude Include="GameOverHUD.hpp" />
     <ClInclude Include="GlfwApp.h" />
     <ClInclude Include="HealthHUD.hpp" />
     <ClInclude Include="ImageGUI.hpp" />

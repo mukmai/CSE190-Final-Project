@@ -293,5 +293,8 @@
     <ClInclude Include="HealthHUD.hpp">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="GameOverHUD.hpp">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -115,6 +115,13 @@ std::function<void(int, int)> playerShoot = [&](int playerID, int handIdx) {
 	mtx.unlock();
 };
 
+std::function<bool()> getGameState = [&]() {
+	mtx.lock();
+	auto res = entityManager->getGameState();
+	mtx.unlock();
+	return res;
+};
+
 void startServer() {
 	// Set up rpc server and listen to PORT
 	rpc::server srv(PORT);
@@ -162,6 +169,8 @@ void startServer() {
 	srv.bind(serverFunction[PLAYER_RIGHT_SWITCH], playerRightHandSwitch);
 
 	srv.bind(serverFunction[PLAYER_SHOOT], playerShoot);
+
+	srv.bind(serverFunction[CHECK_GAME_STATE], getGameState);
 
 	// Blocking call to start the server: non-blocking call is srv.async_run(threadsCount);
 	constexpr size_t thread_count = 2;

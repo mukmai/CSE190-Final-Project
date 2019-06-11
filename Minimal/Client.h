@@ -18,6 +18,7 @@
 
 #include <chrono>
 #include "HealthHUD.hpp"
+#include "GameOverHUD.hpp"
 
 // An example application that renders a simple cube
 class Client : public RiftApp {
@@ -27,6 +28,7 @@ class Client : public RiftApp {
 	std::shared_ptr<SpheresScene> sphereScene;
 	PlayerController playerController;
 	HealthHUD * healthHUD;
+	GameOverHUD * gameOverHUD;
 	float IOD;
 
 	std::vector<ASound *> bgmList;

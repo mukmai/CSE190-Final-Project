@@ -17,11 +17,11 @@ public:
 
 	HealthHUD(float width, float height) : ImageGUI(width, height) {
 		textureID = model->TextureFromFile("light_blue.jpg", "./Resources/Textures/", false);
-		_quad_size = glm::vec2(300, 50);
+		_quad_size = glm::vec2(300, 40);
 		_quad_pos = glm::vec2(200, 150);
 		textTextureID = model->TextureFromFile("health.png", "./Resources/Textures/", false);
 		text_quad_size = _quad_size / 2.0f;
-		text_quad_pos = _quad_pos + glm::vec2(-_quad_size.x / 4, _quad_size.y / 4 * 3);
+		text_quad_pos = _quad_pos + glm::vec2(-_quad_size.x / 4, _quad_size.y / 4 * 3 + 5);
 		healthTextureID = model->TextureFromFile("green.jpg", "./Resources/Textures/", false);
 		health_quad_size = glm::vec2((_quad_size.x - 20) * healthPercentage, _quad_size.y - 15);
 		health_quad_pos = _quad_pos - glm::vec2((_quad_size.x - 20) * (1 - healthPercentage) / 2.0f, 0);

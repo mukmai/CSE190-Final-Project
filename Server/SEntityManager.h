@@ -7,6 +7,8 @@
 class SEntityManager
 {
 public:
+	bool gameEnd = false;
+
 	std::unordered_map<int, std::shared_ptr<SBaseEntity>> entityMap;
 
 	std::vector<int> playerList;
@@ -46,5 +48,7 @@ public:
 	void stabilizerSwitch(int playerID);
 
 	void hitPlayer(int playerID);
+
+	bool getGameState();
 };
 

@@ -38,6 +38,7 @@ void Client::initGl()
 	srand(milliseconds_since_epoch);
 	sphereScene = std::shared_ptr<SpheresScene>(new SpheresScene());
 	healthHUD = new HealthHUD(_mirrorSize.x, _mirrorSize.y);
+	gameOverHUD = new GameOverHUD(_mirrorSize.x, _mirrorSize.y);
 	IOD = _viewScaleDesc.HmdToEyePose[ovrEye_Right].Position.x - _viewScaleDesc.HmdToEyePose[ovrEye_Left].Position.x;
 	std::cout << IOD << std::endl;
 }
@@ -75,9 +76,11 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	auto globalHeadPose = globalPlayerTranslation * globalPlayerRotation * headPose;
 	auto globalEyePose = globalPlayerTranslation * globalPlayerRotation * glm::vec4(eyePos, 1);
 	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), globalEyePose);
-	float offset = IOD / 2 * 5000;
+	float offset = IOD / 2;
 	if (renderingEye) offset = -offset;
-	healthHUD->render(offset);
+	gameOverHUD->render(offset * 4500);
+	healthHUD->render(offset * 4700);
+
 }
 
 void Client::update()
@@ -228,7 +231,10 @@ void Client::update()
 	//std::cout << EntityManager::getInstance().getEntity(playerController.playerID)->getState()->extraData[PLAYER_HEALTH] / 5.0f << std::endl;
 
 	// update health bar
-	healthHUD->updateHealth(EntityManager::getInstance().getEntity(playerController.playerID)->getState()->extraData[PLAYER_HEALTH] / 5.0f);
+	auto healthRatio = EntityManager::getInstance().getEntity(playerController.playerID)->getState()->extraData[PLAYER_HEALTH] / 5.0f;
+	healthHUD->updateHealth(healthRatio);
+	gameOverHUD->updateHealth(healthRatio);
+	gameOverHUD->gameEnd = c.call(serverFunction[CHECK_GAME_STATE]).as<bool>();
 
 	lastLeftHand = tmpLeftMat;
 	lastRightHand = tmpRightMat;
