@@ -22,19 +22,28 @@ PhysicsEngine::PhysicsEngine(SEntityManager * entityManager)
 }
 
 void PhysicsEngine::updateBody() {
-	for (auto& id : deletedEntities) {
+	std::vector<int> completedDeletedList;
+	for (int i = deletedEntities.size() - 1; i >= 0; i--) {
+		int id = deletedEntities[i];
+		auto entity = entityManager->entityMap[id];
+		if (entity->updatedPlayerList.size() > entityManager->playerList.size()) {
+			entityManager->entityMap.erase(id);
+			completedDeletedList.push_back(i);
+		}
+
 		auto search = idBodyMap.find(id);
 		if (search == idBodyMap.end())
 			continue;
 		auto body = btRigidBody::upcast(search->second);
-		auto entity = entityManager->entityMap[id];
-		entityManager->entityMap.erase(id);
-		idBodyMap.erase(id);
 		bodyIdMap.erase(body);
+		idBodyMap.erase(id);
 		dynamicsWorld->removeRigidBody(body);
 		entity->deleteBody();
 	}
-	deletedEntities.clear();
+
+	for (int i = 0; i < completedDeletedList.size(); i++) {
+		deletedEntities.erase(deletedEntities.begin() + completedDeletedList[i]);
+	}
 
 	auto updatedList = entityManager->getUpdateList(0);
 	for (int i = 0; i < updatedList.size(); i++) {
@@ -106,6 +115,14 @@ void PhysicsEngine::stepSimulation(float timeStep) {
 		SBaseEntity* entityA = (SBaseEntity *)(objA->getUserPointer());
 		SBaseEntity* entityB = (SBaseEntity *)(objB->getUserPointer());
 		if (entityA && entityB) {
+			if (entityA->collisionGroup == COL_BULLET && entityB->collisionGroup == COL_WALL) {
+				entityA->getState()->isDeleted = true;
+				deletedEntities.push_back(entityA->getState()->id);
+			}
+			else if (entityA->collisionGroup == COL_WALL && entityB->collisionGroup == COL_BULLET) {
+				entityB->getState()->isDeleted = true;
+				deletedEntities.push_back(entityB->getState()->id);
+			}
 			float diff = glm::length(entityA->getState()->pos - entityB->getState()->pos);
 			float radius = entityA->getState()->scale.x + entityB->getState()->scale.x;
 			if (diff <= radius + 0.03f) {
@@ -126,6 +143,8 @@ void PhysicsEngine::stepSimulation(float timeStep) {
 			}
 		}
 	}
+
+	
 
 	for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
 	{

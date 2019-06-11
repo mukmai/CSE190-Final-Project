@@ -37,6 +37,9 @@ void Client::initGl()
 		std::chrono::milliseconds(1);
 	srand(milliseconds_since_epoch);
 	sphereScene = std::shared_ptr<SpheresScene>(new SpheresScene());
+	imageGUI = new ImageGUI(_mirrorSize.x, _mirrorSize.y);
+	IOD = _viewScaleDesc.HmdToEyePose[ovrEye_Right].Position.x - _viewScaleDesc.HmdToEyePose[ovrEye_Left].Position.x;
+	std::cout << IOD << std::endl;
 }
 
 void Client::initAudio() {
@@ -72,6 +75,9 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	auto globalHeadPose = globalPlayerTranslation * globalPlayerRotation * headPose;
 	auto globalEyePose = globalPlayerTranslation * globalPlayerRotation * glm::vec4(eyePos, 1);
 	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), globalEyePose);
+	float offset = IOD / 2 * 5000;
+	if (renderingEye) offset = -offset;
+	imageGUI->render(offset);
 }
 
 void Client::update()
@@ -219,7 +225,7 @@ void Client::update()
 	for (int i = 0; i < newStates.size(); i++) {
 		EntityManager::getInstance().update(newStates[i]);
 	}
-	//std::cout << std::endl;
+	//std::cout << EntityManager::getInstance().getEntity(playerController.playerID)->getState()->extraData[PLAYER_HEALTH] << std::endl;
 
 	lastLeftHand = tmpLeftMat;
 	lastRightHand = tmpRightMat;

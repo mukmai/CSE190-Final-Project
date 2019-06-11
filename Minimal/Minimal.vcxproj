@@ -218,6 +218,7 @@ xcopy /y /d  "$(ProjectDir)External\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="ExampleApp.h" />
     <ClInclude Include="GlfwApp.h" />
+    <ClInclude Include="ImageGUI.hpp" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="OVRInputWrapper.h" />

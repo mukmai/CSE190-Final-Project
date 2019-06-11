@@ -287,5 +287,8 @@
     <ClInclude Include="CWallEntity.hpp">
       <Filter>Header Files\CEntities</Filter>
     </ClInclude>
+    <ClInclude Include="ImageGUI.hpp">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

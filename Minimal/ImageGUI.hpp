@@ -32,8 +32,6 @@ public:
 	}
 
 	virtual void init(float width, float height) {
-		_quadShader = std::make_unique<Shader>();
-
 		_quadShader = std::make_unique<Shader>("./Resources/Shaders/imageGUI.vert", "./Resources/Shaders/imageGUI.frag");
 
 		updateWindowSize(width, height);
@@ -59,26 +57,26 @@ public:
 		glBindVertexArray(0);
 
 		//_quad_size = glm::vec2(100, 100);
-		textureID = LoadTextureFromFile("green.jpg", "./Resources/Textures/");
-		_quad_pos = glm::vec2(0);
+		Model* model = new Model("./Resources/Models/left_hand.obj", false);
+		textureID = model->TextureFromFile("health.png", "./Resources/Textures/", false);
 	}
 
 	virtual void updateWindowSize(float width, float height) {
 		_win_size = glm::vec2(width, height);
-		float rescaleFactor = (float)(width) / 1280;
-		_quad_size = glm::vec2(100 * rescaleFactor, 100 * rescaleFactor);
-		_quad_pos = glm::vec2(width - 100 * rescaleFactor, height - 100 * rescaleFactor);
+		_quad_size = glm::vec2(300, 100);
+		_quad_pos = glm::vec2(width/2, height/2);
 	}
 
 	virtual void updateRotation(float degree) {
 		_quad_rotation = degree;
 	}
 
-	virtual void render() {
+	virtual void render(float offset) {
+		glDisable(GL_DEPTH_TEST);
 		_quadShader->use();
 
 		// Compute model matrix based on state: t * r * s
-		const auto t = glm::translate(glm::mat4(1.0f), glm::vec3((_quad_pos / _win_size * 2.0f) - 1.0f, 0));
+		const auto t = glm::translate(glm::mat4(1.0f), glm::vec3(((_quad_pos + glm::vec2(offset,0)) / _win_size * 2.0f) - 1.0f, 0));
 		const auto s = glm::scale(glm::mat4(1.0f), glm::vec3(_quad_size / _win_size, 1));
 
 		auto model = t * s;
@@ -98,6 +96,7 @@ public:
 		// Draw the triangles 
 		glDrawArrays(GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
 		glBindVertexArray(0);
+		glEnable(GL_DEPTH_TEST);
 	}
 };
 

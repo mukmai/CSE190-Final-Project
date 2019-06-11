@@ -116,6 +116,7 @@ class RiftApp : public GlfwApp, public RiftManagerApp {
 protected:
 	ovrViewScaleDesc _viewScaleDesc;
 	ovrTrackingState _hmdState;
+	glm::uvec2 _mirrorSize;
 
 private:
 	GLuint _fbo{ 0 };
@@ -133,7 +134,7 @@ private:
 	
 
 	glm::uvec2 _renderTargetSize;
-	glm::uvec2 _mirrorSize;
+
 
 public:
 
