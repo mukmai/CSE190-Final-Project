@@ -173,6 +173,7 @@
     <ClInclude Include="SBaseEntity.hpp" />
     <ClInclude Include="SBodyEntity.hpp" />
     <ClInclude Include="SBoxEntity.hpp" />
+    <ClInclude Include="SBuildingEntity.hpp" />
     <ClInclude Include="SEntityManager.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="SHandEntity.hpp" />

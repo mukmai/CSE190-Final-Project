@@ -70,7 +70,8 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	auto globalPlayerTranslation = glm::translate(glm::mat4(1), playerState->pos);
 	auto globalPlayerRotation = glm::mat4_cast(playerState->rotation);
 	auto globalHeadPose = globalPlayerTranslation * globalPlayerRotation * headPose;
-	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), eyePos);
+	auto globalEyePose = globalPlayerTranslation * globalPlayerRotation * glm::vec4(eyePos, 1);
+	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), globalEyePose);
 
 }
 

@@ -16,7 +16,7 @@ public:
 		_state->pos = pos;
 	};
 
-	btRigidBody* createRigidBody() override {
+	btRigidBody* createRigidBody(btDiscreteDynamicsWorld * dynamicsWorld) override {
 		//create a dynamic rigidbody
 		colShape = new btSphereShape(btScalar(_state->scale.x / 2));
 		colShape = new btBoxShape(btVector3(
@@ -43,6 +43,11 @@ public:
 		btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 		rigidBody = new btRigidBody(rbInfo);
+
+		int collideWith = COL_BODY | COL_BULLET | COL_WALL;
+
+		dynamicsWorld->addRigidBody(rigidBody, COL_WALL, collideWith);
+
 		return rigidBody;
 	}
 

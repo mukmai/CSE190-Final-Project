@@ -26,7 +26,7 @@ public:
 	// return all children entities
 	virtual	std::vector<std::shared_ptr<SBaseEntity>> getChildren();
 
-	virtual btRigidBody* createRigidBody();
+	virtual btRigidBody* createRigidBody(btDiscreteDynamicsWorld * dynamicsWorld);
 
 	virtual btGhostObject* createGhostObject();
 

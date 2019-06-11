@@ -272,6 +272,9 @@
     <ClInclude Include="CBoxEntity.hpp">
       <Filter>Header Files\CEntities</Filter>
     </ClInclude>
+    <ClInclude Include="CBuildingEntity.hpp">
+      <Filter>Header Files\CEntities</Filter>
+    </ClInclude>
     <ClInclude Include="CProjectileEntity.hpp">
       <Filter>Header Files\CEntities</Filter>
     </ClInclude>

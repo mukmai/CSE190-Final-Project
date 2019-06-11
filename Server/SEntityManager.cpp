@@ -2,11 +2,20 @@
 #include "SPlayerEntity.hpp"
 #include "SSphereEntity.hpp"
 #include "SBoxEntity.hpp"
+#include "SBuildingEntity.hpp"
 #include "SProjectileEntity.hpp"
 #include <glm/gtx/quaternion.hpp>
 
 SEntityManager::SEntityManager()
 {
+	auto building = std::make_shared<SBuildingEntity>(glm::vec3(8), glm::vec3(-6, 4, -6));
+	entityMap.insert({ building->getState()->id, building });
+	building = std::make_shared<SBuildingEntity>(glm::vec3(8), glm::vec3(6, 4, -6));
+	entityMap.insert({ building->getState()->id, building });
+	building = std::make_shared<SBuildingEntity>(glm::vec3(8), glm::vec3(-6, 4, 6));
+	entityMap.insert({ building->getState()->id, building });
+	building = std::make_shared<SBuildingEntity>(glm::vec3(8), glm::vec3(6, 4, 6));
+	entityMap.insert({ building->getState()->id, building });
 }
 
 std::vector<BaseState> SEntityManager::getUpdateList(int playerID)
@@ -112,13 +121,15 @@ void SEntityManager::createSphere(int playerID)
 	auto tempEntity = entityMap.find(playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
-	auto rightHand = playerEntity->rightHand;
 
-	auto moveOffset = rightHand->getPalmForward() * 1.0f;
-	auto sphere = std::make_shared<SSphereEntity>(
-		glm::vec3(0.2f),
-		rightHand->getState()->pos + moveOffset);
-	entityMap.insert({ sphere->getState()->id, sphere });
+
+	//auto rightHand = playerEntity->rightHand;
+
+	//auto moveOffset = rightHand->getPalmForward() * 1.0f;
+	//auto sphere = std::make_shared<SSphereEntity>(
+	//	glm::vec3(0.2f),
+	//	rightHand->getState()->pos + moveOffset);
+	//entityMap.insert({ sphere->getState()->id, sphere });
 }
 
 void SEntityManager::createBox(int playerID)

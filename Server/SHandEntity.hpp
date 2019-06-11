@@ -22,7 +22,7 @@ public:
 		//_state->extraData.push_back(0); // extraData[FIRED_GUN] = sound status (0 = off, 1 = on)
 	};
 
-	btRigidBody* createRigidBody() override {
+	btRigidBody* createRigidBody(btDiscreteDynamicsWorld * dynamicsWorld) override {
 		//create a dynamic rigidbody
 		colShape = new btSphereShape(btScalar(0.03f));
 		//colShape = new btBoxShape(btVector3(btScalar(0.02f), btScalar(0.02f), btScalar(0.5f)));
@@ -49,8 +49,12 @@ public:
 
 		// kinematic static objects (hands)
 		rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-		rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+		//rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
 		rigidBody->setActivationState(DISABLE_DEACTIVATION);
+
+		int collideWith = COL_BULLET | COL_WALL;
+
+		dynamicsWorld->addRigidBody(rigidBody, COL_BODY, collideWith);
 
 		return rigidBody;
 	}

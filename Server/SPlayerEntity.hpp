@@ -49,7 +49,7 @@ public:
 		return body->getState()->rotation * glm::vec3(0, 0, -1);
 	}
 
-	btRigidBody* createRigidBody() override {
+	btRigidBody* createRigidBody(btDiscreteDynamicsWorld * dynamicsWorld) override {
 		//create a dynamic rigidbody
 		colShape = new btCapsuleShape(btScalar(0.25f), btScalar(1.6f));
 		//colShape = new btSphereShape(btScalar(0.5f));
@@ -80,10 +80,15 @@ public:
 		//rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
 		rigidBody->setActivationState(DISABLE_DEACTIVATION);
 		rigidBody->setAngularFactor(0);
+
+		int collideWith = COL_WALL;
+
+		dynamicsWorld->addRigidBody(rigidBody, COL_HEIGHT, collideWith);
+
 		return rigidBody;
 	}
 
-	void updateBody() {
+	void updateMovement() {
 		
 		if (leftThrusterOn) {
 			auto force = leftHand->getPalmForward() * THRUSTER_FORCE * leftThrusterRate;

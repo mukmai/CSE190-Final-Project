@@ -61,18 +61,22 @@ enum EntityType
 	ENTITY_BODY,
 	ENTITY_SPHERE,
 	ENTITY_BOX,
+	ENTITY_BUILDING,
 	ENTITY_PROJECTILE
 };
 
 MSGPACK_ADD_ENUM(EntityType);
 
-enum ColliderType
+enum CollisionType
 {
-	COLLIDER_SPHERE,
-	COLLIDER_BOX
+	COL_NOTHING = 0,
+	COL_WALL = 1 << 1,
+	COL_BODY = 1 << 2,
+	COL_HEIGHT = 1 << 3,
+	COL_BULLET = 1 << 4
 };
 
-MSGPACK_ADD_ENUM(ColliderType);
+MSGPACK_ADD_ENUM(CollisionType);
 
 enum HandExtraData
 {
