@@ -2,16 +2,16 @@
 
 #include "SBaseEntity.hpp"
 
-class SBoxEntity : public SBaseEntity
+class SBuildingEntity : public SBaseEntity
 {
 public:
-	SBoxEntity(glm::vec3 scale, glm::vec3 pos) {
+	SBuildingEntity(glm::vec3 scale, glm::vec3 pos) {
 		// Allocated a state struct and initialize (Modify if using other state)
 		_state = std::make_shared<BaseState>();
 
 		// Base defaults
 		SBaseEntity::initState();
-		_state->type = ENTITY_BOX;
+		_state->type = ENTITY_BUILDING;
 		_state->scale = scale;
 		_state->pos = pos;
 	};
@@ -28,7 +28,7 @@ public:
 		btTransform startTransform;
 		startTransform.setIdentity();
 
-		btScalar mass(1.f);
+		btScalar mass(0.f);
 
 		//rigidbody is dynamic if and only if mass is non zero, otherwise static
 		bool isDynamic = (mass != 0.f);
@@ -44,14 +44,14 @@ public:
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 		rigidBody = new btRigidBody(rbInfo);
 
-		int collideWith = COL_BODY | COL_BULLET | COL_WALL;
+		int collideWith = COL_HEIGHT | COL_BULLET | COL_WALL;
 
 		dynamicsWorld->addRigidBody(rigidBody, COL_WALL, collideWith);
 
 		return rigidBody;
 	}
 
-	~SBoxEntity() {
+	~SBuildingEntity() {
 		delete colShape;
 	};
 };

@@ -38,11 +38,10 @@ void PhysicsEngine::updateBody() {
 		else {
 			// create new rigidBody
 			auto entity = entityManager->entityMap[entityID];
-			body = entity->createRigidBody();
+			body = entity->createRigidBody(dynamicsWorld);
 			// add into dynamicsWorld
 			if (body == nullptr)
 				continue;
-			dynamicsWorld->addRigidBody(body);
 			idBodyMap[entityID] = body;
 			bodyIdMap[body] = entityID;
 		}
@@ -59,6 +58,14 @@ void PhysicsEngine::updateBody() {
 			globalPos = globalPlayerTranslation * globalPlayerRotation * glm::vec4(updatedList[i].pos, 1);
 			//globalRot = playerState->rotation * updatedList[i].rotation;
 		}
+		//if (updatedList[i].type == ENTITY_PLAYER) {
+		//	auto tempEntity = entityManager->entityMap[updatedList[i].id];
+		//	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+		//	auto headState = playerEntity->head->getState();
+		//	globalPos = updatedList[i].pos + glm::vec3(1,0,1) * headState->pos;
+		//	std::cout << "before: " << tempEntity->getState()->pos.x << " " << tempEntity->getState()->pos.y << " " << tempEntity->getState()->pos.z << std::endl;
+		//	//globalRot = playerState->rotation * updatedList[i].rotation;
+		//}
 		else {
 			globalPos = updatedList[i].pos;
 		}
@@ -78,7 +85,13 @@ void PhysicsEngine::stepSimulation(float timeStep) {
 	for (int i = 0; i < entityManager->playerList.size(); i++) {
 		auto tempEntity = entityManager->entityMap[entityManager->playerList[i]];
 		auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
-		playerEntity->updateBody();
+		//auto headState = playerEntity->head->getState();
+		//btTransform newTransform;
+		//newTransform.setIdentity();
+		//newTransform.setOrigin(bullet::fromGlm(playerEntity->getState()->pos + glm::vec3(1, 0, 1) * headState->pos));
+		////playerEntity->getRigidBody()->setWorldTransform(newTransform);
+		////playerEntity->getRigidBody()->getMotionState()->setWorldTransform(newTransform);
+		playerEntity->updateMovement();
 	}
 
 	dynamicsWorld->stepSimulation(1.f / timeStep, 10);
@@ -113,11 +126,15 @@ void PhysicsEngine::updateEntity(btRigidBody* body) {
 	btTransform trans;
 	body->getMotionState()->getWorldTransform(trans);
 	entity->getState()->pos = bullet::toGlm(trans.getOrigin());
+	//if (entity->getState()->type == ENTITY_PLAYER) {
+	//	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(entity);
+	//	auto headState = playerEntity->head->getState();
+	//	//entity->getState()->pos -= glm::vec3(1, 0, 1) * headState->pos;
+	//	std::cout << "after: " << entity->getState()->pos.x << " " << entity->getState()->pos.y << " " << entity->getState()->pos.z << std::endl;
+	//}
 	entity->getState()->rotation = bullet::toGlm(trans.getRotation());
 	entity->updatedPlayerList.clear();
 	entity->updatedPlayerList.insert(0);
-	//if (entity->getState()->type == ENTITY_PLAYER)
-	//	std::cout << entity->getState()->pos.x << " " << entity->getState()->pos.y << " " << entity->getState()->pos.z << std::endl;
 }
 
 void PhysicsEngine::generateEnvironment() {
@@ -126,7 +143,7 @@ void PhysicsEngine::generateEnvironment() {
 	collisionShapes.push_back(groundShape);
 
 	std::vector<btVector3> wallsPos;
-	wallsPos.push_back(btVector3(0, -25.3f, 0)); // bottom
+	wallsPos.push_back(btVector3(0, -25.0f, 0)); // bottom
 	wallsPos.push_back(btVector3(0, 0, 50.0f)); // front
 	wallsPos.push_back(btVector3(0, 0, -50.0f)); // back
 	wallsPos.push_back(btVector3(50.0f, 0, 0)); // left
@@ -151,8 +168,10 @@ void PhysicsEngine::generateEnvironment() {
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, groundShape, localInertia);
 		btRigidBody* body = new btRigidBody(rbInfo);
 
+		int collideWith = COL_HEIGHT | COL_BULLET | COL_WALL;
+
 		//add the body to the dynamics world
-		dynamicsWorld->addRigidBody(body);
+		dynamicsWorld->addRigidBody(body, COL_WALL, collideWith);
 	}
 }
 

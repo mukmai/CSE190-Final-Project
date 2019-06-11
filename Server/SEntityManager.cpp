@@ -2,10 +2,19 @@
 #include "SPlayerEntity.hpp"
 #include "SSphereEntity.hpp"
 #include "SBoxEntity.hpp"
+#include "SBuildingEntity.hpp"
 #include <glm/gtx/quaternion.hpp>
 
 SEntityManager::SEntityManager()
 {
+	auto building = std::make_shared<SBuildingEntity>(glm::vec3(8), glm::vec3(-6, 4, -6));
+	entityMap.insert({ building->getState()->id, building });
+	building = std::make_shared<SBuildingEntity>(glm::vec3(8), glm::vec3(6, 4, -6));
+	entityMap.insert({ building->getState()->id, building });
+	building = std::make_shared<SBuildingEntity>(glm::vec3(8), glm::vec3(-6, 4, 6));
+	entityMap.insert({ building->getState()->id, building });
+	building = std::make_shared<SBuildingEntity>(glm::vec3(8), glm::vec3(6, 4, 6));
+	entityMap.insert({ building->getState()->id, building });
 }
 
 std::vector<BaseState> SEntityManager::getUpdateList(int playerID)
@@ -111,13 +120,15 @@ void SEntityManager::createSphere(int playerID)
 	auto tempEntity = entityMap.find(playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
-	auto rightHand = playerEntity->rightHand;
 
-	auto moveOffset = rightHand->getPalmForward() * 1.0f;
-	auto sphere = std::make_shared<SSphereEntity>(
-		glm::vec3(0.2f),
-		rightHand->getState()->pos + moveOffset);
-	entityMap.insert({ sphere->getState()->id, sphere });
+
+	//auto rightHand = playerEntity->rightHand;
+
+	//auto moveOffset = rightHand->getPalmForward() * 1.0f;
+	//auto sphere = std::make_shared<SSphereEntity>(
+	//	glm::vec3(0.2f),
+	//	rightHand->getState()->pos + moveOffset);
+	//entityMap.insert({ sphere->getState()->id, sphere });
 }
 
 void SEntityManager::createBox(int playerID)
@@ -159,15 +170,8 @@ void SEntityManager::rightHandThruster(int playerID, float rate)
 	auto rightHand = playerEntity->rightHand;
 	rightHand->getState()->extraData.at(THRUSTER_ON) = 1;
 
-	//auto force = rightHand->getPalmForward() * THRUSTER_FORCE * rate;
-
-	//// reduce side way speed
-	//force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
-
-	//playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
 	playerEntity->rightThrusterOn = true;
 	playerEntity->rightThrusterRate = rate;
-	//playerEntity->updatedPlayerList.clear();
 }
 
 void SEntityManager::leftHandThruster(int playerID, float rate)
@@ -178,15 +182,8 @@ void SEntityManager::leftHandThruster(int playerID, float rate)
 	auto leftHand = playerEntity->leftHand;
 	leftHand->getState()->extraData.at(THRUSTER_ON) = 1;
 
-	//auto force = leftHand->getPalmForward() * THRUSTER_FORCE * rate;
-
-	//// reduce side way speed
-	//force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
-
-	//playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
 	playerEntity->leftThrusterOn = true;
 	playerEntity->leftThrusterRate = rate;
-	//playerEntity->updatedPlayerList.clear();
 }
 
 void SEntityManager::rightHandThrusterOff(int playerID)

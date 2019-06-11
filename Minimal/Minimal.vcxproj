@@ -200,6 +200,7 @@ xcopy /y /d  "$(ProjectDir)External\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="CBaseEntity.hpp" />
     <ClInclude Include="CBodyEntity.hpp" />
     <ClInclude Include="CBoxEntity.hpp" />
+    <ClInclude Include="CBuildingEntity.hpp" />
     <ClInclude Include="CHandEntity.hpp" />
     <ClInclude Include="CHeadEntity.hpp" />
     <ClInclude Include="Client.h" />

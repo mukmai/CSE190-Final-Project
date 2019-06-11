@@ -13,7 +13,7 @@ struct BaseState
 	int id;
 	EntityType type;
 	std::vector<int> extraData; // any special type of information will store in this vector
-	ColliderType collider;
+	CollisionType collider;
 	glm::vec3 colliderScale;
 
 	// rpc Macro to generate serialize code for the struct
