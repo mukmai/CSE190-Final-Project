@@ -186,6 +186,8 @@ xcopy /y /d  "$(ProjectDir)External\*.dll" "$(OutDir)"</Command>
     <None Include="packages.config" />
     <None Include="Resources\Shaders\cave.frag" />
     <None Include="Resources\Shaders\cave.vert" />
+    <None Include="Resources\Shaders\imageGUI.frag" />
+    <None Include="Resources\Shaders\imageGUI.vert" />
     <None Include="Resources\Shaders\line.frag" />
     <None Include="Resources\Shaders\line.vert" />
     <None Include="Resources\Shaders\particle_shader.frag" />
@@ -212,9 +214,13 @@ xcopy /y /d  "$(ProjectDir)External\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="CProjectileEntity.hpp" />
     <ClInclude Include="CSphereEntity.hpp" />
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="CWallEntity.hpp" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="ExampleApp.h" />
+    <ClInclude Include="GameOverHUD.hpp" />
     <ClInclude Include="GlfwApp.h" />
+    <ClInclude Include="HealthHUD.hpp" />
+    <ClInclude Include="ImageGUI.hpp" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="OVRInputWrapper.h" />

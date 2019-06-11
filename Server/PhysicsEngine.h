@@ -21,8 +21,6 @@ public:
 
 	void updateEntity(btRigidBody* body);
 
-	void generateEnvironment();
-
 	~PhysicsEngine();
 
 private:
@@ -44,11 +42,14 @@ private:
 	//make sure to re-use collision shapes among rigid bodies whenever possible!
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
 
-	std::map<const btCollisionObject*, std::vector<btManifoldPoint*>> objectsCollisions;
+	std::map<const btCollisionObject*, std::vector<const btCollisionObject*>> objectsCollisions;
 
-	std::map<btRigidBody*, int> bodyIdMap;
-	std::map<int, btRigidBody*> idBodyMap;
+	std::map<btCollisionObject*, int> bodyIdMap;
+	std::map<int, btCollisionObject*> idBodyMap;
 
 	SEntityManager * entityManager;
+
+	// Remove all entities marked for deletion
+	std::vector<int> deletedEntities;
 };
 

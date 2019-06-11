@@ -3,6 +3,7 @@
 #include "SSphereEntity.hpp"
 #include "SBoxEntity.hpp"
 #include "SBuildingEntity.hpp"
+#include "SWallEntity.hpp"
 #include "SProjectileEntity.hpp"
 #include <glm/gtx/quaternion.hpp>
 
@@ -16,6 +17,19 @@ SEntityManager::SEntityManager()
 	entityMap.insert({ building->getState()->id, building });
 	building = std::make_shared<SBuildingEntity>(glm::vec3(8), glm::vec3(6, 4, 6));
 	entityMap.insert({ building->getState()->id, building });
+
+	auto wall = std::make_shared<SWallEntity>(glm::vec3(100, 50, 100), glm::vec3(0, -25, 0));
+	entityMap.insert({ wall->getState()->id, wall });
+	wall = std::make_shared<SWallEntity>(glm::vec3(50), glm::vec3(50, 25, 0));
+	entityMap.insert({ wall->getState()->id, wall });
+	wall = std::make_shared<SWallEntity>(glm::vec3(50), glm::vec3(-50, 25, 0));
+	entityMap.insert({ wall->getState()->id, wall });
+	wall = std::make_shared<SWallEntity>(glm::vec3(150, 50, 50), glm::vec3(0, 25, 50));
+	entityMap.insert({ wall->getState()->id, wall });
+	wall = std::make_shared<SWallEntity>(glm::vec3(150, 50, 50), glm::vec3(0, 25, -50));
+	entityMap.insert({ wall->getState()->id, wall });
+	wall = std::make_shared<SWallEntity>(glm::vec3(100, 50, 100), glm::vec3(0, 75, 0));
+	entityMap.insert({ wall->getState()->id, wall });
 }
 
 std::vector<BaseState> SEntityManager::getUpdateList(int playerID)
@@ -57,8 +71,6 @@ void SEntityManager::updatePlayer(PlayerController playerController)
 {
 	auto tempEntity = entityMap.find(playerController.playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
-
-
 
 	// update left hand
 	auto leftHand = playerEntity->leftHand;
@@ -121,15 +133,11 @@ void SEntityManager::createSphere(int playerID)
 	auto tempEntity = entityMap.find(playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
-
-
-	//auto rightHand = playerEntity->rightHand;
-
-	//auto moveOffset = rightHand->getPalmForward() * 1.0f;
-	//auto sphere = std::make_shared<SSphereEntity>(
-	//	glm::vec3(0.2f),
-	//	rightHand->getState()->pos + moveOffset);
-	//entityMap.insert({ sphere->getState()->id, sphere });
+	auto moveOffset = playerEntity->getForward() * 1.0f;
+	auto sphere = std::make_shared<SSphereEntity>(
+		glm::vec3(0.2f),
+		playerEntity->getState()->pos + moveOffset);
+	entityMap.insert({ sphere->getState()->id, sphere });
 }
 
 void SEntityManager::createBox(int playerID)
@@ -145,9 +153,6 @@ void SEntityManager::createBox(int playerID)
 }
 
 void SEntityManager::createProjectile(int playerID, int handIdx) {
-	//std::cout << "In function \'createProjectile\' of SEntityManager." << std::endl;
-	//std::cout << "--- handIdx = " << handIdx << std::endl;
-
 	auto tempEntity = entityMap.find(playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
@@ -343,4 +348,20 @@ void SEntityManager::stabilizerSwitch(int playerID)
 	//force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
 
 	//playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
+}
+
+void SEntityManager::hitPlayer(int playerID)
+{
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	if (!gameEnd && playerEntity->getState()->extraData[PLAYER_HEALTH] > 0)
+		playerEntity->getState()->extraData[PLAYER_HEALTH] -= 1;
+	if (playerEntity->getState()->extraData[PLAYER_HEALTH] == 0)
+		gameEnd = true;
+}
+
+bool SEntityManager::getGameState()
+{
+	return gameEnd;
 }

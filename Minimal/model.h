@@ -35,6 +35,8 @@ public:
 	// draws the model, and thus all its meshes
 	void draw(Shader shader);
 
+	unsigned int TextureFromFile(const char* path, const string& directory, bool gamma);
+
 private:
 	/*  Functions   */
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
@@ -49,7 +51,7 @@ private:
 	// the required info is returned as a Texture struct.
 	vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
 
-	unsigned int TextureFromFile(const char* path, const string& directory, bool gamma);
+
 };
 
 

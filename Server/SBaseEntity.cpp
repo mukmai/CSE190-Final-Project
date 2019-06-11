@@ -46,3 +46,13 @@ btRigidBody * SBaseEntity::getRigidBody()
 {
 	return rigidBody;
 }
+
+void SBaseEntity::deleteBody()
+{
+	if (!deleted) {
+		//delete colShape;
+		//delete rigidBody->getMotionState();
+		//delete rigidBody;
+		deleted = true;
+	}
+}

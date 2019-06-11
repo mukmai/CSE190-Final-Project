@@ -22,6 +22,8 @@ public:
 	// Base render function, affects all entities. If special handling is
 	// needed, override this in the child.
 	virtual void render(const glm::mat4& projection, const glm::mat4& view, glm::vec3 eyePos) {
+		if (_state->isDeleted)
+			return;
 		_objectShader->use();
 		setUniforms(projection, view, eyePos);
 		_objectModel->draw(*_objectShader);

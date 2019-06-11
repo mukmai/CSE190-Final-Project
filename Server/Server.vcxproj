@@ -181,6 +181,7 @@
     <ClInclude Include="SPlayerEntity.hpp" />
     <ClInclude Include="SProjectileEntity.hpp" />
     <ClInclude Include="SSphereEntity.hpp" />
+    <ClInclude Include="SWallEntity.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IDGenerator.cpp" />

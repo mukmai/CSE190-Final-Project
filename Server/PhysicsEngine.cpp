@@ -19,11 +19,34 @@ PhysicsEngine::PhysicsEngine(SEntityManager * entityManager)
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
 	dynamicsWorld->setGravity(btVector3(0, -5, 0));
-
-	generateEnvironment();
 }
 
 void PhysicsEngine::updateBody() {
+	std::vector<int> completedDeletedList;
+	for (int i = deletedEntities.size() - 1; i >= 0; i--) {
+		int id = deletedEntities[i];
+		auto entity = entityManager->entityMap[id];
+		//if (entity->updatedPlayerList.size() > entityManager->playerList.size()) {
+
+		//	completedDeletedList.push_back(i);
+		//}
+		entityManager->entityMap.erase(id);
+		auto search = idBodyMap.find(id);
+		if (search == idBodyMap.end())
+			continue;
+		auto body = btRigidBody::upcast(search->second);
+		bodyIdMap.erase(body);
+		idBodyMap.erase(id);
+		dynamicsWorld->removeRigidBody(body);
+		entity->deleteBody();
+	}
+	deletedEntities.clear();
+
+	//for (int i = 0; i < completedDeletedList.size(); i++) {
+	//	deletedEntities.erase(deletedEntities.begin() + completedDeletedList[i]);
+	//}
+	//completedDeletedList.clear();
+
 	auto updatedList = entityManager->getUpdateList(0);
 	for (int i = 0; i < updatedList.size(); i++) {
 		int entityID = updatedList[i].id;
@@ -32,12 +55,14 @@ void PhysicsEngine::updateBody() {
 
 		// entity exists in map
 		if (search != idBodyMap.end()) {
-			body = search->second;
+			body = btRigidBody::upcast(search->second);
 		}
 		// new entity
 		else {
 			// create new rigidBody
 			auto entity = entityManager->entityMap[entityID];
+			if (entity->getState()->isDeleted)
+				continue;
 			body = entity->createRigidBody(dynamicsWorld);
 			// add into dynamicsWorld
 			if (body == nullptr)
@@ -51,33 +76,14 @@ void PhysicsEngine::updateBody() {
 		// if it is body part then need to get global position through body position
 		glm::vec3 globalPos;
 		glm::quat globalRot = updatedList[i].rotation;
-		if (updatedList[i].type == ENTITY_HAND) {
+		if (updatedList[i].type == ENTITY_HAND || updatedList[i].type == ENTITY_BODY || updatedList[i].type == ENTITY_HEAD) {
 			auto playerState = entityManager->entityMap[updatedList[i].extraData[PLAYER_ID]]->getState();
 			auto globalPlayerTranslation = glm::translate(glm::mat4(1), playerState->pos);
 			auto globalPlayerRotation = glm::mat4_cast(playerState->rotation);
 			globalPos = globalPlayerTranslation * globalPlayerRotation * glm::vec4(updatedList[i].pos, 1);
 			//globalRot = playerState->rotation * updatedList[i].rotation;
 		}
-    
-		//if (updatedList[i].type == ENTITY_PLAYER) {
-		//	auto tempEntity = entityManager->entityMap[updatedList[i].id];
-		//	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
-		//	auto headState = playerEntity->head->getState();
-		//	globalPos = updatedList[i].pos + glm::vec3(1,0,1) * headState->pos;
-		//	std::cout << "before: " << tempEntity->getState()->pos.x << " " << tempEntity->getState()->pos.y << " " << tempEntity->getState()->pos.z << std::endl;
-		//	//globalRot = playerState->rotation * updatedList[i].rotation;
 
-		//else if (updatedList[i].type == ENTITY_PROJECTILE) {
-		//	// Set the velocity of the projectile
-		//	auto init_state = entityManager->entityMap[entityID]->getState();
-		//	glm::vec3 initVel = glm::vec4(0.0f, 0.0f, -20.0f, 0.0f);
-		//	initVel = glm::toMat4(init_state->rotation) * glm::vec4(initVel, 0.0f);
-
-		//	// Calculate the initial velocity of the projectile
-		//	body->setLinearVelocity(bullet::fromGlm(initVel));
-
-		//	globalPos = updatedList[i].pos;
-		//}
 		else {
 			globalPos = updatedList[i].pos;
 		}
@@ -97,18 +103,51 @@ void PhysicsEngine::stepSimulation(float timeStep) {
 	for (int i = 0; i < entityManager->playerList.size(); i++) {
 		auto tempEntity = entityManager->entityMap[entityManager->playerList[i]];
 		auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
-		//auto headState = playerEntity->head->getState();
-		//btTransform newTransform;
-		//newTransform.setIdentity();
-		//newTransform.setOrigin(bullet::fromGlm(playerEntity->getState()->pos + glm::vec3(1, 0, 1) * headState->pos));
-		////playerEntity->getRigidBody()->setWorldTransform(newTransform);
-		////playerEntity->getRigidBody()->getMotionState()->setWorldTransform(newTransform);
 		playerEntity->updateMovement();
 	}
 
 	dynamicsWorld->stepSimulation(1.f / timeStep, 10);
 
-	//print positions of all objects
+	// collision handling
+	int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
+	for (int i = 0; i < numManifolds; i++) {
+		btPersistentManifold *contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+		auto *objA = contactManifold->getBody0();
+		auto *objB = contactManifold->getBody1();
+		SBaseEntity* entityA = (SBaseEntity *)(objA->getUserPointer());
+		SBaseEntity* entityB = (SBaseEntity *)(objB->getUserPointer());
+		if (entityA && entityB) {
+			if (entityA->collisionGroup == COL_BULLET && entityB->collisionGroup == COL_WALL) {
+				entityA->getState()->isDeleted = true;
+				deletedEntities.push_back(entityA->getState()->id);
+			}
+			else if (entityA->collisionGroup == COL_WALL && entityB->collisionGroup == COL_BULLET) {
+				entityB->getState()->isDeleted = true;
+				deletedEntities.push_back(entityB->getState()->id);
+			}
+			float diff = glm::length(entityA->getState()->pos - entityB->getState()->pos);
+			float radius = entityA->getState()->scale.x + entityB->getState()->scale.x;
+			if (diff <= radius + 0.05f) {
+				if (entityA->collisionGroup == COL_BULLET && entityB->collisionGroup == COL_BODY) {
+					if (entityA->getState()->extraData[PLAYER_ID] == entityB->getState()->extraData[PLAYER_ID])
+						continue;
+					entityManager->hitPlayer(entityB->getState()->extraData[PLAYER_ID]);
+					entityA->getState()->isDeleted = true;
+					deletedEntities.push_back(entityA->getState()->id);
+				}
+				else if (entityA->collisionGroup == COL_BODY && entityB->collisionGroup == COL_BULLET) {
+					if (entityB->getState()->extraData[PLAYER_ID] == entityA->getState()->extraData[PLAYER_ID])
+						continue;
+					entityManager->hitPlayer(entityA->getState()->extraData[PLAYER_ID]);
+					entityB->getState()->isDeleted = true;
+					deletedEntities.push_back(entityB->getState()->id);
+				}
+			}
+		}
+	}
+
+	
+
 	for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
 	{
 		btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
@@ -133,58 +172,14 @@ void PhysicsEngine::updateEntity(btRigidBody* body) {
 	auto entity = entityManager->entityMap[bodyIdMap[body]];
 
 	// dont update body part
-	if (entity->getState()->type == ENTITY_HAND)
+	if (entity->collisionGroup == COL_BODY)
 		return;
 	btTransform trans;
 	body->getMotionState()->getWorldTransform(trans);
 	entity->getState()->pos = bullet::toGlm(trans.getOrigin());
-	//if (entity->getState()->type == ENTITY_PLAYER) {
-	//	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(entity);
-	//	auto headState = playerEntity->head->getState();
-	//	//entity->getState()->pos -= glm::vec3(1, 0, 1) * headState->pos;
-	//	std::cout << "after: " << entity->getState()->pos.x << " " << entity->getState()->pos.y << " " << entity->getState()->pos.z << std::endl;
-	//}
 	entity->getState()->rotation = bullet::toGlm(trans.getRotation());
 	entity->updatedPlayerList.clear();
 	entity->updatedPlayerList.insert(0);
-}
-
-void PhysicsEngine::generateEnvironment() {
-	btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(25.), btScalar(25.), btScalar(25.)));
-
-	collisionShapes.push_back(groundShape);
-
-	std::vector<btVector3> wallsPos;
-	wallsPos.push_back(btVector3(0, -25.0f, 0)); // bottom
-	wallsPos.push_back(btVector3(0, 0, 50.0f)); // front
-	wallsPos.push_back(btVector3(0, 0, -50.0f)); // back
-	wallsPos.push_back(btVector3(50.0f, 0, 0)); // left
-	wallsPos.push_back(btVector3(-50.0f, 0, 0)); // right
-
-	for (int i = 0; i < wallsPos.size(); i++) {
-		btTransform groundTransform;
-		groundTransform.setIdentity();
-		groundTransform.setOrigin(wallsPos[i]);
-
-		btScalar mass(0.);
-
-		//rigidbody is dynamic if and only if mass is non zero, otherwise static
-		bool isDynamic = (mass != 0.f);
-
-		btVector3 localInertia(0, 0, 0);
-		if (isDynamic)
-			groundShape->calculateLocalInertia(mass, localInertia);
-
-		//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-		btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, groundShape, localInertia);
-		btRigidBody* body = new btRigidBody(rbInfo);
-
-		int collideWith = COL_HEIGHT | COL_BULLET | COL_WALL;
-
-		//add the body to the dynamics world
-		dynamicsWorld->addRigidBody(body, COL_WALL, collideWith);
-	}
 }
 
 PhysicsEngine::~PhysicsEngine()

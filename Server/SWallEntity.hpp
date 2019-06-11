@@ -2,16 +2,16 @@
 
 #include "SBaseEntity.hpp"
 
-class SSphereEntity : public SBaseEntity
+class SWallEntity : public SBaseEntity
 {
 public:
-	SSphereEntity(glm::vec3 scale, glm::vec3 pos) {
+	SWallEntity(glm::vec3 scale, glm::vec3 pos) {
 		// Allocated a state struct and initialize (Modify if using other state)
 		_state = std::make_shared<BaseState>();
 
 		// Base defaults
 		SBaseEntity::initState();
-		_state->type = ENTITY_SPHERE;
+		_state->type = ENTITY_WALL;
 		_state->scale = scale;
 		_state->pos = pos;
 	};
@@ -19,12 +19,16 @@ public:
 	btRigidBody* createRigidBody(btDiscreteDynamicsWorld * dynamicsWorld) override {
 		//create a dynamic rigidbody
 		colShape = new btSphereShape(btScalar(_state->scale.x / 2));
+		colShape = new btBoxShape(btVector3(
+			btScalar(_state->scale.x / 2),
+			btScalar(_state->scale.y / 2),
+			btScalar(_state->scale.z / 2)));
 
 		/// Create Dynamic Objects
 		btTransform startTransform;
 		startTransform.setIdentity();
 
-		btScalar mass(1.f);
+		btScalar mass(0.f);
 
 		//rigidbody is dynamic if and only if mass is non zero, otherwise static
 		bool isDynamic = (mass != 0.f);
@@ -40,7 +44,7 @@ public:
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 		rigidBody = new btRigidBody(rbInfo);
 
-		collideWith = COL_BODY | COL_BULLET | COL_WALL;
+		collideWith = COL_HEIGHT | COL_BULLET | COL_WALL;
 
 		collisionGroup = COL_WALL;
 
@@ -51,7 +55,7 @@ public:
 		return rigidBody;
 	}
 
-	~SSphereEntity() {
+	~SWallEntity() {
 		delete colShape;
 	};
 };

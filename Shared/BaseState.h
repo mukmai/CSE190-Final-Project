@@ -15,6 +15,7 @@ struct BaseState
 	std::vector<int> extraData; // any special type of information will store in this vector
 	CollisionType collider;
 	glm::vec3 colliderScale;
+	bool isDeleted;
 
 	// rpc Macro to generate serialize code for the struct
 	MSGPACK_DEFINE_ARRAY(
@@ -25,6 +26,7 @@ struct BaseState
 		type,
 		extraData,
 		collider,
-		colliderScale.x, colliderScale.y, colliderScale.z
+		colliderScale.x, colliderScale.y, colliderScale.z,
+		isDeleted
 		);
 };

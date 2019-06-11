@@ -28,6 +28,7 @@ enum FUNCTION {
 	PLAYER_LEFT_SWITCH,
 	PLAYER_RIGHT_SWITCH,
 	PLAYER_SHOOT,
+	CHECK_GAME_STATE,
 	PLAYER_SHOOT_SOUND
 };
 
@@ -52,6 +53,7 @@ static std::map<FUNCTION, std::string> serverFunction {
 { PLAYER_LEFT_SWITCH , "player_left_switch"},
 { PLAYER_RIGHT_SWITCH , "player_right_switch"},
 { PLAYER_SHOOT , "player_shoot" },
+{ CHECK_GAME_STATE , "check_game_state"},
 { PLAYER_SHOOT_SOUND , "player_shoot_sound" }
 };
 
@@ -64,7 +66,8 @@ enum EntityType
 	ENTITY_SPHERE,
 	ENTITY_BOX,
 	ENTITY_BUILDING,
-	ENTITY_PROJECTILE
+	ENTITY_PROJECTILE,
+	ENTITY_WALL
 };
 
 MSGPACK_ADD_ENUM(EntityType);
@@ -86,5 +89,10 @@ enum HandExtraData
 	HAND_INDEX,
 	HAND_STATE,
 	THRUSTER_ON,
-	GUN_SOUND
+  GUN_SOUND
+};
+
+enum PlayerExtraData
+{
+	PLAYER_HEALTH
 };

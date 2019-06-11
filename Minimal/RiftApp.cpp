@@ -114,6 +114,9 @@ void RiftApp::onKey(int key, int scancode, int action, int mods)
 
 void RiftApp::draw()
 {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	ovr_GetEyePoses(_session, frame, true, _viewScaleDesc.HmdToEyePose, eyePoses, &_sceneLayer.SensorSampleTime);
 
 	int curIndex;
@@ -126,6 +129,9 @@ void RiftApp::draw()
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, curTexId, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	ovr::for_each_eye([&](ovrEyeType eye)
 	{
 		renderingEye = eye;
