@@ -37,6 +37,10 @@ public:
 
 	void leftHandThrusterOff(int playerID);
 
+	void leftHandSwitch(int playerID);
+
+	void rightHandSwitch(int playerID);
+
 	void stabilizerSwitch(int playerID);
 
 };

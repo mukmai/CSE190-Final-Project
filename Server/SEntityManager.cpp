@@ -157,17 +157,24 @@ void SEntityManager::rightHandThruster(int playerID, float rate)
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
 	auto rightHand = playerEntity->rightHand;
-	rightHand->getState()->extraData.at(THRUSTER_ON) = 1;
 
-	//auto force = rightHand->getPalmForward() * THRUSTER_FORCE * rate;
+	// Check that the right hand is in the hand thruster mode, NOT in gun mode
+	if (rightHand->getState()->extraData.at(HAND_STATE) == 0) {
+		rightHand->getState()->extraData.at(THRUSTER_ON) = 1;
 
-	//// reduce side way speed
-	//force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
+		//auto force = rightHand->getPalmForward() * THRUSTER_FORCE * rate;
 
-	//playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
-	playerEntity->rightThrusterOn = true;
-	playerEntity->rightThrusterRate = rate;
-	//playerEntity->updatedPlayerList.clear();
+		//// reduce side way speed
+		//force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
+
+		//playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
+		playerEntity->rightThrusterOn = true;
+		playerEntity->rightThrusterRate = rate;
+		//playerEntity->updatedPlayerList.clear();
+	}
+	else {
+		rightHand->getState()->extraData.at(THRUSTER_ON) = 0;
+	}
 }
 
 void SEntityManager::leftHandThruster(int playerID, float rate)
@@ -176,17 +183,24 @@ void SEntityManager::leftHandThruster(int playerID, float rate)
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
 	auto leftHand = playerEntity->leftHand;
-	leftHand->getState()->extraData.at(THRUSTER_ON) = 1;
 
-	//auto force = leftHand->getPalmForward() * THRUSTER_FORCE * rate;
+	// Check that the left hand is in the hand thruster mode, NOT in gun mode
+	if (leftHand->getState()->extraData.at(HAND_STATE) == 0) {
+		leftHand->getState()->extraData.at(THRUSTER_ON) = 1;
 
-	//// reduce side way speed
-	//force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
+		//auto force = leftHand->getPalmForward() * THRUSTER_FORCE * rate;
 
-	//playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
-	playerEntity->leftThrusterOn = true;
-	playerEntity->leftThrusterRate = rate;
-	//playerEntity->updatedPlayerList.clear();
+		//// reduce side way speed
+		//force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
+
+		//playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
+		playerEntity->leftThrusterOn = true;
+		playerEntity->leftThrusterRate = rate;
+		//playerEntity->updatedPlayerList.clear();
+	}
+	else {
+		leftHand->getState()->extraData.at(THRUSTER_ON) = 0;
+	}
 }
 
 void SEntityManager::rightHandThrusterOff(int playerID)
@@ -206,6 +220,39 @@ void SEntityManager::leftHandThrusterOff(int playerID)
 	auto leftHand = playerEntity->leftHand;
 	leftHand->getState()->extraData.at(THRUSTER_ON) = 0;
 }
+
+void SEntityManager::leftHandSwitch(int playerID)
+{
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	auto leftHand = playerEntity->leftHand;
+	bool hand_state = leftHand->getState()->extraData.at(HAND_STATE);
+
+	if (hand_state) {
+		leftHand->getState()->extraData.at(HAND_STATE) = 0;
+	}
+	else {
+		leftHand->getState()->extraData.at(HAND_STATE) = 1;
+	}
+}
+
+void SEntityManager::rightHandSwitch(int playerID)
+{
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	auto rightHand = playerEntity->rightHand;
+	bool hand_state = rightHand->getState()->extraData.at(HAND_STATE);
+
+	if (hand_state) {
+		rightHand->getState()->extraData.at(HAND_STATE) = 0;
+	}
+	else {
+		rightHand->getState()->extraData.at(HAND_STATE) = 1;
+	}
+}
+
 
 void SEntityManager::stabilizerSwitch(int playerID)
 {

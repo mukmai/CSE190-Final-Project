@@ -11,6 +11,18 @@ Client::Client() : c("localhost", PORT)
 	playerController.playerID = c.call(serverFunction[PLAYER_JOIN]).as<int>();
 	initAudio();
 	EntityManager::getInstance().setPlayerID(playerController.playerID);
+
+	glm::mat4 tmpLeftMat = glm::toMat4(controllerRotation[0]);
+	tmpLeftMat[3] = glm::vec4(controllerPosition[0], 0.0f);
+
+	glm::mat4 tmprightMat = glm::toMat4(controllerRotation[0]);
+	tmprightMat[3] = glm::vec4(controllerPosition[0], 0.0f);
+
+	lastLeftHand = tmpLeftMat;
+	lastRightHand = tmprightMat;
+
+	leftCooldown = std::chrono::system_clock::now();
+	rightCooldown = std::chrono::system_clock::now();
 }
 
 void Client::initGl()
@@ -19,7 +31,11 @@ void Client::initGl()
 	glClearColor(0.7f, 0.7f, 0.7f, 0.0f); // background color
 	glEnable(GL_DEPTH_TEST);
 	ovr_RecenterTrackingOrigin(_session);
-	srand((unsigned int)time(NULL));
+	//srand((unsigned int)time(NULL));
+	unsigned int milliseconds_since_epoch =
+		std::chrono::system_clock::now().time_since_epoch() /
+		std::chrono::milliseconds(1);
+	srand(milliseconds_since_epoch);
 	sphereScene = std::shared_ptr<SpheresScene>(new SpheresScene());
 }
 
@@ -64,6 +80,7 @@ void Client::update()
 
 	//oldTime = newTime;
 	//newTime = ovr_GetTimeInSeconds();
+	std::chrono::system_clock::time_point time_now = std::chrono::system_clock::now();
 
 	// send player head, controllers position and rotation to server
 	playerController.leftHandPos = controllerPosition[0];
@@ -71,6 +88,13 @@ void Client::update()
 
 	playerController.rightHandPos = controllerPosition[1];
 	playerController.rightHandRotation = controllerRotation[1];
+
+	// Needed for checking the rotation of the player's hand
+	glm::mat4 tmpLeftMat = glm::toMat4(controllerRotation[0]);
+	tmpLeftMat[3] = glm::vec4(controllerPosition[0], 0.0f);
+
+	glm::mat4 tmpRightMat = glm::toMat4(controllerRotation[1]);
+	tmpRightMat[3] = glm::vec4(controllerPosition[1], 0.0f);
 
 	glm::quat headRotation = ovr::toGlm(eyePoses[0].Orientation);
 	glm::vec3 headPos = (ovr::toGlm(eyePoses[0].Position) + ovr::toGlm(eyePoses[1].Position)) / 2.0f;
@@ -105,6 +129,61 @@ void Client::update()
 	//if (OVRInputWrapper::getInstance().buttonHeld(ovrButton_B)) {
 	//	c.call(serverFunction[PLAYER_BUTTON_B], playerController.playerID);
 	//}
+		
+	// Check if the left hand rotated enough
+	glm::vec3 leftA = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 leftB = glm::vec3(0.0f, 1.0f, 0.0f);
+
+	leftA = lastLeftHand * glm::vec4(leftA, 0.0f);
+	leftB = tmpLeftMat * glm::vec4(leftB, 0.0f);
+
+	glm::vec3 crossLeft = glm::cross(leftA, leftB);
+	float leftAngY = glm::length(crossLeft);
+
+	// Check if the left hand rotated enough
+	leftA = glm::vec3(1.0f, 0.0f, 0.0f);
+	leftB = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	leftA = lastLeftHand * glm::vec4(leftA, 0.0f);
+	leftB = tmpLeftMat * glm::vec4(leftB, 0.0f);
+
+	crossLeft = glm::cross(leftA, leftB);
+	float leftAngX = glm::length(crossLeft);
+
+	//if (OVRInputWrapper::getInstance().buttonPressed(ovrButton_Y)) {
+	if(leftAngY > 0.4f && leftAngX > 0.4f && (std::chrono::duration_cast<std::chrono::milliseconds>(time_now - leftCooldown).count() > 500)){
+	//if(leftAng > 0.05f){
+		std::cout << "Switching left hand state!" << std::endl;
+		c.call(serverFunction[PLAYER_LEFT_SWITCH], playerController.playerID);
+		leftCooldown = std::chrono::system_clock::now();
+	}
+
+	// Check if the right hand rotated enough
+	glm::vec3 rightA = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 rightB = glm::vec3(0.0f, 1.0f, 0.0f);
+
+	rightA = lastRightHand * glm::vec4(rightA, 0.0f);
+	rightB = tmpRightMat * glm::vec4(rightB, 0.0f);
+
+	glm::vec3 crossRight = glm::cross(rightA, rightB);
+	float rightAngY = glm::length(crossRight);
+
+	// Check if the right hand rotated enough
+	rightA = glm::vec3(1.0f, 0.0f, 0.0f);
+	rightB = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	rightA = lastRightHand * glm::vec4(rightA, 0.0f);
+	rightB = tmpRightMat * glm::vec4(rightB, 0.0f);
+
+	crossRight = glm::cross(rightA, rightB);
+	float rightAngX = glm::length(crossRight);
+
+	//if (OVRInputWrapper::getInstance().buttonPressed(ovrButton_B)) {
+	if (rightAngY > 0.4f && rightAngX > 0.4f && (std::chrono::duration_cast<std::chrono::milliseconds>(time_now - rightCooldown).count() > 500)) {
+		std::cout << "Switching right hand state!" << std::endl;
+		c.call(serverFunction[PLAYER_RIGHT_SWITCH], playerController.playerID);
+		rightCooldown = std::chrono::system_clock::now();
+	}
 
 	float leftGripTriggerRate = OVRInputWrapper::getInstance().gripTriggerRate(ovrHand_Left);
 	if (leftGripTriggerRate > 0.15f) {
@@ -144,6 +223,9 @@ void Client::update()
 		EntityManager::getInstance().update(newStates[i]);
 	}
 	//std::cout << std::endl;
+
+	lastLeftHand = tmpLeftMat;
+	lastRightHand = tmpRightMat;
 
 	// STEP: Check that the BGM is playing properly
 	checkBGM();
