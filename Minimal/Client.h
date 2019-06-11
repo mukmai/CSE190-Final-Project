@@ -32,8 +32,8 @@ class Client : public RiftApp {
 
 	ASound * soundFire = new ASound("Resources/Audio/SoundEffects/fire1.wav");
 
-	AParticleSystem * leftPS;
-	AParticleSystem * rightPS;
+	//AParticleSystem * leftPS;
+	//AParticleSystem * rightPS;
 
 public:
 	Client();
@@ -43,7 +43,7 @@ protected:
 
 	void initAudio();
 	
-	void initPS();
+	//void initPS();
 
 	void shutdownGl() override;
 
