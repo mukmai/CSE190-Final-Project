@@ -16,6 +16,8 @@
 #include <iostream>
 #include <random>
 
+#include <chrono>
+
 // An example application that renders a simple cube
 class Client : public RiftApp {
 	double oldTime = 0;
@@ -31,6 +33,12 @@ class Client : public RiftApp {
 	glm::vec3 lastEyePos = glm::vec3(0.0f);
 
 	ASound * soundFire = new ASound("Resources/Audio/SoundEffects/fire1.wav");
+
+	glm::mat4 lastLeftHand;
+	glm::mat4 lastRightHand;
+
+	std::chrono::system_clock::time_point leftCooldown;
+	std::chrono::system_clock::time_point rightCooldown;
 
 
 public:

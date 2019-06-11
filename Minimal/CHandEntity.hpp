@@ -20,11 +20,15 @@ public:
 
 		// load model and shader
 		if (handIndex == 0) {
-			_objectModel = std::make_unique<Model>("./Resources/Models/left_hand.obj", false);
+			_handModel = new Model("./Resources/Models/left_hand.obj", false);
+			_gunModel  = new Model("./Resources/Models/left_gun.obj", false);
+			_currModel = _handModel;
 			aps->vecSpawnDir = glm::vec3(5.0f, 0.0f, 0.0f);
 		}
 		else {
-			_objectModel = std::make_unique<Model>("./Resources/Models/right_hand.obj", false);
+			_handModel = new Model("./Resources/Models/right_hand.obj", false);
+			_gunModel  = new Model("./Resources/Models/right_gun.obj", false);
+			_currModel = _handModel;
 			aps->vecSpawnDir = glm::vec3(-5.0f, 0.0f, 0.0f);
 		}
 
@@ -55,7 +59,7 @@ public:
 	void render(const glm::mat4& projection, const glm::mat4& view, glm::vec3 eyePos) override {
 		_objectShader->use();
 		setUniforms(projection, view, eyePos);
-		_objectModel->draw(*_objectShader);
+		_currModel->draw(*_objectShader);
 
 		// STEP: Update the particle system and the audio associated with it.
 		//       Then render it.
@@ -83,13 +87,29 @@ public:
 
 		//std::cout << "Checking the extraData for a hand entity for THRUSTER_ON" << std::endl;
 		//std::cout << "Size of extraData: " << _state->extraData.size() << std::endl;
-		std::cout << "extraData.at(THRUSTER_ON): " << _state->extraData.at(THRUSTER_ON) << std::endl;
-		if (_state->extraData.at(THRUSTER_ON) == 1) {
+		//std::cout << "extraData.at(THRUSTER_ON): " << _state->extraData.at(THRUSTER_ON) << std::endl;
+		bool bThrustOn  = _state->extraData.at(THRUSTER_ON);
+		bool bGunOn     = _state->extraData.at(HAND_STATE);
+
+		if (bThrustOn == 1) {
 			aps->playPS();
 		}
 		else {
 			aps->stopPS();
 		}
+
+		//std::cout << "extraData.at(HAND_STATE): " << _state->extraData.at(HAND_STATE) << std::endl;
+		if (bGunOn == 0) {
+			_currModel = _handModel;
+		}
+		else {
+			_currModel = _gunModel;
+		}
 		
 	}
+
+protected:
+	Model * _handModel;
+	Model * _gunModel;
+	Model * _currModel;
 };

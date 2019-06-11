@@ -24,7 +24,10 @@ enum FUNCTION {
 	PLAYER_LEFT_THRUSTER,
 	PLAYER_RIGHT_THRUSTER,
 	PLAYER_LEFT_THRUSTER_OFF,
-	PLAYER_RIGHT_THRUSTER_OFF
+	PLAYER_RIGHT_THRUSTER_OFF,
+	PLAYER_LEFT_SWITCH,
+	PLAYER_RIGHT_SWITCH,
+	PLAYER_SHOOT
 };
 
 // map from FUNCTION enum to string (just to make it easier to find the location
@@ -44,7 +47,10 @@ static std::map<FUNCTION, std::string> serverFunction {
 { PLAYER_LEFT_THRUSTER , "player_left_thruster"},
 { PLAYER_RIGHT_THRUSTER , "player_right_thruster"},
 { PLAYER_LEFT_THRUSTER_OFF , "player_left_thruster_off"},
-{ PLAYER_RIGHT_THRUSTER_OFF , "player_right_thruster_off"}
+{ PLAYER_RIGHT_THRUSTER_OFF , "player_right_thruster_off"},
+{ PLAYER_LEFT_SWITCH , "player_left_switch"},
+{ PLAYER_RIGHT_SWITCH , "player_right_switch"},
+{ PLAYER_SHOOT , "player_shoot" }
 };
 
 enum EntityType
@@ -55,7 +61,8 @@ enum EntityType
 	ENTITY_BODY,
 	ENTITY_SPHERE,
 	ENTITY_BOX,
-	ENTITY_BUILDING
+	ENTITY_BUILDING,
+	ENTITY_PROJECTILE
 };
 
 MSGPACK_ADD_ENUM(EntityType);

@@ -27,6 +27,8 @@ public:
 
 	void createBox(int playerID);
 
+	void createProjectile(int playerID, int handIdx);
+
 	void increaseHandSize(int playerID);
 
 	void rightHandThruster(int playerID, float rate);
@@ -36,6 +38,10 @@ public:
 	void rightHandThrusterOff(int playerID);
 
 	void leftHandThrusterOff(int playerID);
+
+	void leftHandSwitch(int playerID);
+
+	void rightHandSwitch(int playerID);
 
 	void stabilizerSwitch(int playerID);
 

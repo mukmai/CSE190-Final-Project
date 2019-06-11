@@ -173,6 +173,24 @@ void ASound::playSound3D(float volume){
 	}
 }
 
+void ASound::playSound3DInstance(float volume) {
+	// Play the stored sound
+	fmod_result = system->playSound(sound, NULL, false, &channel);
+	if (fmod_result != FMOD_OK)
+	{
+		//printf("FUNCTION: playSound3D()");
+		//printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
+
+	// Set the volume of the sound
+	fmod_result = channel->setVolume(volume);
+	if (fmod_result != FMOD_OK)
+	{
+		//printf("FUNCTION: stopSound()");
+		//printf("FMOD error! (%d) %s\n", fmod_result, FMOD_ErrorString(fmod_result));
+	}
+}
+
 void ASound::pauseSound() {
 	fmod_result = channel->setPaused(true);
 	if (fmod_result != FMOD_OK)

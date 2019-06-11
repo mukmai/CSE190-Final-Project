@@ -105,6 +105,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\Include\LibOVR;$(MSBuildThisFileDirectory)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <AdditionalDependencies>rpc.lib;LibOVR.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);fmod_vc.lib;fmodL_vc.lib</AdditionalDependencies>
@@ -208,6 +209,7 @@ xcopy /y /d  "$(ProjectDir)External\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="ColorCubeScene2.h" />
     <ClInclude Include="ControllerSphereModule.h" />
     <ClInclude Include="CPlayerEntity.hpp" />
+    <ClInclude Include="CProjectileEntity.hpp" />
     <ClInclude Include="CSphereEntity.hpp" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="EntityManager.h" />

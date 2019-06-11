@@ -44,6 +44,8 @@ class ASound{
 	  // TODO: Set up the sound for proper spatialization
       void playSound3D(float volume);
 
+	  void playSound3DInstance(float volume);
+
 	  void pauseSound();
 
 	  void unpauseSound();

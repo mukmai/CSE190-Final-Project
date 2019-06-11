@@ -8,6 +8,7 @@
 #include "CSphereEntity.hpp"
 #include "CBoxEntity.hpp"
 #include "CBuildingEntity.hpp"
+#include "CProjectileEntity.hpp"
 
 EntityManager::EntityManager()
 {
@@ -69,6 +70,9 @@ std::shared_ptr<CBaseEntity> EntityManager::getEntity(BaseState const & state)
 		break;
 	case ENTITY_BUILDING:
 		entity = std::make_shared<CBuildingEntity>();
+    break;
+	case ENTITY_PROJECTILE:
+		entity = std::make_shared<CProjectileEntity>();
 		break;
 	}
 
