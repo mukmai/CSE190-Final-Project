@@ -156,14 +156,17 @@ void SEntityManager::rightHandThruster(int playerID, float rate)
 	auto tempEntity = entityMap.find(playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
-	auto rightHand = playerEntity->rightHand;
+	//auto rightHand = playerEntity->rightHand;
 
-	auto force = rightHand->getPalmForward() * THRUSTER_FORCE * rate;
+	//auto force = rightHand->getPalmForward() * THRUSTER_FORCE * rate;
 
-	// reduce side way speed
-	force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
+	//// reduce side way speed
+	//force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
 
-	playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
+	//playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
+	playerEntity->rightThrusterOn = true;
+	playerEntity->rightThrusterRate = rate;
+	//playerEntity->updatedPlayerList.clear();
 }
 
 void SEntityManager::leftHandThruster(int playerID, float rate)
@@ -171,12 +174,30 @@ void SEntityManager::leftHandThruster(int playerID, float rate)
 	auto tempEntity = entityMap.find(playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
-	auto leftHand = playerEntity->leftHand;
+	//auto leftHand = playerEntity->leftHand;
 
-	auto force = leftHand->getPalmForward() * THRUSTER_FORCE * rate;
+	//auto force = leftHand->getPalmForward() * THRUSTER_FORCE * rate;
+
+	//// reduce side way speed
+	//force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
+
+	//playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
+	playerEntity->leftThrusterOn = true;
+	playerEntity->leftThrusterRate = rate;
+	//playerEntity->updatedPlayerList.clear();
+}
+
+void SEntityManager::stabilizerSwitch(int playerID)
+{
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	//auto leftHand = playerEntity->leftHand;
+
+	//auto force = leftHand->getPalmForward() * THRUSTER_FORCE * rate;
 
 	// reduce side way speed
-	force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
+	//force *= glm::vec3(SIDE_THRUSTER_RATIO, 1, SIDE_THRUSTER_RATIO);
 
-	playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
+	//playerEntity->getRigidBody()->applyCentralForce(bullet::fromGlm(force));
 }

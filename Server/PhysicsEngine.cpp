@@ -62,9 +62,7 @@ void PhysicsEngine::updateBody() {
 		else {
 			globalPos = updatedList[i].pos;
 		}
-		if (updatedList[i].type == ENTITY_PLAYER) {
-			//std::cout << updatedList[i].pos.x << " " << updatedList[i].pos.y << " " << updatedList[i].pos.z << std::endl;
-		}
+
 		btTransform newTransform;
 		newTransform.setIdentity();
 		newTransform.setOrigin(bullet::fromGlm(globalPos));
@@ -77,6 +75,12 @@ void PhysicsEngine::updateBody() {
 
 void PhysicsEngine::stepSimulation(float timeStep) {
 	updateBody();
+	for (int i = 0; i < entityManager->playerList.size(); i++) {
+		auto tempEntity = entityManager->entityMap[entityManager->playerList[i]];
+		auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+		playerEntity->updateBody();
+	}
+
 	dynamicsWorld->stepSimulation(1.f / timeStep, 10);
 
 	//print positions of all objects

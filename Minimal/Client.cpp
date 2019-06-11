@@ -85,12 +85,12 @@ void Client::update()
 	//}
 
 	float leftGripTriggerRate = OVRInputWrapper::getInstance().gripTriggerRate(ovrHand_Left);
-	if (leftGripTriggerRate != 0) {
+	if (leftGripTriggerRate > 0.15f) {
 		c.call(serverFunction[PLAYER_LEFT_THRUSTER], playerController.playerID, leftGripTriggerRate);
 	}
 
 	float rightGripTriggerRate = OVRInputWrapper::getInstance().gripTriggerRate(ovrHand_Right);
-	if (leftGripTriggerRate != 0) {
+	if (leftGripTriggerRate > 0.15f) {
 		c.call(serverFunction[PLAYER_RIGHT_THRUSTER], playerController.playerID, rightGripTriggerRate);
 	}
 

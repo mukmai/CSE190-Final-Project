@@ -32,5 +32,7 @@ public:
 	void rightHandThruster(int playerID, float rate);
 
 	void leftHandThruster(int playerID, float rate);
+
+	void stabilizerSwitch(int playerID);
 };
 

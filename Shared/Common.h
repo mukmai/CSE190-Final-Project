@@ -5,7 +5,7 @@
 #define PORT 8008
 #define TICK_PER_SECOND 60
 
-#define THRUSTER_FORCE 150.0f
+#define THRUSTER_FORCE 230.0f
 #define SIDE_THRUSTER_RATIO 0.3f
 
 enum FUNCTION {
