@@ -70,3 +70,8 @@ float OVRInputWrapper::thumbStickVertical(int hand)
 {
 	return newState.Thumbstick[hand].y;
 }
+
+float OVRInputWrapper::gripTriggerRate(int hand)
+{
+	return newState.HandTrigger[hand];
+}

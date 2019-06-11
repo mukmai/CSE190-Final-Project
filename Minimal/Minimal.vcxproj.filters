@@ -257,11 +257,20 @@
     <ClInclude Include="ASound.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="CProjectileEntity.hpp">
-      <Filter>Header Files\CEntities</Filter>
-    </ClInclude>
     <ClInclude Include="AParticleSystem.h">
       <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="CHeadEntity.hpp">
+      <Filter>Header Files\CEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="CBodyEntity.hpp">
+      <Filter>Header Files\CEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="CSphereEntity.hpp">
+      <Filter>Header Files\CEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="CBoxEntity.hpp">
+      <Filter>Header Files\CEntities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

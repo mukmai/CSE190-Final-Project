@@ -5,6 +5,8 @@
 #include "model.h"
 #include <glm/gtx/quaternion.hpp>
 
+#include "EntityManager.h"
+
 /*
 ** This is an interface that any graphics objects on the client side must be
 ** derived from. Do not instantiate objects of this class.

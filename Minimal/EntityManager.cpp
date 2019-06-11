@@ -3,7 +3,10 @@
 #include <iostream>
 #include "CHandEntity.hpp"
 #include "CPlayerEntity.hpp"
-#include "CProjectileEntity.hpp"
+#include "CHeadEntity.hpp"
+#include "CBodyEntity.hpp"
+#include "CSphereEntity.hpp"
+#include "CBoxEntity.hpp"
 
 EntityManager::EntityManager()
 {
@@ -51,8 +54,18 @@ std::shared_ptr<CBaseEntity> EntityManager::getEntity(BaseState const & state)
 	case ENTITY_PLAYER:
 		entity = std::make_shared<CPlayerEntity>();
 		break;
-	case ENTITY_PROJECTILE:
-		entity = std::make_shared<CProjectileEntity>(glm::vec3(0.0f, 0.0f, -0.01f));
+	case ENTITY_HEAD:
+		entity = std::make_shared<CHeadEntity>();
+		break;
+	case ENTITY_BODY:
+		entity = std::make_shared<CBodyEntity>();
+		break;
+	case ENTITY_SPHERE:
+		entity = std::make_shared<CSphereEntity>();
+		break;
+	case ENTITY_BOX:
+		entity = std::make_shared<CBoxEntity>();
+		break;
 	}
 
 	if (entity)
@@ -102,4 +115,14 @@ void EntityManager::render(const glm::mat4 & projection, const glm::mat4 & view,
 		}
 	}
 	//std::cout << std::endl;
+}
+
+void EntityManager::setPlayerID(int playerID)
+{
+	this->playerID = playerID;
+}
+
+int EntityManager::getPlayerID()
+{
+	return playerID;
 }

@@ -48,7 +48,19 @@
     <ClInclude Include="SPlayerEntity.hpp">
       <Filter>Header Files\SEntities</Filter>
     </ClInclude>
-    <ClInclude Include="SProjectileEntity.hpp">
+    <ClInclude Include="SHeadEntity.hpp">
+      <Filter>Header Files\SEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="SBodyEntity.hpp">
+      <Filter>Header Files\SEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="SSphereEntity.hpp">
+      <Filter>Header Files\SEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SBoxEntity.hpp">
       <Filter>Header Files\SEntities</Filter>
     </ClInclude>
   </ItemGroup>
@@ -67,6 +79,9 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsEngine.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

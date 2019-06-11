@@ -9,9 +9,8 @@ Client::Client() : c("localhost", PORT)
 {
 	std::cout << "Connected to port: " << PORT << std::endl;
 	playerController.playerID = c.call(serverFunction[PLAYER_JOIN]).as<int>();
-
 	initAudio();
-
+	EntityManager::getInstance().setPlayerID(playerController.playerID);
 }
 
 void Client::initGl()
@@ -85,7 +84,38 @@ void Client::update()
 
 	float leftThumbStickVertical = OVRInputWrapper::getInstance().thumbStickVertical(ovrHand_Left);
 	if (leftThumbStickVertical != 0) {
-		c.call(serverFunction[PLAYER_MOVE], playerController.playerID, leftThumbStickVertical);
+		c.call(serverFunction[PLAYER_MOVE_Z], playerController.playerID, leftThumbStickVertical);
+	}
+
+	float leftThumbStickHorizontal = OVRInputWrapper::getInstance().thumbStickHorizontal(ovrHand_Left);
+	if (leftThumbStickHorizontal != 0) {
+		c.call(serverFunction[PLAYER_MOVE_X], playerController.playerID, leftThumbStickHorizontal);
+	}
+
+	if (OVRInputWrapper::getInstance().buttonPressed(ovrButton_A)) {
+		c.call(serverFunction[PLAYER_BUTTON_A], playerController.playerID);
+	}
+
+	if (OVRInputWrapper::getInstance().buttonPressed(ovrButton_X)) {
+		c.call(serverFunction[PLAYER_BUTTON_X], playerController.playerID);
+	}
+
+	//if (OVRInputWrapper::getInstance().buttonHeld(ovrButton_Y)) {
+	//	c.call(serverFunction[PLAYER_BUTTON_Y], playerController.playerID);
+	//}
+
+	//if (OVRInputWrapper::getInstance().buttonHeld(ovrButton_B)) {
+	//	c.call(serverFunction[PLAYER_BUTTON_B], playerController.playerID);
+	//}
+
+	float leftGripTriggerRate = OVRInputWrapper::getInstance().gripTriggerRate(ovrHand_Left);
+	if (leftGripTriggerRate > 0.15f) {
+		c.call(serverFunction[PLAYER_LEFT_THRUSTER], playerController.playerID, leftGripTriggerRate);
+	}
+
+	float rightGripTriggerRate = OVRInputWrapper::getInstance().gripTriggerRate(ovrHand_Right);
+	if (leftGripTriggerRate > 0.15f) {
+		c.call(serverFunction[PLAYER_RIGHT_THRUSTER], playerController.playerID, rightGripTriggerRate);
 	}
 
 	bool bRightTriggerPressed = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Right);
@@ -106,10 +136,8 @@ void Client::update()
 
 	// send pos of all things and update all states
 	vector<BaseState> newStates = c.call(serverFunction[GET_UPDATE], playerController.playerID).as<vector<BaseState>>();
-	//std::cout << "Updating: ";
 	for (int i = 0; i < newStates.size(); i++) {
 		EntityManager::getInstance().update(newStates[i]);
-		//std::cout << newStates[i].id << " ";
 	}
 	//std::cout << std::endl;
 

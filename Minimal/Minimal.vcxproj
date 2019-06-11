@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9E48D90F-7C30-4BCE-B738-3DE30FCE147B}</ProjectGuid>
     <RootNamespace>Minimal</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -197,13 +197,16 @@
     <ClInclude Include="AParticleSystem.h" />
     <ClInclude Include="CaveComponent.h" />
     <ClInclude Include="CBaseEntity.hpp" />
+    <ClInclude Include="CBodyEntity.hpp" />
+    <ClInclude Include="CBoxEntity.hpp" />
     <ClInclude Include="CHandEntity.hpp" />
+    <ClInclude Include="CHeadEntity.hpp" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ColorCubeScene.h" />
     <ClInclude Include="ColorCubeScene2.h" />
     <ClInclude Include="ControllerSphereModule.h" />
     <ClInclude Include="CPlayerEntity.hpp" />
-    <ClInclude Include="CProjectileEntity.hpp" />
+    <ClInclude Include="CSphereEntity.hpp" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="ExampleApp.h" />
