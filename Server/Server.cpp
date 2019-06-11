@@ -85,6 +85,18 @@ std::function<void(int, float)> playerRightThruster = [&](int playerID, float ra
 	mtx.unlock();
 };
 
+std::function<void(int)> playerLeftThrusterOff = [&](int playerID) {
+	mtx.lock();
+	entityManager->leftHandThrusterOff(playerID);
+	mtx.unlock();
+};
+
+std::function<void(int)> playerRightThrusterOff = [&](int playerID) {
+	mtx.lock();
+	entityManager->rightHandThrusterOff(playerID);
+	mtx.unlock();
+};
+
 void startServer() {
 	// Set up rpc server and listen to PORT
 	rpc::server srv(PORT);
@@ -122,6 +134,10 @@ void startServer() {
 	srv.bind(serverFunction[PLAYER_LEFT_THRUSTER], playerLeftThruster);
 
 	srv.bind(serverFunction[PLAYER_RIGHT_THRUSTER], playerRightThruster);
+
+	srv.bind(serverFunction[PLAYER_LEFT_THRUSTER_OFF], playerLeftThrusterOff);
+
+	srv.bind(serverFunction[PLAYER_RIGHT_THRUSTER_OFF], playerRightThrusterOff);
 
 	// Blocking call to start the server: non-blocking call is srv.async_run(threadsCount);
 	constexpr size_t thread_count = 2;

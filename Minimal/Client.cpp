@@ -21,8 +21,6 @@ void Client::initGl()
 	ovr_RecenterTrackingOrigin(_session);
 	srand((unsigned int)time(NULL));
 	sphereScene = std::shared_ptr<SpheresScene>(new SpheresScene());
-	
-	std::cout << "***** Initializing particle systems" << std::endl;
 }
 
 void Client::initAudio() {
@@ -112,10 +110,16 @@ void Client::update()
 	if (leftGripTriggerRate > 0.15f) {
 		c.call(serverFunction[PLAYER_LEFT_THRUSTER], playerController.playerID, leftGripTriggerRate);
 	}
+	else {
+		c.call(serverFunction[PLAYER_LEFT_THRUSTER_OFF], playerController.playerID);
+	}
 
 	float rightGripTriggerRate = OVRInputWrapper::getInstance().gripTriggerRate(ovrHand_Right);
-	if (leftGripTriggerRate > 0.15f) {
+	if (rightGripTriggerRate > 0.15f) {
 		c.call(serverFunction[PLAYER_RIGHT_THRUSTER], playerController.playerID, rightGripTriggerRate);
+	}
+	else {
+		c.call(serverFunction[PLAYER_RIGHT_THRUSTER_OFF], playerController.playerID);
 	}
 
 	bool bRightTriggerPressed = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Right);

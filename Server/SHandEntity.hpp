@@ -17,7 +17,8 @@ public:
 
 		_state->extraData.push_back(playerID); // extraData[PLAYER_ID] = player ID
 		_state->extraData.push_back(handIndex); // extraData[HAND_INDEX] = hand index (0 = left, 1 = right)
-		_state->extraData.push_back(0); // extraData[HAND_STATE] = hand state (0 = release hand, 1 = hold hand)
+		_state->extraData.push_back(0); // extraData[HAND_STATE]  = hand state (0 = release hand, 1 = hold hand)
+		_state->extraData.push_back(0); // extraData[THRUSTER_ON] = thrust status (0 = off, 1 = on)
 	};
 
 	btRigidBody* createRigidBody() override {

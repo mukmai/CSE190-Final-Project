@@ -8,7 +8,6 @@ class CHandEntity : public CBaseEntity
 {
 public:
 	AParticleSystem * aps;
-	glm::mat4 playMat = glm::mat4(1.0f);
 
 	bool bPlayPS = false;
 
@@ -47,7 +46,8 @@ public:
 		model = globalPlayerTranslation * globalPlayerRotation * model; // global position
 
 		// XXX: Hack to store the player's last position and rotation
-		playMat = globalPlayerTranslation * globalPlayerRotation;
+		// STEP: Update attached sound and particle systems
+		aps->matModel = model;
 
 		_objectShader->setMat4("model", model);
 	}
@@ -81,14 +81,15 @@ public:
 		// extraData
 		_state->extraData = state.extraData;
 
-		// STEP: Update attached sound and particle systems
-		aps->matModel = glm::translate(glm::mat4(1.0f), _state->pos) * glm::toMat4(_state->rotation);
-
-		if (bPlayPS) {
+		//std::cout << "Checking the extraData for a hand entity for THRUSTER_ON" << std::endl;
+		//std::cout << "Size of extraData: " << _state->extraData.size() << std::endl;
+		std::cout << "extraData.at(THRUSTER_ON): " << _state->extraData.at(THRUSTER_ON) << std::endl;
+		if (_state->extraData.at(THRUSTER_ON) == 1) {
 			aps->playPS();
 		}
 		else {
 			aps->stopPS();
 		}
+		
 	}
 };

@@ -22,7 +22,9 @@ enum FUNCTION {
 	PLAYER_BUTTON_Y,
 	PLAYER_BUTTON_B,
 	PLAYER_LEFT_THRUSTER,
-	PLAYER_RIGHT_THRUSTER
+	PLAYER_RIGHT_THRUSTER,
+	PLAYER_LEFT_THRUSTER_OFF,
+	PLAYER_RIGHT_THRUSTER_OFF
 };
 
 // map from FUNCTION enum to string (just to make it easier to find the location
@@ -40,7 +42,9 @@ static std::map<FUNCTION, std::string> serverFunction {
 { PLAYER_BUTTON_Y , "player_button_y"},
 { PLAYER_BUTTON_B , "player_button_b"},
 { PLAYER_LEFT_THRUSTER , "player_left_thruster"},
-{ PLAYER_RIGHT_THRUSTER , "player_right_thruster"}
+{ PLAYER_RIGHT_THRUSTER , "player_right_thruster"},
+{ PLAYER_LEFT_THRUSTER_OFF , "player_left_thruster_off"},
+{ PLAYER_RIGHT_THRUSTER_OFF , "player_right_thruster_off"}
 };
 
 enum EntityType
@@ -67,5 +71,6 @@ enum HandExtraData
 {
 	PLAYER_ID,
 	HAND_INDEX,
-	HAND_STATE
+	HAND_STATE,
+	THRUSTER_ON
 };

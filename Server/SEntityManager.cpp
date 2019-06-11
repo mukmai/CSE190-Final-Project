@@ -156,7 +156,8 @@ void SEntityManager::rightHandThruster(int playerID, float rate)
 	auto tempEntity = entityMap.find(playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
-	//auto rightHand = playerEntity->rightHand;
+	auto rightHand = playerEntity->rightHand;
+	rightHand->getState()->extraData.at(THRUSTER_ON) = 1;
 
 	//auto force = rightHand->getPalmForward() * THRUSTER_FORCE * rate;
 
@@ -174,7 +175,8 @@ void SEntityManager::leftHandThruster(int playerID, float rate)
 	auto tempEntity = entityMap.find(playerID)->second;
 	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
 
-	//auto leftHand = playerEntity->leftHand;
+	auto leftHand = playerEntity->leftHand;
+	leftHand->getState()->extraData.at(THRUSTER_ON) = 1;
 
 	//auto force = leftHand->getPalmForward() * THRUSTER_FORCE * rate;
 
@@ -185,6 +187,24 @@ void SEntityManager::leftHandThruster(int playerID, float rate)
 	playerEntity->leftThrusterOn = true;
 	playerEntity->leftThrusterRate = rate;
 	//playerEntity->updatedPlayerList.clear();
+}
+
+void SEntityManager::rightHandThrusterOff(int playerID)
+{
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	auto rightHand = playerEntity->rightHand;
+	rightHand->getState()->extraData.at(THRUSTER_ON) = 0;
+}
+
+void SEntityManager::leftHandThrusterOff(int playerID)
+{
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	auto leftHand = playerEntity->leftHand;
+	leftHand->getState()->extraData.at(THRUSTER_ON) = 0;
 }
 
 void SEntityManager::stabilizerSwitch(int playerID)
