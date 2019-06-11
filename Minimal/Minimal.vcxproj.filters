@@ -251,5 +251,8 @@
     <ClInclude Include="CSphereEntity.hpp">
       <Filter>Header Files\CEntities</Filter>
     </ClInclude>
+    <ClInclude Include="CBoxEntity.hpp">
+      <Filter>Header Files\CEntities</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

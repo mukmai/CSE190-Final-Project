@@ -13,6 +13,8 @@ struct BaseState
 	int id;
 	EntityType type;
 	std::vector<int> extraData; // any special type of information will store in this vector
+	ColliderType collider;
+	glm::vec3 colliderScale;
 
 	// rpc Macro to generate serialize code for the struct
 	MSGPACK_DEFINE_ARRAY(
@@ -21,5 +23,8 @@ struct BaseState
 		scale.x, scale.y, scale.z,
 		id,
 		type,
-		extraData);
+		extraData,
+		collider,
+		colliderScale.x, colliderScale.y, colliderScale.z
+		);
 };

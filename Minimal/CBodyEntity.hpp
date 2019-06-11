@@ -31,4 +31,13 @@ public:
 
 		_objectShader->setMat4("model", model);
 	}
+
+	void render(const glm::mat4& projection, const glm::mat4& view, glm::vec3 eyePos) override {
+		// only render body when it is not this player's body
+		if (EntityManager::getInstance().getPlayerID() != _state->extraData[PLAYER_ID]) {
+			_objectShader->use();
+			setUniforms(projection, view, eyePos);
+			_objectModel->draw(*_objectShader);
+		}
+	}
 };

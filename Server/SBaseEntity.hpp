@@ -5,12 +5,13 @@
 #include "BaseState.h"
 #include "IDGenerator.h"
 #include <set>
+#include "btBulletDynamicsCommon.h"
+#include "btBulletCollisionCommon.h"
+#include "BulletCollision/CollisionDispatch/btGhostObject.h"
 
 class SBaseEntity
 {
 public:
-	// bool hasChanged; // If object state has changed during the last iteration
-
 	// stores playerID that has already updated this entity
 	std::set<int> updatedPlayerList; 
 
@@ -25,6 +26,46 @@ public:
 	// return all children entities
 	virtual	std::vector<std::shared_ptr<SBaseEntity>> getChildren();
 
+	virtual btRigidBody* createRigidBody();
+
+	virtual btGhostObject* createGhostObject();
+
+	virtual btCollisionShape* getcollisionShape();
+
+	virtual btRigidBody* getRigidBody();
+
 protected:
 	std::shared_ptr<BaseState> _state;
+
+	btRigidBody* rigidBody;
+
+	btCollisionShape* colShape;
 };
+
+namespace bullet
+{
+	inline glm::vec3 toGlm(const btVector3& bt) {
+		glm::vec3 res;
+		res.x = (float)bt.getX();
+		res.y = (float)bt.getY();
+		res.z = (float)bt.getZ();
+		return res;
+	}
+
+	inline btVector3 fromGlm(const glm::vec3& v) {
+		return btVector3(v.x, v.y, v.z);
+	}
+
+	inline glm::quat toGlm(const btQuaternion& bt) {
+		glm::quat res;
+		res.x = (float)bt.getX();
+		res.y = (float)bt.getY();
+		res.z = (float)bt.getZ();
+		res.w = (float)bt.getW();
+		return res;
+	}
+
+	inline btQuaternion fromGlm(const glm::quat& v) {
+		return btQuaternion(v.x, v.y, v.z);
+	}
+}

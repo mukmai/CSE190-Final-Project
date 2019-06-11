@@ -36,5 +36,7 @@ public:
 	float thumbStickHorizontal(int hand);
 
 	float thumbStickVertical(int hand);
+
+	float gripTriggerRate(int hand);
 };
 

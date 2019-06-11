@@ -22,5 +22,17 @@ public:
 	void movePlayerZ(int playerID, float rate);
 
 	void movePlayerX(int playerID, float rate);
+
+	void createSphere(int playerID);
+
+	void createBox(int playerID);
+
+	void increaseHandSize(int playerID);
+
+	void rightHandThruster(int playerID, float rate);
+
+	void leftHandThruster(int playerID, float rate);
+
+	void stabilizerSwitch(int playerID);
 };
 
