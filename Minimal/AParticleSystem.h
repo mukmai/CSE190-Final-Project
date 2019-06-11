@@ -52,6 +52,7 @@ class AParticleSystem{
 	glm::vec3 lastPos     = glm::vec3(0.0f);
 
 	bool bSpawnParticles = false;
+	bool bPlaySound = true;
 
     AParticleSystem();
 

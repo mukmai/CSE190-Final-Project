@@ -40,6 +40,12 @@ ASound::ASound(const char * filepath){
     loadSound(filepath);
 }
 
+ASound::~ASound() {
+	//delete(channel);
+	//delete(sound);
+	//delete(system);
+}
+
 void ASound::update() {
 	system->update();
 	if (fmod_result != FMOD_OK)

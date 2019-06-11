@@ -43,6 +43,8 @@ public:
 
 	void rightHandSwitch(int playerID);
 
+	void playGunshotSound(int playerID, int handIdx, int toggleOn);
+
 	void stabilizerSwitch(int playerID);
 
 };

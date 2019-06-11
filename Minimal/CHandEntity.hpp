@@ -15,8 +15,12 @@ public:
 		// allocate state
 		_state = std::make_shared<BaseState>();
 
+		gunshot = new ASound("Resources/Audio/SoundEffects/fire1.wav");
+
 		aps = new AParticleSystem();
 		aps->setSound("Resources/Audio/SoundEffects/Thruster1.wav");
+
+		modelMat = glm::mat4(1.0f);
 
 		// load model and shader
 		if (handIndex == 0) {
@@ -51,9 +55,13 @@ public:
 
 		// XXX: Hack to store the player's last position and rotation
 		// STEP: Update attached sound and particle systems
-		aps->matModel = model;
+		if (aps != NULL) {
+			aps->matModel = model;
+		}
 
 		_objectShader->setMat4("model", model);
+
+		modelMat = model;
 	}
 
 	void render(const glm::mat4& projection, const glm::mat4& view, glm::vec3 eyePos) override {
@@ -63,9 +71,13 @@ public:
 
 		// STEP: Update the particle system and the audio associated with it.
 		//       Then render it.
-		aps->update(eyePos);
-		aps->update3DAudio(glm::inverse(view));
-		aps->render(projection, view);
+		if (aps != NULL) {
+			aps->update(eyePos);
+			aps->update3DAudio(glm::inverse(view));
+			aps->render(projection, view);
+		}
+		
+		gunshot->update3DListener(glm::inverse(view));
 	}
 
 
@@ -90,6 +102,7 @@ public:
 		//std::cout << "extraData.at(THRUSTER_ON): " << _state->extraData.at(THRUSTER_ON) << std::endl;
 		bool bThrustOn  = _state->extraData.at(THRUSTER_ON);
 		bool bGunOn     = _state->extraData.at(HAND_STATE);
+		bool bFireSound = _state->extraData.at(GUN_SOUND);
 
 		if (bThrustOn == 1) {
 			aps->playPS();
@@ -105,6 +118,13 @@ public:
 		else {
 			_currModel = _gunModel;
 		}
+
+		//gunshot->update3DChannel(_state->pos);
+		gunshot->update3DChannel(modelMat[3]);
+/*		if (bFireSound == 1) {
+			gunshot->playSound3DInstance(0.4f);
+			std::cout << "Gun shot should play" << std::endl;
+		}	*/	
 		
 	}
 
@@ -112,4 +132,7 @@ protected:
 	Model * _handModel;
 	Model * _gunModel;
 	Model * _currModel;
+
+	ASound * gunshot;
+	glm::mat4 modelMat;
 };
