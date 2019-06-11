@@ -2,6 +2,11 @@
 
 #include "SBaseEntity.hpp"
 
+#include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 class SProjectileEntity : public SBaseEntity
 {
 public:
@@ -42,6 +47,18 @@ public:
 		btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 		rigidBody = new btRigidBody(rbInfo);
+
+		// STEP: Turn off gravity for this entity
+		rigidBody->setGravity(btVector3(0, 0, 0));
+
+		glm::vec3 initVel = glm::vec4(0.0f, 0.0f, -20.0f, 0.0f);
+		initVel = glm::toMat4(_state->rotation) * glm::vec4(initVel, 0.0f);
+
+		// Calculate the initial velocity of the projectile
+		rigidBody->setLinearVelocity(bullet::fromGlm(initVel));
+
+		rigidBody->setFriction(0);
+
 		return rigidBody;
 	}
 
