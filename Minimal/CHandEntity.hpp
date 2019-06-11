@@ -83,5 +83,12 @@ public:
 
 		// STEP: Update attached sound and particle systems
 		aps->matModel = glm::translate(glm::mat4(1.0f), _state->pos) * glm::toMat4(_state->rotation);
+
+		if (bPlayPS) {
+			aps->playPS();
+		}
+		else {
+			aps->stopPS();
+		}
 	}
 };

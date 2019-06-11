@@ -24,31 +24,7 @@ void Client::initGl()
 	sphereScene = std::shared_ptr<SpheresScene>(new SpheresScene());
 	
 	std::cout << "***** Initializing particle systems" << std::endl;
-
-	//initPS(); // For some reason, this initialization has to occur here or else the 
-	//          // program crashes on startup
-	//          // Probably because you need to have the RiftApp initialize the Oculus'
-	//          // environment in OpenGL beforehand.
 }
-
-//void Client::initPS() {
-//	std::cout << "***** Initializing particle systems" << std::endl;
-//
-//	leftPS = new AParticleSystem();
-//	rightPS = new AParticleSystem();
-//
-//	std::cout << "***** Initializing direction vectors for particle systems" << std::endl;
-//
-//	leftPS->vecSpawnDir = glm::vec3(5.0f, 0.0f, 0.0f);
-//	rightPS->vecSpawnDir = glm::vec3(-5.0f, 0.0f, 0.0f);
-//
-//	std::cout << "***** Initializing sound objects for particle systems " << std::endl;
-//
-//	leftPS->setSound("Resources/Audio/SoundEffects/Thruster1.wav");
-//	rightPS->setSound("Resources/Audio/SoundEffects/Thruster1.wav");
-//
-//	std::cout << "***** Finished initializing particle systems" << std::endl;
-//}
 
 void Client::initAudio() {
 	// NOTE: All audio is set up in the ASound constructor.
@@ -82,20 +58,6 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	auto globalPlayerRotation = glm::mat4_cast(playerState->rotation);
 	auto globalHeadPose = globalPlayerTranslation * globalPlayerRotation * headPose;
 	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), eyePos);
-
-	//if (renderingEye == ovrEye_Left) {
-	//	leftPS->update(eyePos);
-	//	leftPS->update3DAudio(globalHeadPose);
-
-	//	rightPS->update(eyePos);
-	//	rightPS->update3DAudio(globalHeadPose);
-	//	// Update the last eye pos
-	//	lastEyePos = eyePos;
-	//}
-
-	//leftPS->render(projection, glm::inverse(globalHeadPose));
-	//rightPS->render(projection, glm::inverse(globalHeadPose));
-
 
 }
 
@@ -142,20 +104,6 @@ void Client::update()
 		soundFire->playSound(1.0f);
 	}
 
-	//if (OVRInputWrapper::getInstance().gripTriggerHeld(ovrHand_Left)) {
-	//	leftPS->playPS();
-	//}
-	//else {
-	//	leftPS->stopPS();
-	//}
-
-	//if (OVRInputWrapper::getInstance().gripTriggerHeld(ovrHand_Right)) {
-	//	rightPS->playPS();
-	//}
-	//else {
-	//	rightPS->stopPS();
-	//}
-
 	// send pos of all things and update all states
 	vector<BaseState> newStates = c.call(serverFunction[GET_UPDATE], playerController.playerID).as<vector<BaseState>>();
 	//std::cout << "Updating: ";
@@ -167,12 +115,6 @@ void Client::update()
 
 	// STEP: Check that the BGM is playing properly
 	checkBGM();
-
-	// STEP: Update particle system for both hands
-	//leftPS->matModel = glm::translate(glm::mat4(1.0f), controllerPosition[0]) * glm::toMat4(controllerRotation[0]);
-	//leftPS->matModel[3][3] = 0.0f;
-	//rightPS->matModel = glm::translate(glm::mat4(1.0f), controllerPosition[1]) * glm::toMat4(controllerRotation[1]);
-	//rightPS->matModel[3][3] = 0.0f;
 }
 
 void Client::checkBGM() {
