@@ -213,6 +213,10 @@ void Client::update()
 		soundFire->playSound3DInstance(1.0f);
 
 		c.call(serverFunction[PLAYER_SHOOT], playerController.playerID, 0);
+		//c.call(serverFunction[PLAYER_SHOOT_SOUND], playerController.playerID, 0, 1);
+	}
+	else {
+		//c.call(serverFunction[PLAYER_SHOOT_SOUND], playerController.playerID, 0, 0);
 	}
 
 	bool bRightTriggerPressed = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Right);
@@ -221,7 +225,12 @@ void Client::update()
 		soundFire->playSound3DInstance(1.0f);
 
 		c.call(serverFunction[PLAYER_SHOOT], playerController.playerID, 1);
+		//c.call(serverFunction[PLAYER_SHOOT_SOUND], playerController.playerID, 1, 1);
 	}
+	else {
+		//c.call(serverFunction[PLAYER_SHOOT_SOUND], playerController.playerID, 1, 0);
+	}
+	
 
 	// send pos of all things and update all states
 	vector<BaseState> newStates = c.call(serverFunction[GET_UPDATE], playerController.playerID).as<vector<BaseState>>();

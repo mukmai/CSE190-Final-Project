@@ -305,6 +305,35 @@ void SEntityManager::rightHandSwitch(int playerID)
 	}
 }
 
+void SEntityManager::playGunshotSound(int playerID, int handIdx, int toggleOn) {
+	auto tempEntity = entityMap.find(playerID)->second;
+	auto playerEntity = std::static_pointer_cast<SPlayerEntity>(tempEntity);
+
+	//auto hand = playerEntity->leftHand;
+	std::shared_ptr<SHandEntity> hand;
+	if (handIdx == 0) {
+		hand = playerEntity->leftHand;
+	}
+	else {
+		hand = playerEntity->rightHand;
+	}
+
+	// Check that the hand is in the gun mode, NOT in thruster mode
+	if (hand->getState()->extraData.at(HAND_STATE) == 1) {
+		if (toggleOn == 1) {
+			hand->getState()->extraData.at(GUN_SOUND) = 1;
+			std::cout << "handIdx: " << handIdx << std::endl;
+			std::cout << "toggleOn: " << toggleOn << std::endl;
+		}
+		else {
+			hand->getState()->extraData.at(GUN_SOUND) = 0;
+		}
+	}
+	else {
+		hand->getState()->extraData.at(GUN_SOUND) = 0;
+	}
+}
+
 
 void SEntityManager::stabilizerSwitch(int playerID)
 {

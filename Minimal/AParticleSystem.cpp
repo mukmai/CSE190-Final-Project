@@ -5,7 +5,7 @@
 
 AParticleSystem::AParticleSystem(){
     // Seed the random number generator
-    srand((unsigned int)(ovr_GetTimeInSeconds));
+    //srand((unsigned int)(ovr_GetTimeInSeconds));
 
 	shader = new Shader("./Resources/Shaders/particle_shader.vert", "./Resources/Shaders/particle_shader.frag");
 	shader->use();
@@ -19,8 +19,18 @@ AParticleSystem::AParticleSystem(){
 
 AParticleSystem::~AParticleSystem(){
     // TODO: delete any pointers and structs
+	//delete(container);
+	//delete(positions);
+	//delete(colors);
 
+	//delete(sound);
+	//delete(shader);
+	
     // TODO: delete the GL buffers
+	//glDeleteBuffers(1, &verticesBO);
+	//glDeleteBuffers(1, &positionBO);
+	//glDeleteBuffers(1, &colorBO);
+	//glDeleteVertexArrays(1, &VAO);
 }
 
 void AParticleSystem::init(){
@@ -272,7 +282,10 @@ void AParticleSystem::setSound(const char * filepath) {
 
 void AParticleSystem::playPS() {
 	bSpawnParticles = true;
-	sound->playSound3D(1.0f);
+
+	if (bPlaySound) {
+		sound->playSound3D(1.0f);
+	}
 }
 
 

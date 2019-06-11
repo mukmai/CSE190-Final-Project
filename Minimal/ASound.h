@@ -26,6 +26,8 @@ class ASound{
       ASound();
       ASound(const char * filepath);
 
+	  ~ASound();
+
 	  // General update function to use per-frame
 	  void update();
 

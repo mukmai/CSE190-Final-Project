@@ -28,7 +28,8 @@ enum FUNCTION {
 	PLAYER_LEFT_SWITCH,
 	PLAYER_RIGHT_SWITCH,
 	PLAYER_SHOOT,
-	CHECK_GAME_STATE
+	CHECK_GAME_STATE,
+	PLAYER_SHOOT_SOUND
 };
 
 // map from FUNCTION enum to string (just to make it easier to find the location
@@ -52,7 +53,8 @@ static std::map<FUNCTION, std::string> serverFunction {
 { PLAYER_LEFT_SWITCH , "player_left_switch"},
 { PLAYER_RIGHT_SWITCH , "player_right_switch"},
 { PLAYER_SHOOT , "player_shoot" },
-{ CHECK_GAME_STATE , "check_game_state"}
+{ CHECK_GAME_STATE , "check_game_state"},
+{ PLAYER_SHOOT_SOUND , "player_shoot_sound" }
 };
 
 enum EntityType
@@ -86,7 +88,8 @@ enum HandExtraData
 	PLAYER_ID,
 	HAND_INDEX,
 	HAND_STATE,
-	THRUSTER_ON
+	THRUSTER_ON,
+  GUN_SOUND
 };
 
 enum PlayerExtraData

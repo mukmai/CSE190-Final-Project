@@ -122,6 +122,12 @@ std::function<bool()> getGameState = [&]() {
 	return res;
 };
 
+std::function<void(int, int, int)> playerShootSound = [&](int playerID, int handIdx, int toggleOn) {
+	mtx.lock();
+	entityManager->playGunshotSound(playerID, handIdx, toggleOn);
+	mtx.unlock();
+};
+
 void startServer() {
 	// Set up rpc server and listen to PORT
 	rpc::server srv(PORT);
@@ -171,6 +177,8 @@ void startServer() {
 	srv.bind(serverFunction[PLAYER_SHOOT], playerShoot);
 
 	srv.bind(serverFunction[CHECK_GAME_STATE], getGameState);
+  
+	srv.bind(serverFunction[PLAYER_SHOOT_SOUND], playerShootSound);
 
 	// Blocking call to start the server: non-blocking call is srv.async_run(threadsCount);
 	constexpr size_t thread_count = 2;
