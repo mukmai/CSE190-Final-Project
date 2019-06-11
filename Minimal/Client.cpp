@@ -3,10 +3,13 @@
 #include "OVRInputWrapper.h"
 #include "EntityManager.h"
 
+#include <chrono>
+
 Client::Client() : c("localhost", PORT)
 {
 	std::cout << "Connected to port: " << PORT << std::endl;
 	playerController.playerID = c.call(serverFunction[PLAYER_JOIN]).as<int>();
+	initAudio();
 	EntityManager::getInstance().setPlayerID(playerController.playerID);
 }
 
@@ -18,7 +21,27 @@ void Client::initGl()
 	ovr_RecenterTrackingOrigin(_session);
 	srand((unsigned int)time(NULL));
 	sphereScene = std::shared_ptr<SpheresScene>(new SpheresScene());
+	
+	std::cout << "***** Initializing particle systems" << std::endl;
+}
 
+void Client::initAudio() {
+	// NOTE: All audio is set up in the ASound constructor.
+	//       This function is really just to autoplay the BGM.
+	soundBGM = new ASound("Resources/Audio/BGM/Moment of Impact V2.wav");
+	bgmList.push_back(soundBGM);
+	soundBGM = new ASound("Resources/Audio/BGM/Conciliation.wav");
+	bgmList.push_back(soundBGM);
+	soundBGM = new ASound("Resources/Audio/BGM/Riverside.wav");
+	bgmList.push_back(soundBGM);
+	soundBGM = new ASound("Resources/Audio/BGM/Fireworks Over Barcelona.wav");
+	bgmList.push_back(soundBGM);
+	soundBGM = new ASound("Resources/Audio/BGM/Wayang Kulit.wav");
+	bgmList.push_back(soundBGM);
+
+	checkBGM();
+
+	std::cout << "BGM should be playing..." << std::endl;
 }
 
 void Client::shutdownGl()
@@ -34,6 +57,7 @@ void Client::renderScene(const glm::mat4& projection, const glm::mat4& headPose)
 	auto globalPlayerRotation = glm::mat4_cast(playerState->rotation);
 	auto globalHeadPose = globalPlayerTranslation * globalPlayerRotation * headPose;
 	EntityManager::getInstance().render(projection, glm::inverse(globalHeadPose), eyePos);
+
 }
 
 void Client::update()
@@ -94,9 +118,60 @@ void Client::update()
 		c.call(serverFunction[PLAYER_RIGHT_THRUSTER], playerController.playerID, rightGripTriggerRate);
 	}
 
+	bool bRightTriggerPressed = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Right);
+	if (bRightTriggerPressed) {
+		std::cout << "Right trigger pressed!" << std::endl;
+
+		// STEP: Play fire sound
+		soundFire->playSound(1.0f);
+	}
+
+	bool bLeftTriggerPressed = OVRInputWrapper::getInstance().indexTriggerPressed(ovrHand_Left);
+	if (bLeftTriggerPressed) {
+		std::cout << "Left trigger pressed!" << std::endl;
+
+		// STEP: Play fire sound
+		soundFire->playSound(1.0f);
+	}
+
 	// send pos of all things and update all states
 	vector<BaseState> newStates = c.call(serverFunction[GET_UPDATE], playerController.playerID).as<vector<BaseState>>();
 	for (int i = 0; i < newStates.size(); i++) {
 		EntityManager::getInstance().update(newStates[i]);
+	}
+	//std::cout << std::endl;
+
+	// STEP: Check that the BGM is playing properly
+	checkBGM();
+}
+
+void Client::checkBGM() {
+	// Check if the BGM has stopped playing.
+	// If it has, play a random song from the BGM list.
+
+	// Check that the soundBGM ptr is NOT NULL
+	if (soundBGM != NULL) {
+		// If the ptr is not NULL, check that its audio channel is playing
+		bool bTempPlaying;
+		soundBGM->channel->isPlaying(&bTempPlaying);
+		if (!bTempPlaying) {
+			// Just in case, manually stop the channel
+			soundBGM->stopSound();
+
+			// Pick a random index for the BGM list
+			unsigned int idx = rand() % (bgmList.size());
+
+			// Reassign soundBGM to a randomly selected BGM
+			soundBGM = bgmList[idx];
+			soundBGM->playSound(BGM_VOLUME);
+		}
+	}
+	else {
+		// Pick a random index for the BGM list
+		unsigned int idx = rand() % (bgmList.size());
+
+		// Reassign soundBGM to a randomly selected BGM
+		soundBGM = bgmList[idx];
+		soundBGM->playSound(BGM_VOLUME);
 	}
 }
